@@ -206,17 +206,53 @@ export default function ThreeVisualizer({
     scene.background = new THREE.Color(isDark ? '#050B1B' : '#F5F5F5');
     sceneRef.current = scene;
 
-    // Solid floor matching background color
+    // Solid floor with concrete specular reflections
     const floorGeo = new THREE.PlaneGeometry(100, 100);
     const floorMat = new THREE.MeshStandardMaterial({ 
-      color: isDark ? '#070D1A' : '#F5F5F5', 
-      roughness: 1.0, 
-      metalness: 0.0 
+      color: isDark ? '#080E1C' : '#F5F5F5', 
+      roughness: 0.35, 
+      metalness: 0.8 
     });
     const floorMesh = new THREE.Mesh(floorGeo, floorMat);
     floorMesh.rotation.x = -Math.PI / 2;
     floorMesh.position.y = -2;
     scene.add(floorMesh);
+
+    // Industrial Dark Wall in the background
+    if (isDark) {
+      const wallGeo = new THREE.PlaneGeometry(40, 20);
+      const wallMat = new THREE.MeshStandardMaterial({
+        color: '#070D1A',
+        roughness: 0.7,
+        metalness: 0.5
+      });
+      const wallMesh = new THREE.Mesh(wallGeo, wallMat);
+      wallMesh.position.set(0, 4, -8);
+      scene.add(wallMesh);
+
+      // Steel pedestal/platform slab under the machine
+      const platformGeo = new THREE.BoxGeometry(6.6, 0.15, 3.2);
+      const platformMat = new THREE.MeshStandardMaterial({
+        color: '#16264F',
+        roughness: 0.25,
+        metalness: 0.9
+      });
+      const platform = new THREE.Mesh(platformGeo, platformMat);
+      platform.position.set(0, -1.92, 0);
+      scene.add(platform);
+
+      // Cyan-blue glowing underglow strip
+      const underglowGeo = new THREE.BoxGeometry(5.4, 0.04, 0.04);
+      const underglowMat = new THREE.MeshStandardMaterial({
+        color: '#00F0FF',
+        emissive: '#00D8FF',
+        emissiveIntensity: 6.0,
+        roughness: 0.1
+      });
+      const underglow = new THREE.Mesh(underglowGeo, underglowMat);
+      underglow.position.set(0, -1.83, 0.9);
+      scene.add(underglow);
+    }
 
     // Custom Canvas radial contact shadow texture under the machine base
     const shadowCanvas = document.createElement('canvas');
@@ -261,49 +297,61 @@ export default function ThreeVisualizer({
     controls.minDistance = 3;
     controlsRef.current = controls;
 
-    // Lighting: Professional Studio Settings
-    const ambientLight = new THREE.AmbientLight(isDark ? '#3B4B6F' : '#C2CAD9', highContrast ? 1.5 : 0.9); // High-fidelity ambient fill
+    // Lighting: Bright electric-blue laboratory grading
+    const ambientLight = new THREE.AmbientLight(isDark ? '#2C3A5A' : '#C2CAD9', highContrast ? 2.0 : 1.4); // Enhanced ambient fill
     scene.add(ambientLight);
 
-    const mainLight = new THREE.DirectionalLight('#FFFFFF', highContrast ? 2.5 : 1.5); // Key light
+    const mainLight = new THREE.DirectionalLight('#FFFFFF', highContrast ? 3.0 : 2.2); // Powerful key light for sharp highlights
     mainLight.position.set(8, 15, 8);
     scene.add(mainLight);
 
-    const rimLight = new THREE.DirectionalLight('#9EB4E4', highContrast ? 2.0 : 1.2); // Soft blue rim highlights
+    const rimLight = new THREE.DirectionalLight('#4D72C1', highContrast ? 3.0 : 2.5); // Intense blue-rim highlights
     rimLight.position.set(-8, 5, -8);
     scene.add(rimLight);
 
-    const orangeSpotLight = new THREE.PointLight('#3D72C1', highContrast ? 1.8 : 1.0, 15); // Soft blue fill spotlight
+    const orangeSpotLight = new THREE.PointLight('#9EB4E4', highContrast ? 2.5 : 1.8, 18); // Soft fill light
     orangeSpotLight.position.set(-3, 4, 3);
     scene.add(orangeSpotLight);
 
+    // Over-head bright electric blue light projecting onto metallic body
     if (isDark) {
-      // Add two neon blue tube lights in the background
-      const tubeGeo = new THREE.CylinderGeometry(0.04, 0.04, 8, 8);
-      const tubeMat = new THREE.MeshBasicMaterial({ color: '#1D49B4' });
+      const topBlueLight = new THREE.DirectionalLight('#4D72C1', 3.5);
+      topBlueLight.position.set(2, 8, 6);
+      scene.add(topBlueLight);
+    }
+
+    if (isDark) {
+      // Dual horizontal glowing neon cyan tubes centered behind the machine
+      const tubeGeo = new THREE.CylinderGeometry(0.06, 0.06, 12, 16);
+      const tubeMat = new THREE.MeshStandardMaterial({ 
+        color: '#00F0FF',
+        emissive: '#1D49B4',
+        emissiveIntensity: 5.0,
+        roughness: 0.1
+      });
       
       const tube1 = new THREE.Mesh(tubeGeo, tubeMat);
-      tube1.position.set(-2.5, 2.0, -4.5);
+      tube1.position.set(0, 3.4, -7.9);
       tube1.rotation.z = Math.PI / 2;
       scene.add(tube1);
       
       const tube2 = new THREE.Mesh(tubeGeo, tubeMat);
-      tube2.position.set(-2.5, 2.15, -4.55);
+      tube2.position.set(0, 3.7, -7.9);
       tube2.rotation.z = Math.PI / 2;
       scene.add(tube2);
     }
 
-    // Materials: Color-graded inside blue range (210-225 deg), desaturated to ~65%
+    // Materials: Highly metallic reflective blue range desaturated to ~65%
     const mats = {
-      machineBody: new THREE.MeshStandardMaterial({ color: isDark ? '#1C3A7A' : '#4D72C1', metalness: 0.85, roughness: 0.3 }), // Metallic blue
-      secondaryMetal: new THREE.MeshStandardMaterial({ color: '#9EB4E4', metalness: 0.9, roughness: 0.25 }), // Steel/silver mid-tones
-      darkMechanicalParts: new THREE.MeshStandardMaterial({ color: isDark ? '#16264F' : '#3B4B6F', metalness: 0.8, roughness: 0.35 }), // Shadow navy
-      shafts: new THREE.MeshStandardMaterial({ color: '#C2CAD9', metalness: 0.95, roughness: 0.15 }), // Polished ambient elements
-      workpiece: new THREE.MeshStandardMaterial({ color: '#9EB4E4', metalness: 0.9, roughness: 0.2 }), // Steel workpiece
-      cuttingTool: new THREE.MeshStandardMaterial({ color: '#C2CAD9', metalness: 0.9, roughness: 0.2 }),
-      safetyParts: new THREE.MeshStandardMaterial({ color: isDark ? '#1C3A7A' : '#4D72C1', metalness: 0.2, roughness: 0.4 }),
-      sandMould: new THREE.MeshStandardMaterial({ color: '#3B4B6F', roughness: 0.95, metalness: 0.05 }), // Deep navy moulds
-      moltenMetal: new THREE.MeshStandardMaterial({ color: '#4D72C1', emissive: '#1D49B4', emissiveIntensity: 1.0, roughness: 0.1 }), // Blue glow metal
+      machineBody: new THREE.MeshStandardMaterial({ color: isDark ? '#1C3A7A' : '#4D72C1', metalness: 0.92, roughness: 0.22 }), // High-specular metallic blue
+      secondaryMetal: new THREE.MeshStandardMaterial({ color: '#C2CAD9', metalness: 0.98, roughness: 0.15 }), // Polished silver components
+      darkMechanicalParts: new THREE.MeshStandardMaterial({ color: isDark ? '#0B1733' : '#3B4B6F', metalness: 0.9, roughness: 0.25 }), // Shadow navy
+      shafts: new THREE.MeshStandardMaterial({ color: '#E2E8F0', metalness: 0.98, roughness: 0.1 }), // Bright chrome finish
+      workpiece: new THREE.MeshStandardMaterial({ color: '#C2CAD9', metalness: 0.95, roughness: 0.18 }), // Steel workpiece
+      cuttingTool: new THREE.MeshStandardMaterial({ color: '#E2E8F0', metalness: 0.95, roughness: 0.18 }),
+      safetyParts: new THREE.MeshStandardMaterial({ color: isDark ? '#1C3A7A' : '#4D72C1', metalness: 0.3, roughness: 0.3 }),
+      sandMould: new THREE.MeshStandardMaterial({ color: '#3B4B6F', roughness: 0.95, metalness: 0.05 }), 
+      moltenMetal: new THREE.MeshStandardMaterial({ color: '#00F0FF', emissive: '#1D49B4', emissiveIntensity: 2.0, roughness: 0.1 }), // Electric glowing blue metal
       moltenMetalCool: new THREE.MeshStandardMaterial({ color: '#3B4B6F', metalness: 0.8, roughness: 0.6 })
     };
 
