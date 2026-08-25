@@ -23,7 +23,7 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
     const height = mountRef.current.clientHeight || 450;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#F5F5F5'); // Clean Mechanical Lab Light Background
+    scene.background = new THREE.Color('#F0EDE5'); // Clean Mechanical Lab Light Sand Dune Background
 
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     camera.position.set(0, 11, 15);
@@ -52,27 +52,27 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
     dirLight.position.set(5, 15, 5);
     scene.add(dirLight);
 
-    // Industrial floor grids (Safety Blue and Steel)
-    const gridHelper = new THREE.GridHelper(24, 24, '#1D49B4', '#C2CAD9');
+    // Industrial floor grids (Safety Cyprus Light and Sand Dune Dark)
+    const gridHelper = new THREE.GridHelper(24, 24, '#0A625D', '#D8D2C5');
     gridHelper.position.y = -0.5;
     scene.add(gridHelper);
 
     const borderGeo = new THREE.BoxGeometry(24.2, 0.05, 24.2);
-    const borderMat = new THREE.MeshBasicMaterial({ color: '#C2CAD9', wireframe: true });
+    const borderMat = new THREE.MeshBasicMaterial({ color: '#D8D2C5', wireframe: true });
     const border = new THREE.Mesh(borderGeo, borderMat);
     border.position.y = -0.5;
     scene.add(border);
 
     // Materials
-    const benchMat = new THREE.MeshStandardMaterial({ color: '#3B4B6F', roughness: 0.6 }); // Deep Navy benches
+    const benchMat = new THREE.MeshStandardMaterial({ color: '#003532', roughness: 0.6 }); // Cyprus Dark benches
     const machineMats = {
-      lathe: new THREE.MeshStandardMaterial({ color: '#1D49B4', metalness: 0.8, roughness: 0.2 }),
-      welding: new THREE.MeshStandardMaterial({ color: '#3D72C1', metalness: 0.7, roughness: 0.3 }),
-      milling: new THREE.MeshStandardMaterial({ color: '#9EB4E4', metalness: 0.8, roughness: 0.2 }),
-      shaper: new THREE.MeshStandardMaterial({ color: '#4D72C1', metalness: 0.8, roughness: 0.2 }),
-      planer: new THREE.MeshStandardMaterial({ color: '#3B4B6F', metalness: 0.8, roughness: 0.2 }),
-      casting: new THREE.MeshStandardMaterial({ color: '#C2CAD9', metalness: 0.7, roughness: 0.4 }),
-      moulding: new THREE.MeshStandardMaterial({ color: '#3B4B6F', metalness: 0.7, roughness: 0.4 })    // Earth/Copper
+      lathe: new THREE.MeshStandardMaterial({ color: '#004643', metalness: 0.8, roughness: 0.2 }),
+      welding: new THREE.MeshStandardMaterial({ color: '#0A625D', metalness: 0.7, roughness: 0.3 }),
+      milling: new THREE.MeshStandardMaterial({ color: '#D9E8E5', metalness: 0.8, roughness: 0.2 }),
+      shaper: new THREE.MeshStandardMaterial({ color: '#0A625D', metalness: 0.8, roughness: 0.2 }),
+      planer: new THREE.MeshStandardMaterial({ color: '#003532', metalness: 0.8, roughness: 0.2 }),
+      casting: new THREE.MeshStandardMaterial({ color: '#D8D2C5', metalness: 0.7, roughness: 0.4 }),
+      moulding: new THREE.MeshStandardMaterial({ color: '#003532', metalness: 0.7, roughness: 0.4 })    // Cyprus Dark moulding
     };
 
     // Terminal layout positioning
@@ -99,9 +99,9 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
       bench.position.y = -0.1;
       group.add(bench);
 
-      // Safety border lines in Blue
+      // Safety border lines in Cyprus Light
       const stripGeo = new THREE.BoxGeometry(2.5, 0.05, 1.9);
-      const stripMat = new THREE.MeshBasicMaterial({ color: '#1D49B4', wireframe: true });
+      const stripMat = new THREE.MeshBasicMaterial({ color: '#0A625D', wireframe: true });
       const strip = new THREE.Mesh(stripGeo, stripMat);
       strip.position.y = 0.31;
       group.add(strip);

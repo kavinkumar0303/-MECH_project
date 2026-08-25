@@ -16,28 +16,28 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
       value: '7', 
       desc: 'Machines Available', 
       icon: Settings,
-      color: '#1D49B4'
+      color: '#004643'
     },
     { 
       label: 'Simulations Completed', 
       value: '24+', 
       desc: 'Completed Tasks', 
       icon: BarChart2,
-      color: '#3D72C1'
+      color: '#0A625D'
     },
     { 
       label: 'Accuracy Performance', 
       value: `${user?.accuracy || 98}%`, 
       desc: 'Performance Score', 
       icon: Target,
-      color: '#4D72C1'
+      color: '#0A625D'
     },
     { 
       label: 'Time Spent This Week', 
       value: '12h', 
       desc: 'Total Activity', 
       icon: Clock,
-      color: '#9EB4E4'
+      color: '#D9E8E5'
     }
   ];
 
@@ -154,8 +154,8 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
             key={card.id}
             className="glass-panel"
             style={{
-              background: 'rgba(6, 31, 70, 0.65)',
-              border: '1px solid rgba(61, 114, 193, 0.25)',
+              background: 'rgba(0, 70, 67, 0.65)',
+              border: '1px solid rgba(10, 98, 93, 0.25)',
               borderRadius: '8px',
               overflow: 'hidden',
               display: 'flex',
@@ -166,7 +166,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-4px)';
               e.currentTarget.style.borderColor = 'var(--brand-secondary)';
-              e.currentTarget.style.boxShadow = '0 8px 24px rgba(29, 73, 180, 0.15)';
+              e.currentTarget.style.boxShadow = '0 8px 24px rgba(10, 98, 93, 0.15)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'translateY(0)';

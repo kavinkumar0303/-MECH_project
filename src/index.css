@@ -1,30 +1,30 @@
 :root {
-  --brand-primary: #3865BE;
-  --brand-secondary: #1E5BBA;
-  --deep-navy: #010816;
-  --shadow-navy: #18243D;
-  --robot-highlight: #3865BE;
-  --robot-mid: #C4D6EE;
-  --ambient-grey: #C4D6EE;
-  --surface-bg: #010816;
-  --text-primary: #D3D9E9;
-  --text-secondary: #C4D6EE;
+  --brand-primary: #004643;
+  --brand-secondary: #0A625D;
+  --deep-navy: #003532;
+  --shadow-navy: #002F2D;
+  --robot-highlight: #0A625D;
+  --robot-mid: #D9E8E5;
+  --ambient-grey: #D8D2C5;
+  --surface-bg: #F0EDE5;
+  --text-primary: #F0EDE5;
+  --text-secondary: #D8D2C5;
 
-  --primary-blue: #3865BE;
-  --secondary-blue: #1E5BBA;
-  --cool-grey-blue: #C4D6EE;
-  --background: #010816;
-  --text-headline: #D3D9E9;
+  --primary-blue: #004643;
+  --secondary-blue: #0A625D;
+  --cool-grey-blue: #D8D2C5;
+  --background: #003532;
+  --text-headline: #F0EDE5;
 
-  --bg-primary: #010816;
-  --bg-secondary: #03142E;
-  --surface: #03142E;
-  --steel-light: #C4D6EE;
-  --accent-orange: #3865BE;
-  --accent-amber: #1E5BBA;
+  --bg-primary: #003532;
+  --bg-secondary: #004643;
+  --surface: #004643;
+  --steel-light: #D9E8E5;
+  --accent-orange: #004643;
+  --accent-amber: #0A625D;
   
-  --border: #18243D;
-  --border-active: #1E5BBA;
+  --border: rgba(10, 98, 93, 0.25);
+  --border-active: #0A625D;
   
   --success: #2E7D32;
   --warning: #EF6C00;
@@ -43,9 +43,9 @@
 body {
   background-color: var(--bg-primary);
   background-image: 
-    radial-gradient(circle at 50% 50%, rgba(30, 91, 186, 0.15) 0%, var(--bg-primary) 100%),
-    linear-gradient(0deg, transparent 24%, rgba(30, 91, 186, 0.05) 25%, rgba(30, 91, 186, 0.05) 26%, transparent 27%, transparent 74%, rgba(30, 91, 186, 0.05) 75%, rgba(30, 91, 186, 0.05) 76%, transparent 77%),
-    linear-gradient(90deg, transparent 24%, rgba(30, 91, 186, 0.05) 25%, rgba(30, 91, 186, 0.05) 26%, transparent 27%, transparent 74%, rgba(30, 91, 186, 0.05) 75%, rgba(30, 91, 186, 0.05) 76%, transparent 77%);
+    radial-gradient(circle at 50% 50%, rgba(10, 98, 93, 0.15) 0%, var(--bg-primary) 100%),
+    linear-gradient(0deg, transparent 24%, rgba(10, 98, 93, 0.04) 25%, rgba(10, 98, 93, 0.04) 26%, transparent 27%, transparent 74%, rgba(10, 98, 93, 0.04) 75%, rgba(10, 98, 93, 0.04) 76%, transparent 77%),
+    linear-gradient(90deg, transparent 24%, rgba(10, 98, 93, 0.04) 25%, rgba(10, 98, 93, 0.04) 26%, transparent 27%, transparent 74%, rgba(10, 98, 93, 0.04) 75%, rgba(10, 98, 93, 0.04) 76%, transparent 77%);
   background-size: 100% 100%, 40px 40px, 40px 40px;
   background-attachment: fixed;
   color: var(--text-primary);
@@ -517,18 +517,18 @@ body.high-contrast .glow-btn-orange:hover {
 
 .btn-login {
   background: var(--brand-primary) !important;
-  color: #FFFFFF !important;
+  color: #F0EDE5 !important;
   border: 1px solid var(--brand-primary) !important;
   border-radius: 4px !important;
   font-weight: 700 !important;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  box-shadow: 0 2px 4px rgba(59, 75, 111, 0.08) !important;
+  box-shadow: 0 2px 4px rgba(0, 70, 67, 0.08) !important;
 }
 .btn-login:hover:not(:disabled) {
   background: var(--brand-secondary) !important;
   border-color: var(--brand-secondary) !important;
   transform: translateY(-1.5px) !important;
-  box-shadow: 0 4px 12px rgba(29, 73, 180, 0.15) !important;
+  box-shadow: 0 4px 12px rgba(10, 98, 93, 0.15) !important;
 }
 .btn-login:active:not(:disabled) {
   transform: translateY(0) scale(0.985) !important;
@@ -555,7 +555,7 @@ input::placeholder {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(to right, rgba(11, 23, 51, 0.15) 0%, rgba(11, 23, 51, 0.85) 100%);
+  background: linear-gradient(to right, rgba(0, 53, 50, 0.15) 0%, rgba(0, 53, 50, 0.85) 100%);
   z-index: 2;
   pointer-events: none;
 }
@@ -573,7 +573,7 @@ input::placeholder {
 
 @media (max-width: 900px) {
   .login-overlay {
-    background: radial-gradient(circle, rgba(11, 23, 51, 0.3) 0%, rgba(11, 23, 51, 0.9) 100%);
+    background: radial-gradient(circle, rgba(0, 53, 50, 0.3) 0%, rgba(0, 53, 50, 0.9) 100%);
   }
   .login-card-container {
     justify-content: center;

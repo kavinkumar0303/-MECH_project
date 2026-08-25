@@ -63,29 +63,29 @@ export default function Auth({ onLoginSuccess }) {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
     
-    const ambientLight = new THREE.AmbientLight('#C2CAD9', 0.85);
+    const ambientLight = new THREE.AmbientLight('#D9E8E5', 0.85);
     scene.add(ambientLight);
     
     const keyLight = new THREE.DirectionalLight('#FFFFFF', 1.5);
     keyLight.position.set(5, 5, 5);
     scene.add(keyLight);
     
-    const fillLight = new THREE.DirectionalLight('#9EB4E4', 0.9);
+    const fillLight = new THREE.DirectionalLight('#D9E8E5', 0.9);
     fillLight.position.set(-5, -2, 2);
     scene.add(fillLight);
     
-    const rimLight = new THREE.DirectionalLight('#3D72C1', 0.85);
+    const rimLight = new THREE.DirectionalLight('#0A625D', 0.85);
     rimLight.position.set(0, 5, -5);
     scene.add(rimLight);
     
     const group = new THREE.Group();
     scene.add(group);
     
-    // Materials palette matching brand colors
-    const matMain = new THREE.MeshStandardMaterial({ color: '#1C3A7A', roughness: 0.35, metalness: 0.8 });
-    const matAccent = new THREE.MeshStandardMaterial({ color: '#3D72C1', roughness: 0.25, metalness: 0.9 });
-    const matReflections = new THREE.MeshStandardMaterial({ color: '#9EB4E4', roughness: 0.2, metalness: 0.95 });
-    const matShadow = new THREE.MeshStandardMaterial({ color: '#3B4B6F', roughness: 0.45, metalness: 0.65 });
+    // Materials palette matching cyprus and sand dune colors
+    const matMain = new THREE.MeshStandardMaterial({ color: '#004643', roughness: 0.35, metalness: 0.8 });
+    const matAccent = new THREE.MeshStandardMaterial({ color: '#0A625D', roughness: 0.25, metalness: 0.9 });
+    const matReflections = new THREE.MeshStandardMaterial({ color: '#F0EDE5', roughness: 0.2, metalness: 0.95 });
+    const matShadow = new THREE.MeshStandardMaterial({ color: '#003532', roughness: 0.45, metalness: 0.65 });
     
     // Constructing the logo components:
     
@@ -173,14 +173,14 @@ export default function Auth({ onLoginSuccess }) {
     pedestal.position.y = -2.5;
     group.add(pedestal);
 
-    // Pedestal Glowing Blue Ring
+    // Pedestal Glowing Cyprus Ring
     const ringGeom = new THREE.TorusGeometry(2.4, 0.06, 12, 64);
-    const glowingRing = new THREE.Mesh(ringGeom, new THREE.MeshBasicMaterial({ color: '#1D49B4' }));
+    const glowingRing = new THREE.Mesh(ringGeom, new THREE.MeshBasicMaterial({ color: '#0A625D' }));
     glowingRing.position.y = -2.35;
     glowingRing.rotation.x = Math.PI / 2;
     group.add(glowingRing);
     
-    const glowingRing2 = new THREE.Mesh(ringGeom, new THREE.MeshBasicMaterial({ color: '#3D72C1' }));
+    const glowingRing2 = new THREE.Mesh(ringGeom, new THREE.MeshBasicMaterial({ color: '#004643' }));
     glowingRing2.position.y = -2.48;
     glowingRing2.rotation.x = Math.PI / 2;
     group.add(glowingRing2);
@@ -351,7 +351,7 @@ export default function Auth({ onLoginSuccess }) {
         minHeight: '100vh',
         width: '100vw',
         display: 'flex',
-        background: 'radial-gradient(circle at center, #0A142A 0%, #050B1B 100%)',
+        background: 'radial-gradient(circle at center, #004643 0%, #003532 100%)',
         overflow: 'hidden',
         position: 'relative'
       }}
@@ -362,7 +362,7 @@ export default function Auth({ onLoginSuccess }) {
       </div>
 
       {/* 2. Visual readability overlay */}
-      <div className="login-overlay" style={{ background: 'linear-gradient(to right, rgba(1, 8, 22, 0.15) 0%, rgba(1, 8, 22, 0.8) 100%)' }} />
+      <div className="login-overlay" style={{ background: 'linear-gradient(to right, rgba(0, 53, 50, 0.15) 0%, rgba(0, 53, 50, 0.85) 100%)' }} />
 
       {/* 3. Left Branding Overlay Text */}
       <div 
@@ -442,10 +442,10 @@ export default function Auth({ onLoginSuccess }) {
             width: '100%',
             maxWidth: isLogin ? '400px' : '500px',
             padding: '36px',
-            background: 'rgba(3, 20, 46, 0.75)',
+            background: 'rgba(0, 53, 50, 0.75)',
             backdropFilter: 'blur(16px)',
-            border: '1px solid rgba(61, 114, 193, 0.35)',
-            boxShadow: '0 0 20px rgba(29, 73, 180, 0.2), 0 15px 35px rgba(0, 0, 0, 0.4)',
+            border: '1px solid rgba(10, 98, 93, 0.35)',
+            boxShadow: '0 0 20px rgba(10, 98, 93, 0.2), 0 15px 35px rgba(0, 0, 0, 0.4)',
             borderRadius: '8px',
             display: 'flex',
             flexDirection: 'column',
@@ -472,8 +472,8 @@ export default function Auth({ onLoginSuccess }) {
           {isLogin && (
             <div 
               style={{
-                background: 'rgba(6, 31, 70, 0.45)',
-                border: '1px solid rgba(61, 114, 193, 0.25)',
+                background: 'rgba(0, 70, 67, 0.45)',
+                border: '1px solid rgba(10, 98, 93, 0.25)',
                 borderRadius: '6px',
                 padding: '10px 14px',
                 display: 'flex',
@@ -529,7 +529,7 @@ export default function Auth({ onLoginSuccess }) {
                   <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                     Username
                   </label>
-                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0, 53, 50, 0.65)', border: '1px solid rgba(10, 98, 93, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
                     <User size={14} style={{ color: 'var(--text-secondary)' }} />
                     <input 
                       type="text" 
@@ -547,7 +547,7 @@ export default function Auth({ onLoginSuccess }) {
                   <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                     Password
                   </label>
-                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0, 53, 50, 0.65)', border: '1px solid rgba(10, 98, 93, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
                     <Lock size={14} style={{ color: 'var(--text-secondary)' }} />
                     <input 
                       type={showPassword ? 'text' : 'password'}
@@ -595,7 +595,7 @@ export default function Auth({ onLoginSuccess }) {
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                       Student Name
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0, 53, 50, 0.65)', border: '1px solid rgba(10, 98, 93, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
                       <User size={14} style={{ color: 'var(--text-secondary)' }} />
                       <input 
                         type="text" 
@@ -612,7 +612,7 @@ export default function Auth({ onLoginSuccess }) {
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                       Student ID
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0, 53, 50, 0.65)', border: '1px solid rgba(10, 98, 93, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
                       <Lock size={14} style={{ color: 'var(--text-secondary)' }} />
                       <input 
                         type="text" 
@@ -631,7 +631,7 @@ export default function Auth({ onLoginSuccess }) {
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                       College
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0, 53, 50, 0.65)', border: '1px solid rgba(10, 98, 93, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
                       <School size={14} style={{ color: 'var(--text-secondary)' }} />
                       <input 
                         type="text" 
@@ -648,7 +648,7 @@ export default function Auth({ onLoginSuccess }) {
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                       Department
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0, 53, 50, 0.65)', border: '1px solid rgba(10, 98, 93, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
                       <BookOpen size={14} style={{ color: 'var(--text-secondary)' }} />
                       <input 
                         type="text" 
@@ -666,7 +666,7 @@ export default function Auth({ onLoginSuccess }) {
                   <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                     Email Address
                   </label>
-                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0, 53, 50, 0.65)', border: '1px solid rgba(10, 98, 93, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
                     <Mail size={14} style={{ color: 'var(--text-secondary)' }} />
                     <input 
                       type="email" 
@@ -684,7 +684,7 @@ export default function Auth({ onLoginSuccess }) {
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                       Password
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0, 53, 50, 0.65)', border: '1px solid rgba(10, 98, 93, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
                       <Lock size={14} style={{ color: 'var(--text-secondary)' }} />
                       <input 
                         type={showPassword ? 'text' : 'password'}
@@ -701,7 +701,7 @@ export default function Auth({ onLoginSuccess }) {
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                       Confirm
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0, 53, 50, 0.65)', border: '1px solid rgba(10, 98, 93, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
                       <Lock size={14} style={{ color: 'var(--text-secondary)' }} />
                       <input 
                         type={showPassword ? 'text' : 'password'}

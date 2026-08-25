@@ -13,7 +13,7 @@ export default function MachineComparison() {
           m1: {
             id: "casting",
             name: "Sand Casting",
-            color: "#C2CAD9",
+            color: "#D9E8E5",
             purpose: "Metal shaping by gravity pouring",
             movement: "Liquid metal flows freely under gravity into sand cavity",
             tool: "Manual pouring ladle, green sand flasks",
@@ -24,7 +24,7 @@ export default function MachineComparison() {
           m2: {
             id: "moulding",
             name: "Injection Moulding",
-            color: "#3B4B6F",
+            color: "#003532",
             purpose: "High-volume polymer shape molding",
             movement: "Thermoplastic pellets are screw-fed, melted, and injected mechanically",
             tool: "Reciprocating cylinder screw inside heated barrel",
@@ -39,7 +39,7 @@ export default function MachineComparison() {
           m1: {
             id: "shaper",
             name: "Shaper Machine",
-            color: "#4D72C1",
+            color: "#0A625D",
             purpose: "Machining flat planes on small workpieces",
             movement: "Workpiece feeds crosswise slowly, tool reciprocates",
             tool: "Single-point HSS tool clamped in reciprocating ram",
@@ -50,7 +50,7 @@ export default function MachineComparison() {
           m2: {
             id: "planer",
             name: "Planer Machine",
-            color: "#3B4B6F",
+            color: "#003532",
             purpose: "Machining flat paths on massive/long workpieces",
             movement: "Workpiece reciprocates on massive bed table, tool feeds crosswise",
             tool: "Heavy tool heads locked stationary on horizontal cross rail",
@@ -66,7 +66,7 @@ export default function MachineComparison() {
           m1: {
             id: "lathe",
             name: "Lathe Machine (Turning)",
-            color: "#1D49B4",
+            color: "#004643",
             purpose: "Generating cylindrical/conical shapes",
             movement: "Workpiece rotates rapidly, cutting tool feeds linearly",
             tool: "Single-point HSS/Carbide tip held in tool post",
@@ -77,7 +77,7 @@ export default function MachineComparison() {
           m2: {
             id: "milling",
             name: "Milling Machine",
-            color: "#9EB4E4",
+            color: "#D9E8E5",
             purpose: "Generating flat surfaces, keyways, pockets, gears",
             movement: "Workpiece feeds linearly in X-Y-Z, cutting tool rotates",
             tool: "Multi-point rotating End Mill or Face Mill cutter",
