@@ -1,23 +1,24 @@
 :root {
   --brand-primary: #1D49B4;
   --brand-secondary: #3D72C1;
+  --deep-navy: #0B1733;
   --shadow-navy: #3B4B6F;
-  --accent-light: #9EB4E4;
-  --surface-bg: #101625;
+  --robot-highlight: #4D72C1;
+  --robot-mid: #9EB4E4;
   --ambient-grey: #C2CAD9;
+  --surface-bg: #F5F5F5;
+  --text-primary: #FFFFFF;
+  --text-secondary: #9EB4E4;
 
   --primary-blue: #1D49B4;
   --secondary-blue: #3D72C1;
-  --deep-navy: #3B4B6F;
-  --robot-highlight: #4D72C1;
-  --robot-mid-tone: #9EB4E4;
   --cool-grey-blue: #C2CAD9;
-  --background: #101625;
+  --background: #0B1733;
   --text-headline: #FFFFFF;
 
-  --bg-primary: #101625;
-  --bg-secondary: #161D30;
-  --surface: #1E2638;
+  --bg-primary: #0B1733;
+  --bg-secondary: #112147;
+  --surface: #16264F;
   --steel-light: #9EB4E4;
   --accent-orange: #1D49B4;
   --accent-amber: #3D72C1;
@@ -25,7 +26,7 @@
   --text-secondary: #9EB4E4;
   
   --border: #3B4B6F;
-  --border-active: #1D49B4;
+  --border-active: #3D72C1;
   
   --success: #2E7D32;
   --warning: #EF6C00;
@@ -44,9 +45,9 @@
 body {
   background-color: var(--bg-primary);
   background-image: 
-    radial-gradient(circle at 50% 50%, rgba(29, 73, 180, 0.12) 0%, var(--bg-primary) 100%),
-    linear-gradient(0deg, transparent 24%, rgba(29, 73, 180, 0.04) 25%, rgba(29, 73, 180, 0.04) 26%, transparent 27%, transparent 74%, rgba(29, 73, 180, 0.04) 75%, rgba(29, 73, 180, 0.04) 76%, transparent 77%),
-    linear-gradient(90deg, transparent 24%, rgba(29, 73, 180, 0.04) 25%, rgba(29, 73, 180, 0.04) 26%, transparent 27%, transparent 74%, rgba(29, 73, 180, 0.04) 75%, rgba(29, 73, 180, 0.04) 76%, transparent 77%);
+    radial-gradient(circle at 50% 50%, rgba(61, 114, 193, 0.2) 0%, var(--bg-primary) 100%),
+    linear-gradient(0deg, transparent 24%, rgba(61, 114, 193, 0.08) 25%, rgba(61, 114, 193, 0.08) 26%, transparent 27%, transparent 74%, rgba(61, 114, 193, 0.08) 75%, rgba(61, 114, 193, 0.08) 76%, transparent 77%),
+    linear-gradient(90deg, transparent 24%, rgba(61, 114, 193, 0.08) 25%, rgba(61, 114, 193, 0.08) 26%, transparent 27%, transparent 74%, rgba(61, 114, 193, 0.08) 75%, rgba(61, 114, 193, 0.08) 76%, transparent 77%);
   background-size: 100% 100%, 40px 40px, 40px 40px;
   background-attachment: fixed;
   color: var(--text-primary);
@@ -556,7 +557,7 @@ input::placeholder {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(to right, rgba(16, 22, 37, 0.15) 0%, rgba(16, 22, 37, 0.85) 100%);
+  background: linear-gradient(to right, rgba(11, 23, 51, 0.15) 0%, rgba(11, 23, 51, 0.85) 100%);
   z-index: 2;
   pointer-events: none;
 }
@@ -574,7 +575,7 @@ input::placeholder {
 
 @media (max-width: 900px) {
   .login-overlay {
-    background: radial-gradient(circle, rgba(16, 22, 37, 0.3) 0%, rgba(16, 22, 37, 0.9) 100%);
+    background: radial-gradient(circle, rgba(11, 23, 51, 0.3) 0%, rgba(11, 23, 51, 0.9) 100%);
   }
   .login-card-container {
     justify-content: center;

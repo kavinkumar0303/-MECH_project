@@ -201,21 +201,40 @@ export default function ThreeVisualizer({
     const height = mountRef.current.clientHeight || 360;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#101625'); // Deep Navy Industrial Background
+    scene.background = new THREE.Color('#F5F5F5'); // Flat #F5F5F5 Studio Backdrop
     sceneRef.current = scene;
 
-    // Solid floor
-    const floorGeo = new THREE.PlaneGeometry(50, 50);
-    const floorMat = new THREE.MeshStandardMaterial({ color: '#161D30', roughness: 0.6, metalness: 0.4 }); // Dark Industrial Floor
+    // Solid floor matching background color
+    const floorGeo = new THREE.PlaneGeometry(100, 100);
+    const floorMat = new THREE.MeshStandardMaterial({ color: '#F5F5F5', roughness: 1.0, metalness: 0.0 }); // Matte floor
     const floorMesh = new THREE.Mesh(floorGeo, floorMat);
     floorMesh.rotation.x = -Math.PI / 2;
     floorMesh.position.y = -2;
     scene.add(floorMesh);
 
-    // Grid
-    const gridHelper = new THREE.GridHelper(30, 30, '#1D49B4', 'rgba(29, 73, 180, 0.08)'); // Subtle glowing grid
-    gridHelper.position.y = -1.99;
-    scene.add(gridHelper);
+    // Custom Canvas radial contact shadow texture under the machine base
+    const shadowCanvas = document.createElement('canvas');
+    shadowCanvas.width = 128;
+    shadowCanvas.height = 128;
+    const ctx = shadowCanvas.getContext('2d');
+    const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    grad.addColorStop(0, 'rgba(59, 75, 111, 0.25)'); // #3B4B6F soft shadow center
+    grad.addColorStop(0.5, 'rgba(59, 75, 111, 0.08)');
+    grad.addColorStop(1, 'rgba(245, 245, 245, 0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 128, 128);
+
+    const shadowTexture = new THREE.CanvasTexture(shadowCanvas);
+    const shadowGeo = new THREE.PlaneGeometry(8, 4);
+    const shadowMat = new THREE.MeshBasicMaterial({
+      map: shadowTexture,
+      transparent: true,
+      depthWrite: false
+    });
+    const shadowMesh = new THREE.Mesh(shadowGeo, shadowMat);
+    shadowMesh.rotation.x = -Math.PI / 2;
+    shadowMesh.position.y = -1.98; // Positioned slightly above matte floor
+    scene.add(shadowMesh);
 
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     camera.position.set(6, 4, 8);
@@ -236,34 +255,34 @@ export default function ThreeVisualizer({
     controls.minDistance = 3;
     controlsRef.current = controls;
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight('#C2CAD9', highContrast ? 1.2 : 0.6); // Subtle blue ambient lighting
+    // Lighting: Professional Studio Settings
+    const ambientLight = new THREE.AmbientLight('#C2CAD9', highContrast ? 1.25 : 0.85); // High-fidelity ambient fill
     scene.add(ambientLight);
 
-    const mainLight = new THREE.DirectionalLight('#FFFFFF', highContrast ? 3.0 : 1.8);
+    const mainLight = new THREE.DirectionalLight('#FFFFFF', highContrast ? 2.5 : 1.5); // Key light
     mainLight.position.set(8, 15, 8);
     scene.add(mainLight);
 
-    const rimLight = new THREE.DirectionalLight('#1D49B4', highContrast ? 2.5 : 1.2); // Blue rim lighting
+    const rimLight = new THREE.DirectionalLight('#9EB4E4', highContrast ? 2.0 : 1.2); // Soft blue rim highlights
     rimLight.position.set(-8, 5, -8);
     scene.add(rimLight);
 
-    const orangeSpotLight = new THREE.PointLight('#3D72C1', highContrast ? 3.5 : 1.8, 15);
+    const orangeSpotLight = new THREE.PointLight('#3D72C1', highContrast ? 1.5 : 0.8, 15); // Soft blue fill spotlight
     orangeSpotLight.position.set(-3, 4, 3);
     scene.add(orangeSpotLight);
 
-    // Materials
+    // Materials: Color-graded inside blue range (210-225 deg), desaturated to ~65%
     const mats = {
-      machineBody: new THREE.MeshStandardMaterial({ color: '#1D49B4', metalness: 0.85, roughness: 0.25 }), // Metallic blue surfaces
-      secondaryMetal: new THREE.MeshStandardMaterial({ color: '#9EB4E4', metalness: 0.9, roughness: 0.2 }), // Steel highlights
-      darkMechanicalParts: new THREE.MeshStandardMaterial({ color: '#3B4B6F', metalness: 0.8, roughness: 0.3 }), // Deep shadows
-      shafts: new THREE.MeshStandardMaterial({ color: '#C2CAD9', metalness: 0.95, roughness: 0.15 }),
-      workpiece: new THREE.MeshStandardMaterial({ color: '#B87333', metalness: 0.95, roughness: 0.15 }),
-      cuttingTool: new THREE.MeshStandardMaterial({ color: '#D6D9DA', metalness: 0.95, roughness: 0.1 }),
-      safetyParts: new THREE.MeshStandardMaterial({ color: '#1D49B4', metalness: 0.2, roughness: 0.4 }),
-      sandMould: new THREE.MeshStandardMaterial({ color: '#A08060', roughness: 0.95, metalness: 0.05 }),
-      moltenMetal: new THREE.MeshStandardMaterial({ color: '#FF4D00', emissive: '#FF2200', emissiveIntensity: 1.5, roughness: 0.1 }),
-      moltenMetalCool: new THREE.MeshStandardMaterial({ color: '#454B4E', metalness: 0.8, roughness: 0.6 })
+      machineBody: new THREE.MeshStandardMaterial({ color: '#4D72C1', metalness: 0.85, roughness: 0.3 }), // Metallic blue
+      secondaryMetal: new THREE.MeshStandardMaterial({ color: '#9EB4E4', metalness: 0.9, roughness: 0.25 }), // Steel/silver mid-tones
+      darkMechanicalParts: new THREE.MeshStandardMaterial({ color: '#3B4B6F', metalness: 0.8, roughness: 0.35 }), // Shadow navy
+      shafts: new THREE.MeshStandardMaterial({ color: '#C2CAD9', metalness: 0.95, roughness: 0.15 }), // Polished ambient elements
+      workpiece: new THREE.MeshStandardMaterial({ color: '#9EB4E4', metalness: 0.9, roughness: 0.2 }), // Steel workpiece
+      cuttingTool: new THREE.MeshStandardMaterial({ color: '#C2CAD9', metalness: 0.9, roughness: 0.2 }),
+      safetyParts: new THREE.MeshStandardMaterial({ color: '#4D72C1', metalness: 0.2, roughness: 0.4 }),
+      sandMould: new THREE.MeshStandardMaterial({ color: '#3B4B6F', roughness: 0.95, metalness: 0.05 }), // Deep navy moulds
+      moltenMetal: new THREE.MeshStandardMaterial({ color: '#4D72C1', emissive: '#1D49B4', emissiveIntensity: 1.0, roughness: 0.1 }), // Blue glow metal
+      moltenMetalCool: new THREE.MeshStandardMaterial({ color: '#3B4B6F', metalness: 0.8, roughness: 0.6 })
     };
 
     const machineGroup = new THREE.Group();

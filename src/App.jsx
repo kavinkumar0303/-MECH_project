@@ -127,7 +127,7 @@ function App() {
   if (isLoading) {
     return (
       <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-primary)' }}>
-        <div style={{ color: 'var(--accent-orange)', fontSize: '14px', fontFamily: 'var(--mono-font)', letterSpacing: '1px' }}>
+        <div style={{ color: 'var(--brand-primary)', fontSize: '14px', fontFamily: 'var(--mono-font)', letterSpacing: '1px' }}>
           LOADING VIRTUAL FACTORY COCKPIT...
         </div>
       </div>
@@ -196,6 +196,8 @@ function App() {
       <Sidebar 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
+        selectedMachineId={selectedMachineId}
+        setSelectedMachineId={setSelectedMachineId}
         user={user} 
         onLogout={handleLogout} 
       />
