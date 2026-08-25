@@ -23,7 +23,7 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
     const height = mountRef.current.clientHeight || 450;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#151719'); // Graphite Black
+    scene.background = new THREE.Color('#F5F5F5'); // Clean Mechanical Lab Light Background
 
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     camera.position.set(0, 11, 15);
@@ -45,34 +45,34 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
     controls.target.set(0, 0, 0);
 
     // Warm cinematic lighting
-    const ambientLight = new THREE.AmbientLight('#A4AAAC', 0.35); // Neutral Cool Grey fill
+    const ambientLight = new THREE.AmbientLight('#FFFFFF', 0.75); // Neutral Fill Light
     scene.add(ambientLight);
 
-    const dirLight = new THREE.DirectionalLight('#F1F0EA', 0.85); // Warm white overhead light
+    const dirLight = new THREE.DirectionalLight('#FFFFFF', 1.5); // Overhead light
     dirLight.position.set(5, 15, 5);
     scene.add(dirLight);
 
-    // Industrial floor grids (Safety Orange and Steel)
-    const gridHelper = new THREE.GridHelper(24, 24, '#F28C28', '#343A3D');
+    // Industrial floor grids (Safety Blue and Steel)
+    const gridHelper = new THREE.GridHelper(24, 24, '#1D49B4', '#C2CAD9');
     gridHelper.position.y = -0.5;
     scene.add(gridHelper);
 
     const borderGeo = new THREE.BoxGeometry(24.2, 0.05, 24.2);
-    const borderMat = new THREE.MeshBasicMaterial({ color: '#343A3D', wireframe: true });
+    const borderMat = new THREE.MeshBasicMaterial({ color: '#C2CAD9', wireframe: true });
     const border = new THREE.Mesh(borderGeo, borderMat);
     border.position.y = -0.5;
     scene.add(border);
 
     // Materials
-    const benchMat = new THREE.MeshStandardMaterial({ color: '#202427', roughness: 0.6 }); // Charcoal Steel benches
+    const benchMat = new THREE.MeshStandardMaterial({ color: '#3B4B6F', roughness: 0.6 }); // Deep Navy benches
     const machineMats = {
-      lathe: new THREE.MeshStandardMaterial({ color: '#F28C28', metalness: 0.8, roughness: 0.2 }),      // Safety Orange
-      welding: new THREE.MeshStandardMaterial({ color: '#C96F16', metalness: 0.7, roughness: 0.3 }),    // Warm Amber
-      milling: new THREE.MeshStandardMaterial({ color: '#C96F16', metalness: 0.8, roughness: 0.2 }),    // Deep Amber
-      shaper: new THREE.MeshStandardMaterial({ color: '#FFD600', metalness: 0.8, roughness: 0.2 }),     // Industrial Yellow
-      planer: new THREE.MeshStandardMaterial({ color: '#E65100', metalness: 0.8, roughness: 0.2 }),     // Muted Orange
-      casting: new THREE.MeshStandardMaterial({ color: '#D84315', metalness: 0.7, roughness: 0.4 }),    // Warm Copper
-      moulding: new THREE.MeshStandardMaterial({ color: '#8D6E63', metalness: 0.7, roughness: 0.4 })    // Earth/Copper
+      lathe: new THREE.MeshStandardMaterial({ color: '#1D49B4', metalness: 0.8, roughness: 0.2 }),
+      welding: new THREE.MeshStandardMaterial({ color: '#3D72C1', metalness: 0.7, roughness: 0.3 }),
+      milling: new THREE.MeshStandardMaterial({ color: '#9EB4E4', metalness: 0.8, roughness: 0.2 }),
+      shaper: new THREE.MeshStandardMaterial({ color: '#4D72C1', metalness: 0.8, roughness: 0.2 }),
+      planer: new THREE.MeshStandardMaterial({ color: '#3B4B6F', metalness: 0.8, roughness: 0.2 }),
+      casting: new THREE.MeshStandardMaterial({ color: '#C2CAD9', metalness: 0.7, roughness: 0.4 }),
+      moulding: new THREE.MeshStandardMaterial({ color: '#3B4B6F', metalness: 0.7, roughness: 0.4 })    // Earth/Copper
     };
 
     // Terminal layout positioning
@@ -99,9 +99,9 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
       bench.position.y = -0.1;
       group.add(bench);
 
-      // Safety border lines in Orange
+      // Safety border lines in Blue
       const stripGeo = new THREE.BoxGeometry(2.5, 0.05, 1.9);
-      const stripMat = new THREE.MeshBasicMaterial({ color: '#F28C28', wireframe: true });
+      const stripMat = new THREE.MeshBasicMaterial({ color: '#1D49B4', wireframe: true });
       const strip = new THREE.Mesh(stripGeo, stripMat);
       strip.position.y = 0.31;
       group.add(strip);
@@ -158,7 +158,7 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
       }
 
       // Warm spotlights
-      const spot = new THREE.SpotLight('#FFE0B2', 2.0, 8, Math.PI / 6, 0.5, 1);
+      const spot = new THREE.SpotLight('#D0F0FF', 2.0, 8, Math.PI / 6, 0.5, 1);
       spot.position.set(term.pos[0], 5, term.pos[2]);
       spot.target = group;
       scene.add(spot);
@@ -272,8 +272,8 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
             background: 'var(--bg-secondary)',
             padding: 0,
             overflow: 'hidden',
-            border: hoveredId ? `1px solid var(--accent-orange)` : '1px solid var(--border)',
-            boxShadow: hoveredId ? `0 0 15px rgba(242, 140, 40, 0.15)` : 'none',
+            border: hoveredId ? `1px solid var(--primary-blue)` : '1px solid var(--border)',
+            boxShadow: hoveredId ? `0 4px 20px rgba(29, 73, 180, 0.15)` : 'none',
             height: '450px'
           }}
         >
@@ -288,8 +288,8 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            border: hoveredId ? `1px solid var(--accent-orange)` : '1px solid var(--border)',
-            boxShadow: hoveredId ? `0 0 12px rgba(242, 140, 40, 0.05)` : 'none'
+            border: hoveredId ? `1px solid var(--primary-blue)` : '1px solid var(--border)',
+            boxShadow: hoveredId ? `0 4px 20px rgba(29, 73, 180, 0.15)` : 'none'
           }}
         >
           {hoveredId ? (
@@ -298,7 +298,7 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
                 <span style={{ fontSize: '10px', color: 'var(--text-secondary)', textTransform: 'uppercase', fontFamily: 'var(--mono-font)' }}>
                   Active Terminal
                 </span>
-                <h3 style={{ fontSize: '20px', fontWeight: '800', color: 'var(--accent-orange)', marginTop: '4px' }}>
+                <h3 style={{ fontSize: '20px', fontWeight: '800', color: 'var(--primary-blue)', marginTop: '4px' }}>
                   {MACHINES[hoveredId].name}
                 </h3>
                 <p style={{ fontSize: '12px', fontStyle: 'italic', color: 'var(--text-secondary)', marginTop: '2px' }}>
@@ -315,7 +315,7 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
                 </div>
                 <div>
                   <div className="telemetry-label">Tolerance Target</div>
-                  <div style={{ fontSize: '13px', color: 'var(--accent-orange)', marginTop: '2px', fontFamily: 'var(--mono-font)', fontWeight: '700' }}>
+                  <div style={{ fontSize: '13px', color: 'var(--primary-blue)', marginTop: '2px', fontFamily: 'var(--mono-font)', fontWeight: '700' }}>
                     {MACHINES[hoveredId].accuracyClass}
                   </div>
                 </div>
@@ -329,17 +329,12 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
 
               <div style={{ marginTop: 'auto' }}>
                 <button
-                  className="glow-btn-orange"
+                  className="btn-primary"
                   onClick={() => handleEnterBay(hoveredId)}
                   style={{
                     width: '100%',
                     padding: '12px',
-                    borderRadius: '4px',
-                    border: 'none',
-                    fontWeight: '800',
-                    textTransform: 'uppercase',
-                    cursor: 'pointer',
-                    color: '#151719'
+                    cursor: 'pointer'
                   }}
                 >
                   Configure Simulator →
@@ -348,7 +343,7 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', textAlign: 'center', gap: '16px' }}>
-              <Compass size={40} className="animate-spin-slow" style={{ color: 'var(--accent-orange)', opacity: 0.5 }} />
+              <Compass size={40} className="animate-spin-slow" style={{ color: 'var(--primary-blue)', opacity: 0.5 }} />
               <div>
                 <h4 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)' }}>Terminal Radar Grid</h4>
                 <p style={{ fontSize: '12px', color: 'var(--text-secondary)', maxWidth: '200px', margin: '4px auto 0', lineHeight: '1.4' }}>

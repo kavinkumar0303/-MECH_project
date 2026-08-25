@@ -191,7 +191,7 @@ function App() {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#0B0F19', width: '100vw', overflowX: 'hidden' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-primary)', width: '100vw', overflowX: 'hidden' }}>
       {/* Navigation sidebar */}
       <Sidebar 
         activeTab={activeTab} 
@@ -230,21 +230,21 @@ function App() {
             top: '24px',
             left: '50%',
             transform: 'translateX(-50%)',
-            background: 'rgba(16, 24, 32, 0.95)',
-            border: '2px solid var(--accent-orange)',
+            background: 'var(--surface)',
+            border: '2px solid var(--primary-blue)',
             borderRadius: '4px',
             padding: '12px 24px',
-            color: '#FFF',
+            color: 'var(--text-primary)',
             fontFamily: 'var(--mono-font)',
             fontWeight: 'bold',
             zIndex: 10005,
-            boxShadow: '0 0 20px rgba(242, 140, 40, 0.4)',
+            boxShadow: '0 4px 20px rgba(29, 73, 180, 0.15)',
             textAlign: 'center',
             pointerEvents: 'none',
             animation: 'slideDown 0.25s ease-out'
           }}
         >
-          <div style={{ fontSize: '13px', color: 'var(--accent-orange)' }}>
+          <div style={{ fontSize: '13px', color: 'var(--primary-blue)' }}>
             {toastAlert.title}
           </div>
           <div style={{ fontSize: '10px', color: 'var(--text-secondary)', marginTop: '2px', textTransform: 'uppercase' }}>
@@ -273,13 +273,13 @@ function App() {
         >
           <div 
             style={{
-              background: '#101820',
-              border: '2px solid var(--accent-orange)',
+              background: 'var(--surface)',
+              border: '2px solid var(--primary-blue)',
               borderRadius: '8px',
               padding: '28px',
               width: '640px',
               maxWidth: '90%',
-              boxShadow: '0 0 30px rgba(242, 140, 40, 0.25)',
+              boxShadow: '0 10px 40px rgba(29, 73, 180, 0.15)',
               color: 'var(--text-primary)'
             }}
             onClick={(e) => e.stopPropagation()}
@@ -287,7 +287,7 @@ function App() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '12px', marginBottom: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span style={{ fontSize: '20px' }}>⌨</span>
-                <h3 style={{ fontSize: '18px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.8px', color: 'var(--accent-orange)' }}>Keyboard Shortcuts</h3>
+                <h3 style={{ fontSize: '18px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.8px', color: 'var(--primary-blue)' }}>Keyboard Shortcuts</h3>
               </div>
               <button 
                 onClick={() => setShowKeyboardHelp(false)}
@@ -299,7 +299,7 @@ function App() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', maxHeight: '420px', overflowY: 'auto' }}>
               <div>
-                <h4 style={{ fontSize: '11px', color: 'var(--accent-amber)', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid var(--border)', paddingBottom: '4px', marginBottom: '8px' }}>Navigation Controls</h4>
+                <h4 style={{ fontSize: '11px', color: 'var(--secondary-blue)', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid var(--border)', paddingBottom: '4px', marginBottom: '8px' }}>Navigation Controls</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '11px', fontFamily: 'var(--mono-font)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span>1 - 7</span>
@@ -335,7 +335,7 @@ function App() {
                   </div>
                 </div>
 
-                <h4 style={{ fontSize: '11px', color: 'var(--accent-amber)', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid var(--border)', paddingBottom: '4px', marginTop: '16px', marginBottom: '8px' }}>Global Settings</h4>
+                <h4 style={{ fontSize: '11px', color: 'var(--secondary-blue)', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid var(--border)', paddingBottom: '4px', marginTop: '16px', marginBottom: '8px' }}>Global Settings</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '11px', fontFamily: 'var(--mono-font)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span>H</span>
@@ -349,7 +349,7 @@ function App() {
               </div>
 
               <div>
-                <h4 style={{ fontSize: '11px', color: 'var(--accent-amber)', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid var(--border)', paddingBottom: '4px', marginBottom: '8px' }}>3D Camera Controls</h4>
+                <h4 style={{ fontSize: '11px', color: 'var(--secondary-blue)', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid var(--border)', paddingBottom: '4px', marginBottom: '8px' }}>3D Camera Controls</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '11px', fontFamily: 'var(--mono-font)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span>W / S / A / D</span>
@@ -381,7 +381,7 @@ function App() {
                   </div>
                 </div>
 
-                <h4 style={{ fontSize: '11px', color: 'var(--accent-amber)', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid var(--border)', paddingBottom: '4px', marginTop: '16px', marginBottom: '8px' }}>Sub-Panel Interaction</h4>
+                <h4 style={{ fontSize: '11px', color: 'var(--secondary-blue)', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid var(--border)', paddingBottom: '4px', marginTop: '16px', marginBottom: '8px' }}>Sub-Panel Interaction</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '11px', fontFamily: 'var(--mono-font)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span>TAB / SHIFT+TAB</span>
@@ -406,7 +406,7 @@ function App() {
             <div style={{ marginTop: '20px', textAlign: 'right' }}>
               <button 
                 onClick={() => setShowKeyboardHelp(false)}
-                className="glow-btn"
+                className="btn-primary"
                 style={{ fontSize: '11px', padding: '8px 16px' }}
               >
                 GOT IT

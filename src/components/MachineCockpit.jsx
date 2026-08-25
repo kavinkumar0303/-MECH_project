@@ -725,7 +725,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 70px)', background: '#0B0F19' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 70px)', background: 'var(--bg-primary)' }}>
       
       {/* 1. Category Switcher (1-7 machines) */}
       <div 
@@ -734,7 +734,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
           gap: '8px', 
           padding: '12px 24px', 
           borderBottom: '1px solid var(--border-light)',
-          background: '#0F1624'
+          background: 'var(--surface)'
         }}
       >
         {Object.values(MACHINES).map((m) => (
@@ -770,13 +770,13 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
             display: 'flex', 
             flexDirection: 'column', 
             gap: '16px',
-            background: 'rgba(15, 22, 36, 0.5)',
+            background: 'var(--surface)',
             overflowY: 'auto'
           }}
         >
           <div>
-            <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#FFF' }}>{machine.name}</h3>
-            <span style={{ fontSize: '11px', fontStyle: 'italic', color: 'var(--color-text-secondary)' }}>"{machine.tagline}"</span>
+            <h3 style={{ fontSize: '18px', fontWeight: '800', color: 'var(--text-primary)' }}>{machine.name}</h3>
+            <span style={{ fontSize: '12px', fontStyle: 'italic', color: 'var(--text-secondary)', lineHeight: '1.4' }}>"{machine.tagline}"</span>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
@@ -803,8 +803,8 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                     padding: '8px 12px',
                     borderRadius: '6px',
                     border: 'none',
-                    background: activeSubTab === tab.id ? 'rgba(255,255,255,0.03)' : 'transparent',
-                    color: activeSubTab === tab.id ? machine.color : 'var(--color-text-secondary)',
+                    background: activeSubTab === tab.id ? 'rgba(29, 73, 180, 0.08)' : 'transparent',
+                    color: activeSubTab === tab.id ? machine.color : 'var(--text-secondary)',
                     cursor: 'pointer',
                     textAlign: 'left',
                     fontWeight: activeSubTab === tab.id ? '700' : '500',
@@ -1194,14 +1194,14 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
             display: 'flex', 
             flexDirection: 'column', 
             gap: '20px',
-            background: 'rgba(15, 22, 36, 0.5)',
+            background: 'var(--surface)',
             overflowY: 'auto'
           }}
         >
           {isWorkpieceSelected(selectedPartId, selectedId) ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', color: '#FFF' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', color: 'var(--text-primary)' }}>
               <span className="telemetry-label">WORKPIECE / OPERATIONS</span>
-              <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border)', padding: '12px', borderRadius: '4px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ background: 'var(--bg-primary)', border: '1px solid var(--border)', padding: '12px', borderRadius: '4px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
                   <span>Material:</span>
                   <strong style={{ color: machine.color }}>Steel</strong>
@@ -1212,7 +1212,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
                   <span>Operations Available:</span>
-                  <strong style={{ color: 'var(--accent-orange)' }}>{machine.operations.length}</strong>
+                  <strong style={{ color: 'var(--primary-blue)' }}>{machine.operations.length}</strong>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
                   <span>Last Operation:</span>
@@ -1269,15 +1269,15 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                       onBlur={() => { if (focusedPartId === p.id) setFocusedPartId(null); }}
                       style={{
                         padding: '8px 12px',
-                        background: isSelected ? 'rgba(242, 140, 40, 0.1)' : 'rgba(255,255,255,0.02)',
-                        border: isFocused ? '2px solid var(--accent-orange)' : '1px solid ' + (isSelected ? 'var(--accent-orange)' : 'var(--border)'),
+                        background: isSelected ? 'rgba(29, 73, 180, 0.08)' : 'rgba(194, 202, 217, 0.08)',
+                        border: isFocused ? '2px solid var(--primary-blue)' : '1px solid ' + (isSelected ? 'var(--primary-blue)' : 'var(--border)'),
                         borderRadius: '4px',
-                        color: isSelected ? 'var(--accent-orange)' : 'var(--text-primary)',
+                        color: isSelected ? 'var(--primary-blue)' : 'var(--text-primary)',
                         textAlign: 'left',
                         fontSize: '11px',
                         fontWeight: isSelected ? '700' : '500',
                         cursor: 'pointer',
-                        boxShadow: isFocused ? '0 0 8px var(--accent-orange)' : 'none',
+                        boxShadow: isFocused ? '0 0 8px var(--primary-blue)' : 'none',
                         outline: 'none',
                         display: 'flex',
                         justifyContent: 'space-between',
@@ -1406,7 +1406,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                 )}
                 <button 
                   onClick={checkSafety}
-                  className="glow-btn"
+                  className="btn-primary"
                   style={{ width: '100%', justifyContent: 'center' }}
                 >
                   VERIFY COMPLIANCE
@@ -1528,9 +1528,9 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                       </div>
                     </div>
                   ) : (
-                    <button onClick={handleStartSim} className="glow-btn" style={{ background: 'var(--color-green)', color: '#000', borderColor: 'var(--color-green)' }}>
-                      START 3D OPERATION
-                    </button>
+                     <button onClick={handleStartSim} className="btn-primary" style={{ background: 'var(--success)', border: '1px solid var(--success)', color: '#FFFFFF' }}>
+                       START 3D OPERATION
+                     </button>
                   )}
                 </div>
               )}
@@ -1603,7 +1603,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                     {troubleFeedback}
                   </div>
                 )}
-                <button onClick={handleCheckTroubleshoot} disabled={!selectedOptionId} className="glow-btn" style={{ width: '100%', justifyContent: 'center' }}>SUBMIT DIAGNOSIS</button>
+                 <button onClick={handleCheckTroubleshoot} disabled={!selectedOptionId} className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>SUBMIT DIAGNOSIS</button>
               </div>
             </div>
           )}
@@ -1617,13 +1617,13 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                   Use digital calipers to measure target dimension tolerances of finished part.
                 </p>
 
-                <button 
-                  onClick={handleInspectCaliper}
-                  className="glow-btn"
-                  style={{ marginTop: '12px' }}
-                >
-                  Measure Workpiece
-                </button>
+                 <button 
+                   onClick={handleInspectCaliper}
+                   className="btn-primary"
+                   style={{ marginTop: '12px' }}
+                 >
+                   Measure Workpiece
+                 </button>
               </div>
 
               {inspectFeedback && (

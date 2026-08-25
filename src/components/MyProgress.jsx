@@ -42,7 +42,7 @@ export default function MyProgress({ user }) {
           <span className="telemetry-label">Rank XP Status</span>
           <div style={{ position: 'relative', width: '120px', height: '120px' }}>
             <svg width="120" height="120" viewBox="0 0 120 120">
-              <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.01)" strokeWidth="8" />
+              <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(194, 202, 217, 0.2)" strokeWidth="8" />
               <circle cx="60" cy="60" r="50" fill="none" stroke="var(--accent-orange)" strokeWidth="8" strokeDasharray="314.16" strokeDashoffset="80" strokeLinecap="round" transform="rotate(-90 60 60)" />
             </svg>
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
@@ -60,7 +60,7 @@ export default function MyProgress({ user }) {
           <span className="telemetry-label">Safety Compliance</span>
           <div style={{ position: 'relative', width: '120px', height: '120px' }}>
             <svg width="120" height="120" viewBox="0 0 120 120">
-              <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.01)" strokeWidth="8" />
+              <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(194, 202, 217, 0.2)" strokeWidth="8" />
               <circle cx="60" cy="60" r="50" fill="none" stroke="var(--accent-orange)" strokeWidth="8" strokeDasharray="314.16" strokeDashoffset={314.16 * (1 - (user?.safetyScore || 100) / 100)} strokeLinecap="round" transform="rotate(-90 60 60)" />
             </svg>
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
@@ -78,7 +78,7 @@ export default function MyProgress({ user }) {
           <span className="telemetry-label">Machining Accuracy</span>
           <div style={{ position: 'relative', width: '120px', height: '120px' }}>
             <svg width="120" height="120" viewBox="0 0 120 120">
-              <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.01)" strokeWidth="8" />
+              <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(194, 202, 217, 0.2)" strokeWidth="8" />
               <circle cx="60" cy="60" r="50" fill="none" stroke="var(--success)" strokeWidth="8" strokeDasharray="314.16" strokeDashoffset={314.16 * (1 - (user?.accuracy || 90) / 100)} strokeLinecap="round" transform="rotate(-90 60 60)" />
             </svg>
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
@@ -134,7 +134,7 @@ export default function MyProgress({ user }) {
                     padding: '12px',
                     borderRadius: '4px',
                     border: '1px solid ' + (isUnlocked ? badge.color + '30' : 'var(--border)'),
-                    background: isUnlocked ? 'rgba(255,255,255,0.01)' : 'rgba(0,0,0,0.15)',
+                    background: isUnlocked ? 'var(--surface)' : 'rgba(194, 202, 217, 0.08)',
                     opacity: isUnlocked ? 1 : 0.4
                   }}
                 >

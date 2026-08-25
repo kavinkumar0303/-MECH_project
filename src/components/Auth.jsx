@@ -129,7 +129,7 @@ export default function Auth({ onLoginSuccess }) {
           width: '500px',
           height: '500px',
           opacity: 0.08,
-          color: 'var(--accent-amber)',
+          color: 'var(--cool-grey-blue)',
           top: '-100px',
           right: '-100px',
           pointerEvents: 'none'
@@ -166,7 +166,7 @@ export default function Auth({ onLoginSuccess }) {
         {/* Title */}
         <div style={{ textAlign: 'center', marginBottom: '24px' }}>
           <div style={{ display: 'inline-flex', padding: '12px', borderRadius: '50%', background: 'var(--surface)', border: '1px solid var(--border)', marginBottom: '16px' }}>
-            <Settings size={32} className="animate-spin-slow" style={{ color: 'var(--accent-orange)' }} />
+            <Settings size={32} className="animate-spin-slow" style={{ color: 'var(--primary-blue)' }} />
           </div>
           <h2 style={{ fontSize: '20px', fontWeight: '800', letterSpacing: '0.8px', textTransform: 'uppercase', color: 'var(--text-primary)' }}>
             VIRTUAL MECHANICAL WORKSHOP
@@ -192,16 +192,16 @@ export default function Auth({ onLoginSuccess }) {
             }}
           >
             <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
-              <strong style={{ color: 'var(--accent-orange)' }}>Demo Account</strong><br/>
+              <strong style={{ color: 'var(--primary-blue)' }}>Demo Account</strong><br/>
               ID: <span style={{ fontFamily: 'var(--mono-font)', color: 'var(--text-primary)' }}>student01</span> | Pass: <span style={{ fontFamily: 'var(--mono-font)', color: 'var(--text-primary)' }}>demo123</span>
             </div>
             <button 
               type="button"
               onClick={handleDemoFill}
               style={{
-                background: 'rgba(242, 140, 40, 0.08)',
-                border: '1px solid var(--accent-orange)',
-                color: 'var(--accent-orange)',
+                background: 'rgba(29, 73, 180, 0.08)',
+                border: '1px solid var(--primary-blue)',
+                color: 'var(--primary-blue)',
                 padding: '6px 12px',
                 borderRadius: '4px',
                 fontSize: '11px',
@@ -210,12 +210,12 @@ export default function Auth({ onLoginSuccess }) {
                 transition: 'all 0.2s'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'var(--accent-orange)';
-                e.currentTarget.style.color = '#151719';
+                e.currentTarget.style.background = 'var(--primary-blue)';
+                e.currentTarget.style.color = '#FFFFFF';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(242, 140, 40, 0.08)';
-                e.currentTarget.style.color = 'var(--accent-orange)';
+                e.currentTarget.style.background = 'rgba(29, 73, 180, 0.08)';
+                e.currentTarget.style.color = 'var(--primary-blue)';
               }}
             >
               Fill Demo
@@ -279,10 +279,10 @@ export default function Auth({ onLoginSuccess }) {
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', marginTop: '4px' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: 'var(--text-secondary)' }}>
-                  <input type="checkbox" defaultChecked style={{ accentColor: 'var(--accent-orange)' }} />
+                  <input type="checkbox" defaultChecked style={{ accentColor: 'var(--primary-blue)' }} />
                   Remember Me
                 </label>
-                <a href="#forgot" onClick={(e) => { e.preventDefault(); setError('⚠️ Contact department administrator to reset credentials.'); }} style={{ color: 'var(--accent-orange)', textDecoration: 'none' }}>
+                <a href="#forgot" onClick={(e) => { e.preventDefault(); setError('⚠️ Contact department administrator to reset credentials.'); }} style={{ color: 'var(--primary-blue)', textDecoration: 'none' }}>
                   Forgot Password?
                 </a>
               </div>
@@ -419,21 +419,15 @@ export default function Auth({ onLoginSuccess }) {
           {/* safety orange button with dark text for contrast */}
           <button 
             type="submit"
-            className="glow-btn-orange"
+            className="btn-primary"
             style={{
               width: '100%',
               padding: '12px',
-              borderRadius: '4px',
-              border: 'none',
-              fontWeight: '800',
-              textTransform: 'uppercase',
-              letterSpacing: '0.8px',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              marginTop: '10px',
-              transition: 'all 0.2s'
+              marginTop: '10px'
             }}
           >
             {isLogin ? 'Login to Workshop' : 'Create Account'}
@@ -446,7 +440,7 @@ export default function Auth({ onLoginSuccess }) {
             <a 
               href="#toggle" 
               onClick={(e) => { e.preventDefault(); setIsLogin(!isLogin); setError(''); setSuccess(''); }}
-              style={{ color: 'var(--accent-orange)', textDecoration: 'none', fontWeight: 'bold' }}
+              style={{ color: 'var(--primary-blue)', textDecoration: 'none', fontWeight: 'bold' }}
             >
               {isLogin ? 'Create Account' : 'Sign In'}
             </a>

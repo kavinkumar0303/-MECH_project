@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Trophy, ShieldAlert, Award, Bell } from 'lucide-react';
+import { Search, Trophy, ShieldAlert, Award, Bell, Settings } from 'lucide-react';
 import { MACHINES } from '../data/machines';
 
 export default function Navbar({ 
@@ -15,6 +15,22 @@ export default function Navbar({
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [showResults, setShowResults] = useState(false);
+  const [showSettingsMenu, setShowSettingsMenu] = useState(false);
+
+  const handleBlur = (e) => {
+    const currentTarget = e.currentTarget;
+    setTimeout(() => {
+      if (!currentTarget.contains(document.activeElement)) {
+        setShowSettingsMenu(false);
+      }
+    }, 50);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Escape') {
+      setShowSettingsMenu(false);
+    }
+  };
 
   const handleSearch = (e) => {
     const query = e.target.value;
@@ -121,7 +137,7 @@ export default function Navbar({
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--surface)'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
-                <div style={{ fontSize: '10px', fontWeight: '700', color: 'var(--accent-orange)', textTransform: 'uppercase', marginBottom: '2px' }}>
+                <div style={{ fontSize: '10px', fontWeight: '700', color: 'var(--primary-blue)', textTransform: 'uppercase', marginBottom: '2px' }}>
                   {res.type}
                 </div>
                 <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>{res.label}</div>
@@ -137,97 +153,122 @@ export default function Navbar({
       {/* Telemetry Metrics Strip (Cyan details removed) */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Trophy size={16} style={{ color: 'var(--steel-light)' }} />
+          <Trophy size={16} style={{ color: 'var(--secondary-blue)' }} />
           <div>
             <div className="telemetry-label">Workshop XP</div>
-            <div style={{ fontSize: '13px', fontWeight: '800', color: 'var(--text-primary)', fontFamily: 'var(--mono-font)' }}>
+            <div style={{ fontSize: '13px', fontWeight: '800', color: 'var(--primary-blue)', fontFamily: 'var(--mono-font)' }}>
               {user?.xp?.toLocaleString() || '0'} XP
             </div>
           </div>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <ShieldAlert size={16} style={{ color: 'var(--accent-orange)' }} />
+          <ShieldAlert size={16} style={{ color: 'var(--secondary-blue)' }} />
           <div>
             <div className="telemetry-label">Safety Rating</div>
-            <div style={{ fontSize: '13px', fontWeight: '800', color: user?.safetyScore >= 85 ? 'var(--success)' : 'var(--accent-orange)', fontFamily: 'var(--mono-font)' }}>
+            <div style={{ fontSize: '13px', fontWeight: '800', color: user?.safetyScore >= 85 ? 'var(--success)' : 'var(--primary-blue)', fontFamily: 'var(--mono-font)' }}>
               {user?.safetyScore || '100'}%
             </div>
           </div>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Award size={16} style={{ color: 'var(--steel-light)' }} />
+          <Award size={16} style={{ color: 'var(--secondary-blue)' }} />
           <div>
             <div className="telemetry-label">Accuracy</div>
-            <div style={{ fontSize: '13px', fontWeight: '800', color: 'var(--text-primary)', fontFamily: 'var(--mono-font)' }}>
+            <div style={{ fontSize: '13px', fontWeight: '800', color: 'var(--primary-blue)', fontFamily: 'var(--mono-font)' }}>
               {user?.accuracy || '90'}%
             </div>
           </div>
         </div>
 
-        {/* Dynamic Modes Quick Action Bar */}
-        <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginLeft: '12px' }}>
+        {/* Compact Settings & Accessibility Dropdown */}
+        <div 
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+          style={{ position: 'relative', display: 'flex', alignItems: 'center', marginLeft: '12px' }}
+        >
           <button
-            onClick={() => setShowLabels(!showLabels)}
+            onClick={() => setShowSettingsMenu(!showSettingsMenu)}
+            aria-label="Settings and Accessibility Menu"
+            aria-haspopup="true"
+            aria-expanded={showSettingsMenu}
             style={{
-              background: showLabels ? 'rgba(242, 140, 40, 0.12)' : 'transparent',
-              border: '1px solid ' + (showLabels ? 'var(--accent-orange)' : 'var(--border)'),
-              color: showLabels ? 'var(--accent-orange)' : 'var(--text-secondary)',
+              background: showSettingsMenu ? 'rgba(29, 73, 180, 0.08)' : 'transparent',
+              border: '1px solid ' + (showSettingsMenu ? 'var(--primary-blue)' : 'var(--border)'),
+              color: showSettingsMenu ? 'var(--primary-blue)' : 'var(--text-secondary)',
               borderRadius: '4px',
               padding: '6px 10px',
-              fontSize: '10px',
-              fontWeight: '700',
-              cursor: 'pointer',
-              transition: 'all 0.2s'
-            }}
-          >
-            LABELS: {showLabels ? 'ON' : 'OFF'}
-          </button>
-
-          <button
-            onClick={() => setHighContrast(!highContrast)}
-            style={{
-              background: highContrast ? 'rgba(242, 140, 40, 0.12)' : 'transparent',
-              border: '1px solid ' + (highContrast ? 'var(--accent-orange)' : 'var(--border)'),
-              color: highContrast ? 'var(--accent-orange)' : 'var(--text-secondary)',
-              borderRadius: '4px',
-              padding: '6px 10px',
-              fontSize: '10px',
-              fontWeight: '700',
-              cursor: 'pointer',
-              transition: 'all 0.2s'
-            }}
-          >
-            HIGH CONTRAST: {highContrast ? 'ON' : 'OFF'}
-          </button>
-
-          <button
-            onClick={() => setShowKeyboardHelp(true)}
-            style={{
-              background: 'var(--accent-orange)',
-              border: '1px solid var(--accent-orange)',
-              color: '#101820',
-              borderRadius: '4px',
-              padding: '6px 12px',
-              fontSize: '10px',
-              fontWeight: '800',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '4px',
-              transition: 'all 0.2s'
+              justifyContent: 'center',
+              transition: 'all 0.2s',
+              outline: 'none'
             }}
+            onFocus={(e) => e.currentTarget.style.outline = '2px solid var(--primary-blue)'}
+            onBlur={(e) => e.currentTarget.style.outline = 'none'}
           >
-            <span>⌨</span> KEYBOARD CONTROLS
+            <Settings size={16} />
           </button>
+
+          {showSettingsMenu && (
+            <div 
+              style={{
+                position: 'absolute',
+                top: 'calc(100% + 8px)',
+                right: 0,
+                background: 'var(--surface)',
+                border: '1px solid var(--border)',
+                borderRadius: '6px',
+                padding: '12px',
+                boxShadow: '0 4px 20px rgba(59, 75, 111, 0.12)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+                width: '180px',
+                zIndex: 10005
+              }}
+            >
+              <div style={{ fontSize: '10px', fontWeight: '800', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                Accessibility
+              </div>
+              
+              <button
+                onClick={() => setShowLabels(!showLabels)}
+                className={showLabels ? "btn-primary" : "btn-outline"}
+                style={{ fontSize: '11px', padding: '6px 10px', width: '100%', textTransform: 'uppercase' }}
+              >
+                Labels: {showLabels ? 'ON' : 'OFF'}
+              </button>
+
+              <button
+                onClick={() => setHighContrast(!highContrast)}
+                className={highContrast ? "btn-primary" : "btn-outline"}
+                style={{ fontSize: '11px', padding: '6px 10px', width: '100%', textTransform: 'uppercase' }}
+              >
+                Contrast: {highContrast ? 'ON' : 'OFF'}
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowKeyboardHelp(true);
+                  setShowSettingsMenu(false);
+                }}
+                className="btn-outline"
+                style={{ fontSize: '11px', padding: '6px 10px', width: '100%', textTransform: 'uppercase' }}
+              >
+                Keyboard Help
+              </button>
+            </div>
+          )}
         </div>
 
         <div style={{ width: '1px', height: '24px', background: 'var(--border)' }}></div>
 
         <div style={{ position: 'relative', cursor: 'pointer' }}>
           <Bell size={18} style={{ color: 'var(--text-secondary)' }} />
-          <div style={{ position: 'absolute', top: '-4px', right: '-4px', width: '6px', height: '6px', background: 'var(--accent-orange)', borderRadius: '3px' }}></div>
+          <div style={{ position: 'absolute', top: '-4px', right: '-4px', width: '6px', height: '6px', background: 'var(--primary-blue)', borderRadius: '3px' }}></div>
         </div>
       </div>
     </div>

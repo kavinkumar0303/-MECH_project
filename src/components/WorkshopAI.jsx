@@ -101,13 +101,13 @@ export default function WorkshopAI() {
             style={{
               padding: '16px',
               borderBottom: '1px solid var(--border)',
-              background: 'rgba(242, 140, 40, 0.05)',
+              background: 'rgba(29, 73, 180, 0.05)',
               display: 'flex',
               alignItems: 'center',
               gap: '10px'
             }}
           >
-            <Cpu size={20} style={{ color: 'var(--accent-orange)' }} />
+            <Cpu size={20} style={{ color: 'var(--primary-blue)' }} />
             <div>
               <h4 style={{ fontSize: '13px', fontWeight: '800', color: 'var(--text-primary)', textTransform: 'uppercase' }}>WORKSHOP CO-PILOT</h4>
               <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -125,13 +125,13 @@ export default function WorkshopAI() {
                 style={{
                   alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
                   maxWidth: '85%',
-                  background: msg.sender === 'user' ? 'rgba(242, 140, 40, 0.08)' : 'var(--surface)',
-                  border: msg.sender === 'user' ? '1px solid var(--accent-orange)' : '1px solid var(--border)',
+                  background: msg.sender === 'user' ? 'rgba(29, 73, 180, 0.08)' : 'var(--surface)',
+                  border: msg.sender === 'user' ? '1px solid var(--primary-blue)' : '1px solid var(--border)',
                   borderRadius: msg.sender === 'user' ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
                   padding: '10px 14px',
                   fontSize: '13px',
                   lineHeight: '1.4',
-                  color: msg.sender === 'user' ? '#FFF' : 'var(--text-primary)'
+                  color: 'var(--text-primary)'
                 }}
               >
                 {msg.text}
@@ -147,12 +147,12 @@ export default function WorkshopAI() {
                 SUGGESTED ENQUIRIES
               </span>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                {quickPrompts.map((p, idx) => (
+                 {quickPrompts.map((p, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleSend(p.query)}
                     style={{
-                      background: 'rgba(255,255,255,0.02)',
+                      background: 'rgba(194, 202, 217, 0.1)',
                       border: '1px solid var(--border)',
                       borderRadius: '4px',
                       padding: '4px 8px',
@@ -162,8 +162,8 @@ export default function WorkshopAI() {
                       transition: 'all 0.2s'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--accent-orange)';
-                      e.currentTarget.style.color = 'var(--accent-orange)';
+                      e.currentTarget.style.borderColor = 'var(--primary-blue)';
+                      e.currentTarget.style.color = 'var(--primary-blue)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.borderColor = 'var(--border)';
@@ -178,7 +178,7 @@ export default function WorkshopAI() {
           )}
 
           {/* Chat Input */}
-          <div style={{ padding: '12px', borderTop: '1px solid var(--border)', background: 'rgba(0,0,0,0.15)' }}>
+          <div style={{ padding: '12px', borderTop: '1px solid var(--border)', background: 'rgba(194, 202, 217, 0.15)' }}>
             <div style={{ display: 'flex', gap: '8px' }}>
               <input 
                 type="text" 

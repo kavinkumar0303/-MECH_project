@@ -13,7 +13,7 @@ export default function MachineComparison() {
           m1: {
             id: "casting",
             name: "Sand Casting",
-            color: "#FFD600",
+            color: "#C2CAD9",
             purpose: "Metal shaping by gravity pouring",
             movement: "Liquid metal flows freely under gravity into sand cavity",
             tool: "Manual pouring ladle, green sand flasks",
@@ -24,7 +24,7 @@ export default function MachineComparison() {
           m2: {
             id: "moulding",
             name: "Injection Moulding",
-            color: "#795548",
+            color: "#3B4B6F",
             purpose: "High-volume polymer shape molding",
             movement: "Thermoplastic pellets are screw-fed, melted, and injected mechanically",
             tool: "Reciprocating cylinder screw inside heated barrel",
@@ -39,7 +39,7 @@ export default function MachineComparison() {
           m1: {
             id: "shaper",
             name: "Shaper Machine",
-            color: "#4CAF50",
+            color: "#4D72C1",
             purpose: "Machining flat planes on small workpieces",
             movement: "Workpiece feeds crosswise slowly, tool reciprocates",
             tool: "Single-point HSS tool clamped in reciprocating ram",
@@ -50,7 +50,7 @@ export default function MachineComparison() {
           m2: {
             id: "planer",
             name: "Planer Machine",
-            color: "#E91E63",
+            color: "#3B4B6F",
             purpose: "Machining flat paths on massive/long workpieces",
             movement: "Workpiece reciprocates on massive bed table, tool feeds crosswise",
             tool: "Heavy tool heads locked stationary on horizontal cross rail",
@@ -66,7 +66,7 @@ export default function MachineComparison() {
           m1: {
             id: "lathe",
             name: "Lathe Machine (Turning)",
-            color: "#00E5FF",
+            color: "#1D49B4",
             purpose: "Generating cylindrical/conical shapes",
             movement: "Workpiece rotates rapidly, cutting tool feeds linearly",
             tool: "Single-point HSS/Carbide tip held in tool post",
@@ -77,8 +77,8 @@ export default function MachineComparison() {
           m2: {
             id: "milling",
             name: "Milling Machine",
-            color: "#E040FB",
-            purpose: "Generating flat planes, keyways, pockets, gears",
+            color: "#9EB4E4",
+            purpose: "Generating flat surfaces, keyways, pockets, gears",
             movement: "Workpiece feeds linearly in X-Y-Z, cutting tool rotates",
             tool: "Multi-point rotating End Mill or Face Mill cutter",
             output: "Flat plates, slots, pockets, complex engine casings",
@@ -115,7 +115,7 @@ export default function MachineComparison() {
               key={pair.id}
               onClick={() => setComparisonPair(pair.id)}
               style={{
-                background: comparisonPair === pair.id ? 'rgba(242, 140, 40, 0.08)' : 'transparent',
+                background: comparisonPair === pair.id ? 'rgba(29, 73, 180, 0.08)' : 'transparent',
                 color: comparisonPair === pair.id ? 'var(--accent-orange)' : 'var(--text-secondary)',
                 border: 'none',
                 borderRadius: '4px',
@@ -136,14 +136,14 @@ export default function MachineComparison() {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }}>
         
         {/* Machine Alpha */}
-        <div className="glass-panel" style={{ borderTop: `4px solid ${data.m1.color}`, background: 'rgba(20, 26, 38, 0.8)', padding: '20px' }}>
+        <div className="glass-panel" style={{ borderTop: `4px solid ${data.m1.color}`, background: 'var(--surface)', padding: '20px' }}>
           <span style={{ fontSize: '9px', color: data.m1.color, fontWeight: '700', fontFamily: 'var(--mono-font)' }}>
             COMPARATIVE BAY A
           </span>
-          <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#FFF', margin: '4px 0 16px' }}>{data.m1.name}</h3>
+          <h3 style={{ fontSize: '18px', fontWeight: '800', color: 'var(--text-primary)', margin: '4px 0 16px' }}>{data.m1.name}</h3>
           
           {/* 3D Viewport container */}
-          <div style={{ height: '220px', background: 'rgba(0,0,0,0.3)', borderRadius: '6px', border: '1px solid var(--border-light)', overflow: 'hidden', marginBottom: '20px' }}>
+          <div style={{ height: '220px', background: 'var(--bg-primary)', borderRadius: '6px', border: '1px solid var(--border-light)', overflow: 'hidden', marginBottom: '20px' }}>
             <ThreeVisualizer
               machineId={data.m1.id}
               selectedPartId={activePartId}
@@ -158,11 +158,11 @@ export default function MachineComparison() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '13px' }}>
             <div>
               <div className="telemetry-label">Primary kinematics</div>
-              <div style={{ color: '#FFF', fontWeight: '600', marginTop: '2px' }}>{data.m1.movement}</div>
+              <div style={{ color: 'var(--text-secondary)', fontWeight: '600', marginTop: '2px' }}>{data.m1.movement}</div>
             </div>
             <div>
               <div className="telemetry-label">Standard tooling setup</div>
-              <div style={{ color: '#FFF', fontWeight: '600', marginTop: '2px' }}>{data.m1.tool}</div>
+              <div style={{ color: 'var(--text-secondary)', fontWeight: '600', marginTop: '2px' }}>{data.m1.tool}</div>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', borderTop: '1px solid var(--border)', paddingTop: '12px' }}>
               <div>
@@ -178,14 +178,14 @@ export default function MachineComparison() {
         </div>
 
         {/* Machine Beta */}
-        <div className="glass-panel" style={{ borderTop: `4px solid ${data.m2.color}`, background: 'rgba(20, 26, 38, 0.8)', padding: '20px' }}>
+        <div className="glass-panel" style={{ borderTop: `4px solid ${data.m2.color}`, background: 'var(--surface)', padding: '20px' }}>
           <span style={{ fontSize: '9px', color: data.m2.color, fontWeight: '700', fontFamily: 'var(--mono-font)' }}>
             COMPARATIVE BAY B
           </span>
-          <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#FFF', margin: '4px 0 16px' }}>{data.m2.name}</h3>
+          <h3 style={{ fontSize: '18px', fontWeight: '800', color: 'var(--text-primary)', margin: '4px 0 16px' }}>{data.m2.name}</h3>
           
           {/* 3D Viewport container */}
-          <div style={{ height: '220px', background: 'rgba(0,0,0,0.3)', borderRadius: '6px', border: '1px solid var(--border-light)', overflow: 'hidden', marginBottom: '20px' }}>
+          <div style={{ height: '220px', background: 'var(--bg-primary)', borderRadius: '6px', border: '1px solid var(--border-light)', overflow: 'hidden', marginBottom: '20px' }}>
             <ThreeVisualizer
               machineId={data.m2.id}
               selectedPartId={activePartId}
@@ -200,11 +200,11 @@ export default function MachineComparison() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '13px' }}>
             <div>
               <div className="telemetry-label">Primary kinematics</div>
-              <div style={{ color: '#FFF', fontWeight: '600', marginTop: '2px' }}>{data.m2.movement}</div>
+              <div style={{ color: 'var(--text-secondary)', fontWeight: '600', marginTop: '2px' }}>{data.m2.movement}</div>
             </div>
             <div>
               <div className="telemetry-label">Standard tooling setup</div>
-              <div style={{ color: '#FFF', fontWeight: '600', marginTop: '2px' }}>{data.m2.tool}</div>
+              <div style={{ color: 'var(--text-secondary)', fontWeight: '600', marginTop: '2px' }}>{data.m2.tool}</div>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', borderTop: '1px solid var(--border)', paddingTop: '12px' }}>
               <div>

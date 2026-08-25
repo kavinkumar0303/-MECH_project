@@ -66,13 +66,13 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
               width: '80px',
               height: '80px',
               borderRadius: '40px',
-              background: 'linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-amber) 100%)',
+              background: 'linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: '32px',
               fontWeight: '800',
-              color: '#151719'
+              color: '#FFFFFF'
             }}
           >
             {user?.name?.charAt(0).toUpperCase() || 'S'}
@@ -80,7 +80,7 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
 
           <div>
             <h3 style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-primary)' }}>{user?.name}</h3>
-            <span style={{ fontSize: '11px', fontFamily: 'var(--mono-font)', color: 'var(--accent-orange)' }}>
+            <span style={{ fontSize: '11px', fontFamily: 'var(--mono-font)', color: 'var(--primary-blue)' }}>
               ID: {user?.studentId}
             </span>
           </div>
@@ -92,34 +92,9 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
               <span style={{ color: 'var(--text-secondary)' }}>Total XP</span>
-              <strong style={{ color: 'var(--accent-orange)', fontFamily: 'var(--mono-font)' }}>{user?.xp} XP</strong>
+              <strong style={{ color: 'var(--primary-blue)', fontFamily: 'var(--mono-font)' }}>{user?.xp} XP</strong>
             </div>
           </div>
-
-          <button 
-            onClick={onLogout}
-            style={{
-              background: 'rgba(198, 40, 40, 0.05)',
-              border: '1px solid var(--danger)',
-              color: 'var(--danger)',
-              width: '100%',
-              padding: '8px',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: '600',
-              fontSize: '12px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
-              marginTop: '8px',
-              transition: 'all 0.2s'
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(198, 40, 40, 0.1)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(198, 40, 40, 0.05)'; }}
-          >
-            <LogOut size={14} /> Sign Out
-          </button>
         </div>
 
         {/* Right Form panel */}
@@ -210,7 +185,7 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
 
             <button 
               type="submit" 
-              className="glow-btn"
+              className="btn-primary"
               style={{ padding: '12px', justifyContent: 'center' }}
             >
               Save Configuration

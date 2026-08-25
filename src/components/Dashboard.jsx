@@ -23,7 +23,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
         className="glass-panel"
         style={{
           background: 'var(--bg-secondary)',
-          borderLeft: '4px solid var(--accent-orange)',
+          borderLeft: '4px solid var(--primary-blue)',
           padding: '32px',
           display: 'flex',
           justifyContent: 'space-between',
@@ -41,19 +41,16 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
           </p>
         </div>
         <button 
-          className="glow-btn-orange"
+          className="btn-primary"
           onClick={() => setActiveTab('workshop_map')}
           style={{ 
             padding: '12px 24px', 
             fontSize: '13px',
-            border: 'none',
             borderRadius: '4px',
-            fontWeight: '800',
             cursor: 'pointer',
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '8px',
-            color: '#151719'
+            gap: '8px'
           }}
         >
           Enter 3D Workshop <Play size={14} fill="currentColor" />
@@ -87,7 +84,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
               {user?.safetyScore || '100'}%
             </span>
           </div>
-          <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
+          <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
             Compliance parameters aligned
           </div>
         </div>
@@ -104,7 +101,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
             </span>
             <span style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>Runs</span>
           </div>
-          <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
+          <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
             Across all mechanical bays
           </div>
         </div>
@@ -120,7 +117,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
               {user?.machinesExplored || '0'} / 7
             </span>
           </div>
-          <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
+          <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
             Workshop units unlocked
           </div>
         </div>
@@ -131,7 +128,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
         
         {/* Machine Bay Quicklinks */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <h3 style={{ fontSize: '15px', fontWeight: '800', letterSpacing: '0.8px', color: 'var(--text-primary)', textTransform: 'uppercase' }}>
+          <h3 style={{ fontSize: '15px', fontWeight: '800', color: 'var(--text-primary)' }}>
             Machining training console
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -140,14 +137,10 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
               return (
                 <div 
                   key={m.id}
-                  className="glass-panel"
+                  className={`glass-panel machine-row ${isExplored ? 'explored' : ''}`}
                   style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '14px 20px',
-                    borderLeft: `3px solid ${isExplored ? 'var(--accent-orange)' : 'var(--border)'}`,
-                    background: 'var(--bg-secondary)'
+                    borderLeft: `3px solid ${isExplored ? 'var(--primary-blue)' : 'var(--border)'}`,
+                    padding: '14px 20px'
                   }}
                 >
                   <div>
@@ -156,39 +149,25 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
                       {m.tagline}
                     </p>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <div>
                     {isExplored ? (
                       <span style={{ fontSize: '10px', color: 'var(--success)', fontFamily: 'var(--mono-font)', background: 'rgba(46, 125, 80, 0.08)', padding: '2px 6px', borderRadius: '3px' }}>
-                        ✓ COMPLIANT
+                        ✓ Compliant
                       </span>
                     ) : (
                       <span style={{ fontSize: '10px', color: 'var(--text-secondary)', fontFamily: 'var(--mono-font)' }}>
-                        CALIBRATING
+                        Calibrating
                       </span>
                     )}
+                  </div>
+                  <div style={{ justifySelf: 'end' }}>
                     <button 
                       onClick={() => handleQuickLink(m.id)}
+                      className="btn-secondary"
                       style={{
-                        background: 'var(--surface)',
-                        border: '1px solid var(--border)',
-                        borderRadius: '3px',
                         padding: '6px 12px',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px',
                         fontSize: '11px',
-                        fontWeight: '700',
-                        color: 'var(--text-primary)',
-                        transition: 'all 0.2s'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--accent-orange)';
-                        e.currentTarget.style.color = 'var(--accent-orange)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--border)';
-                        e.currentTarget.style.color = 'var(--text-primary)';
+                        width: '100px'
                       }}
                     >
                       Enter Bay <ChevronRight size={12} />
@@ -237,13 +216,13 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
               </div>
             )}
 
-            <div style={{ borderTop: '1px solid var(--border)', paddingTop: '16px' }}>
+            <div style={{ borderTop: '1px solid var(--border)', paddingTop: '20px', marginTop: '16px', paddingBottom: '8px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '8px', color: 'var(--text-secondary)' }}>
                 <span>Next Milestone</span>
-                <span style={{ color: 'var(--accent-orange)', fontWeight: 'bold' }}>Troubleshooter</span>
+                <span style={{ color: 'var(--primary-blue)', fontWeight: 'bold' }}>Troubleshooter</span>
               </div>
               <div style={{ width: '100%', height: '4px', background: 'var(--surface)', borderRadius: '2px', overflow: 'hidden' }}>
-                <div style={{ width: '60%', height: '100%', background: 'var(--accent-orange)' }}></div>
+                <div style={{ width: '60%', height: '100%', background: 'var(--primary-blue)' }}></div>
               </div>
             </div>
           </div>

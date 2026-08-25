@@ -111,7 +111,7 @@ export default function DecisionAssistant() {
                     cursor: 'pointer',
                     transition: 'all 0.2s'
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent-orange)'; e.currentTarget.style.background = 'rgba(242, 140, 40, 0.03)'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--primary-blue)'; e.currentTarget.style.background = 'rgba(29, 73, 180, 0.03)'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--surface)'; }}
                 >
                   <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)' }}>{opt.title}</div>
@@ -150,7 +150,7 @@ export default function DecisionAssistant() {
                     cursor: 'pointer',
                     transition: 'all 0.2s'
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent-orange)'; e.currentTarget.style.background = 'rgba(242, 140, 40, 0.03)'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--primary-blue)'; e.currentTarget.style.background = 'rgba(29, 73, 180, 0.03)'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--surface)'; }}
                 >
                   <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)' }}>{opt.title}</div>
@@ -190,7 +190,7 @@ export default function DecisionAssistant() {
                     cursor: 'pointer',
                     transition: 'all 0.2s'
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent-orange)'; e.currentTarget.style.background = 'rgba(242, 140, 40, 0.03)'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--primary-blue)'; e.currentTarget.style.background = 'rgba(29, 73, 180, 0.03)'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--surface)'; }}
                 >
                   <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)' }}>{opt.title}</div>
@@ -226,7 +226,7 @@ export default function DecisionAssistant() {
                 alignItems: 'center', 
                 justifyContent: 'center', 
                 gap: '12px', 
-                background: 'rgba(0,0,0,0.15)', 
+                background: 'rgba(194, 202, 217, 0.15)', 
                 padding: '16px', 
                 borderRadius: '4px',
                 border: '1px solid var(--border)',
@@ -253,11 +253,8 @@ export default function DecisionAssistant() {
             <div style={{ display: 'flex', gap: '16px' }}>
               <button 
                 onClick={handleReset}
-                className="glow-btn"
+                className="btn-secondary"
                 style={{
-                  background: 'var(--surface)',
-                  borderColor: 'var(--border)',
-                  color: 'var(--text-primary)',
                   flex: 1,
                   justifyContent: 'center'
                 }}

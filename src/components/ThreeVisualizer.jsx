@@ -201,19 +201,19 @@ export default function ThreeVisualizer({
     const height = mountRef.current.clientHeight || 360;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#101820'); // Premium Dark Workshop Background
+    scene.background = new THREE.Color('#F5F5F5'); // Clean Mechanical Lab Light Background
     sceneRef.current = scene;
 
     // Solid floor
     const floorGeo = new THREE.PlaneGeometry(50, 50);
-    const floorMat = new THREE.MeshStandardMaterial({ color: '#252B2F', roughness: 0.6, metalness: 0.1 });
+    const floorMat = new THREE.MeshStandardMaterial({ color: '#C2CAD9', roughness: 0.8, metalness: 0.1 });
     const floorMesh = new THREE.Mesh(floorGeo, floorMat);
     floorMesh.rotation.x = -Math.PI / 2;
     floorMesh.position.y = -2;
     scene.add(floorMesh);
 
     // Grid
-    const gridHelper = new THREE.GridHelper(30, 30, '#F28C28', 'rgba(174, 181, 183, 0.08)');
+    const gridHelper = new THREE.GridHelper(30, 30, '#1D49B4', 'rgba(59, 75, 111, 0.15)');
     gridHelper.position.y = -1.99;
     scene.add(gridHelper);
 
@@ -237,30 +237,30 @@ export default function ThreeVisualizer({
     controlsRef.current = controls;
 
     // Lighting
-    const ambientLight = new THREE.AmbientLight('#A4AAAC', highContrast ? 1.0 : 0.45);
+    const ambientLight = new THREE.AmbientLight('#FFFFFF', highContrast ? 1.2 : 0.85);
     scene.add(ambientLight);
 
-    const mainLight = new THREE.DirectionalLight('#F1F0EA', highContrast ? 3.0 : 1.5);
+    const mainLight = new THREE.DirectionalLight('#FFFFFF', highContrast ? 3.0 : 1.8);
     mainLight.position.set(8, 15, 8);
     scene.add(mainLight);
 
-    const rimLight = new THREE.DirectionalLight('#AEB5B7', highContrast ? 2.5 : 1.0);
+    const rimLight = new THREE.DirectionalLight('#9EB4E4', highContrast ? 2.5 : 1.2);
     rimLight.position.set(-8, 5, -8);
     scene.add(rimLight);
 
-    const orangeSpotLight = new THREE.PointLight('#F28C28', highContrast ? 3.5 : 2.0, 15);
+    const orangeSpotLight = new THREE.PointLight('#3D72C1', highContrast ? 3.5 : 1.8, 15);
     orangeSpotLight.position.set(-3, 4, 3);
     scene.add(orangeSpotLight);
 
     // Materials
     const mats = {
-      machineBody: new THREE.MeshStandardMaterial({ color: '#596166', metalness: 0.7, roughness: 0.35 }),
-      secondaryMetal: new THREE.MeshStandardMaterial({ color: '#858D91', metalness: 0.8, roughness: 0.25 }),
-      darkMechanicalParts: new THREE.MeshStandardMaterial({ color: '#30363A', metalness: 0.85, roughness: 0.35 }),
-      shafts: new THREE.MeshStandardMaterial({ color: '#AEB5B7', metalness: 0.9, roughness: 0.2 }),
+      machineBody: new THREE.MeshStandardMaterial({ color: '#4D72C1', metalness: 0.6, roughness: 0.4 }),
+      secondaryMetal: new THREE.MeshStandardMaterial({ color: '#9EB4E4', metalness: 0.7, roughness: 0.3 }),
+      darkMechanicalParts: new THREE.MeshStandardMaterial({ color: '#3B4B6F', metalness: 0.5, roughness: 0.5 }),
+      shafts: new THREE.MeshStandardMaterial({ color: '#C2CAD9', metalness: 0.9, roughness: 0.2 }),
       workpiece: new THREE.MeshStandardMaterial({ color: '#B87333', metalness: 0.95, roughness: 0.15 }),
       cuttingTool: new THREE.MeshStandardMaterial({ color: '#D6D9DA', metalness: 0.95, roughness: 0.1 }),
-      safetyParts: new THREE.MeshStandardMaterial({ color: '#F28C28', metalness: 0.2, roughness: 0.4 }),
+      safetyParts: new THREE.MeshStandardMaterial({ color: '#1D49B4', metalness: 0.2, roughness: 0.4 }),
       sandMould: new THREE.MeshStandardMaterial({ color: '#A08060', roughness: 0.95, metalness: 0.05 }),
       moltenMetal: new THREE.MeshStandardMaterial({ color: '#FF4D00', emissive: '#FF2200', emissiveIntensity: 1.5, roughness: 0.1 }),
       moltenMetalCool: new THREE.MeshStandardMaterial({ color: '#454B4E', metalness: 0.8, roughness: 0.6 })
@@ -321,7 +321,7 @@ export default function ThreeVisualizer({
       for (let t = 0; t < Math.PI * 16; t += 0.1) {
         helixPoints.push(new THREE.Vector3(-1.2 + (t / (Math.PI * 16)) * 2.4, 0.41 * Math.sin(t), 0.41 * Math.cos(t)));
       }
-      const helixLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(helixPoints), new THREE.LineBasicMaterial({ color: '#F28C28', linewidth: 2 }));
+      const helixLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(helixPoints), new THREE.LineBasicMaterial({ color: '#1D49B4', linewidth: 2 }));
       helixLine.name = 'helix_line';
       helixLine.visible = false;
       wpGroup.add(helixLine);
@@ -484,12 +484,12 @@ export default function ThreeVisualizer({
       g.userData.basePosition.copy(g.position);
     });
 
-    const selectedHelper = new THREE.BoxHelper(new THREE.Mesh(), '#F28C28');
+    const selectedHelper = new THREE.BoxHelper(new THREE.Mesh(), '#1D49B4');
     selectedHelper.visible = false;
     scene.add(selectedHelper);
     selectedHelperRef.current = selectedHelper;
 
-    const focusedHelper = new THREE.BoxHelper(new THREE.Mesh(), '#E4572E');
+    const focusedHelper = new THREE.BoxHelper(new THREE.Mesh(), '#3D72C1');
     focusedHelper.visible = false;
     scene.add(focusedHelper);
     focusedHelperRef.current = focusedHelper;
@@ -506,7 +506,7 @@ export default function ThreeVisualizer({
       sparkVelocities.push(new THREE.Vector3((Math.random() - 0.5) * 2, Math.random() * 2, (Math.random() - 0.5) * 2));
     }
     sparkGeo.setAttribute('position', new THREE.BufferAttribute(sparkPositions, 3));
-    const sparks = new THREE.Points(sparkGeo, new THREE.PointsMaterial({ color: '#F28C28', size: 0.12, transparent: true, opacity: 0.8 }));
+    const sparks = new THREE.Points(sparkGeo, new THREE.PointsMaterial({ color: '#3D72C1', size: 0.12, transparent: true, opacity: 0.8 }));
     sparks.visible = false;
     scene.add(sparks);
 
@@ -574,7 +574,7 @@ export default function ThreeVisualizer({
         const g = groupsRef.current[foundPartId];
         g.traverse((child) => {
           if (child.isMesh && child.material) {
-            child.material.emissive?.set('#F28C28');
+            child.material.emissive?.set('#1D49B4');
             child.material.emissiveIntensity = 0.5;
           }
         });
@@ -652,10 +652,10 @@ export default function ThreeVisualizer({
               child.userData.originalEmissive = child.material.emissive?.getHex() || 0;
             }
             if (isSelected) {
-              child.material.emissive?.set('#F28C28');
+              child.material.emissive?.set('#1D49B4');
               child.material.emissiveIntensity = 0.28;
             } else if (isFocused) {
-              child.material.emissive?.set('#E4572E');
+              child.material.emissive?.set('#3D72C1');
               child.material.emissiveIntensity = 0.2;
             } else {
               child.material.emissive?.setHex(child.userData.originalEmissive);
@@ -1179,8 +1179,8 @@ export default function ThreeVisualizer({
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
       {loading && (
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: '#101820', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
-          <div style={{ fontSize: '11px', color: 'var(--accent-orange)', fontFamily: 'var(--mono-font)', letterSpacing: '1px' }}>
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
+          <div style={{ fontSize: '11px', color: 'var(--primary-blue)', fontFamily: 'var(--mono-font)', letterSpacing: '1px' }}>
             CONNECTING 3D INDUSTRIAL ENGINE...
           </div>
         </div>
@@ -1225,7 +1225,7 @@ export default function ThreeVisualizer({
               key={lbl.id}
               id={`line-${lbl.id}`}
               x1="0" y1="0" x2="0" y2="0"
-              stroke="#F28C28"
+              stroke="#1D49B4"
               strokeWidth="1.2"
               strokeDasharray="2,2"
               style={{ display: 'none' }}

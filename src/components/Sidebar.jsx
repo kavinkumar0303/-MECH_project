@@ -55,11 +55,11 @@ export default function Sidebar({ activeTab, setActiveTab, user, onLogout }) {
       >
         {!collapsed && (
           <div>
-            <h1 style={{ fontSize: '15px', fontWeight: '800', letterSpacing: '0.8px', color: 'var(--accent-orange)', margin: 0, textTransform: 'uppercase' }}>
-              VIRTUAL WORKSHOP
+            <h1 style={{ fontSize: '15px', fontWeight: '800', color: 'var(--primary-blue)', margin: 0 }}>
+              Virtual Workshop
             </h1>
-            <span style={{ fontSize: '9px', color: 'var(--text-secondary)', fontFamily: 'var(--mono-font)' }}>
-              CORE TELEMETRY: ACTIVE
+            <span style={{ fontSize: '12px', color: 'var(--text-secondary)', fontFamily: 'var(--mono-font)' }}>
+              Core telemetry: Active
             </span>
           </div>
         )}
@@ -86,14 +86,14 @@ export default function Sidebar({ activeTab, setActiveTab, user, onLogout }) {
       {!collapsed && (
         <div style={{ padding: '16px 14px', borderBottom: '1px solid var(--border)' }}>
           <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '4px', padding: '10px 12px', display: 'flex', gap: '10px', alignItems: 'center' }}>
-            <div style={{ width: '32px', height: '32px', borderRadius: '16px', background: 'var(--accent-orange)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '14px', color: '#151719' }}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '16px', background: 'var(--primary-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '14px', color: '#FFFFFF' }}>
               {user?.name?.charAt(0).toUpperCase() || 'S'}
             </div>
             <div style={{ overflow: 'hidden' }}>
               <div style={{ fontSize: '12px', fontWeight: '700', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', color: 'var(--text-primary)' }}>
                 {user?.name || 'Student'}
               </div>
-              <div style={{ fontSize: '9px', color: 'var(--accent-orange)', fontFamily: 'var(--mono-font)' }}>
+              <div style={{ fontSize: '9px', color: 'var(--primary-blue)', fontFamily: 'var(--mono-font)' }}>
                 {user?.level || 'Apprentice'}
               </div>
             </div>
@@ -124,10 +124,10 @@ export default function Sidebar({ activeTab, setActiveTab, user, onLogout }) {
                 width: '100%',
                 transition: 'all 0.15s',
                 fontWeight: isActive ? '700' : '500',
-                borderLeft: isActive ? '3px solid var(--accent-orange)' : '3px solid transparent'
+                borderLeft: isActive ? '3px solid var(--primary-blue)' : '3px solid transparent'
               }}
             >
-              <Icon size={16} style={{ flexShrink: 0, color: isActive ? 'var(--accent-orange)' : 'var(--text-secondary)' }} />
+              <Icon size={16} style={{ flexShrink: 0, color: isActive ? 'var(--primary-blue)' : 'var(--text-secondary)' }} />
               {!collapsed && <span style={{ fontSize: '13px', whiteSpace: 'nowrap' }}>{item.label}</span>}
             </button>
           );
@@ -138,19 +138,13 @@ export default function Sidebar({ activeTab, setActiveTab, user, onLogout }) {
       <div style={{ padding: '12px 6px', borderTop: '1px solid var(--border)' }}>
         <button
           onClick={onLogout}
+          className="btn-danger"
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
             padding: '10px 14px',
-            borderRadius: '4px',
-            border: 'none',
-            background: 'rgba(198, 40, 40, 0.05)',
-            color: 'var(--danger)',
-            cursor: 'pointer',
-            textAlign: 'left',
             width: '100%',
-            transition: 'all 0.15s',
             fontWeight: '600'
           }}
         >
