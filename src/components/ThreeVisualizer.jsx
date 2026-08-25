@@ -290,6 +290,8 @@ export default function ThreeVisualizer({
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.35;
     
     mountRef.current.innerHTML = '';
     mountRef.current.appendChild(renderer.domElement);
@@ -378,9 +380,40 @@ export default function ThreeVisualizer({
 
     // Lathe Machine
     if (machineId === 'lathe') {
-      addPart('bed', new THREE.Mesh(new THREE.BoxGeometry(7, 0.8, 1.4), mats.machineBody), [0, -1.2, 0]);
-      addPart('headstock', new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.6, 1.4), mats.darkMechanicalParts), [-2.6, 0.2, 0]);
-      addPart('chuck', new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 0.6, 16).rotateZ(Math.PI / 2), mats.secondaryMetal), [-1.8, 0.2, 0]);
+      // Detailed bed group with silver rails
+      const bedGroup = new THREE.Group();
+      const bedBase = new THREE.Mesh(new THREE.BoxGeometry(7, 0.8, 1.4), mats.machineBody);
+      bedGroup.add(bedBase);
+      const rail1 = new THREE.Mesh(new THREE.BoxGeometry(7, 0.08, 0.15), mats.secondaryMetal);
+      rail1.position.set(0, 0.44, 0.4);
+      const rail2 = new THREE.Mesh(new THREE.BoxGeometry(7, 0.08, 0.15), mats.secondaryMetal);
+      rail2.position.set(0, 0.44, -0.4);
+      bedGroup.add(rail1, rail2);
+      addPart('bed', bedGroup, [0, -1.2, 0]);
+
+      // Gearbox Headstock details
+      const headstockGroup = new THREE.Group();
+      const hsBase = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.6, 1.4), mats.darkMechanicalParts);
+      headstockGroup.add(hsBase);
+      // Speed selectors / gear dials
+      for (let i = 0; i < 2; i++) {
+        const dial = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.1, 12).rotateX(Math.PI / 2), mats.secondaryMetal);
+        dial.position.set(-0.4 + i * 0.8, 0.4, 0.71);
+        headstockGroup.add(dial);
+      }
+      addPart('headstock', headstockGroup, [-2.6, 0.2, 0]);
+
+      // Detailed 3-Jaw scroll chuck
+      const chuckGroup = new THREE.Group();
+      const chuckBase = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 0.6, 24).rotateZ(Math.PI / 2), mats.secondaryMetal);
+      chuckGroup.add(chuckBase);
+      for (let i = 0; i < 3; i++) {
+        const angle = (i * Math.PI * 2) / 3;
+        const jaw = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.3, 0.3), mats.shafts);
+        jaw.position.set(-0.25, 0.62 * Math.sin(angle), 0.62 * Math.cos(angle));
+        chuckGroup.add(jaw);
+      }
+      addPart('chuck', chuckGroup, [-1.8, 0.2, 0]);
       addPart('spindle', new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 2.0, 16).rotateZ(Math.PI / 2), mats.shafts), [-2.6, 0.2, 0]);
 
       // Workpiece Group
@@ -431,9 +464,16 @@ export default function ThreeVisualizer({
       addPart('tool_post', toolPostMesh, [0.2, 1.2, 1.6]);
       addPart('cutting_tool', new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.1, 0.1), mats.cuttingTool), [0.3, 1.3, 1.8]);
 
-      const tailstock = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.0, 1.0), mats.machineBody);
-      tailstock.add(new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.8, 12).rotateZ(Math.PI / 2), mats.shafts));
-      addPart('tailstock', tailstock, [2.5, 0.2, 0]);
+      const tailstockGroup = new THREE.Group();
+      const tsBody = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.0, 1.0), mats.machineBody);
+      tailstockGroup.add(tsBody);
+      const quill = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.9, 12).rotateZ(Math.PI / 2), mats.shafts);
+      quill.position.set(-0.4, 0.1, 0);
+      tailstockGroup.add(quill);
+      const whRing = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.08, 16).rotateZ(Math.PI / 2), mats.secondaryMetal);
+      whRing.position.set(0.5, 0.1, 0);
+      tailstockGroup.add(whRing);
+      addPart('tailstock', tailstockGroup, [2.5, 0.2, 0]);
 
       addPart('lead_screw', new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 6.2, 16).rotateZ(Math.PI / 2), mats.shafts), [0, -0.6, 0.8]);
       addPart('feed_rod', new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 6.2, 16).rotateZ(Math.PI / 2), mats.secondaryMetal), [0, -0.9, 0.8]);
