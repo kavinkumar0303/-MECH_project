@@ -201,19 +201,19 @@ export default function ThreeVisualizer({
     const height = mountRef.current.clientHeight || 360;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#F5F5F5'); // Clean Mechanical Lab Light Background
+    scene.background = new THREE.Color('#101625'); // Deep Navy Industrial Background
     sceneRef.current = scene;
 
     // Solid floor
     const floorGeo = new THREE.PlaneGeometry(50, 50);
-    const floorMat = new THREE.MeshStandardMaterial({ color: '#C2CAD9', roughness: 0.8, metalness: 0.1 });
+    const floorMat = new THREE.MeshStandardMaterial({ color: '#161D30', roughness: 0.6, metalness: 0.4 }); // Dark Industrial Floor
     const floorMesh = new THREE.Mesh(floorGeo, floorMat);
     floorMesh.rotation.x = -Math.PI / 2;
     floorMesh.position.y = -2;
     scene.add(floorMesh);
 
     // Grid
-    const gridHelper = new THREE.GridHelper(30, 30, '#1D49B4', 'rgba(59, 75, 111, 0.15)');
+    const gridHelper = new THREE.GridHelper(30, 30, '#1D49B4', 'rgba(29, 73, 180, 0.08)'); // Subtle glowing grid
     gridHelper.position.y = -1.99;
     scene.add(gridHelper);
 
@@ -237,14 +237,14 @@ export default function ThreeVisualizer({
     controlsRef.current = controls;
 
     // Lighting
-    const ambientLight = new THREE.AmbientLight('#FFFFFF', highContrast ? 1.2 : 0.85);
+    const ambientLight = new THREE.AmbientLight('#C2CAD9', highContrast ? 1.2 : 0.6); // Subtle blue ambient lighting
     scene.add(ambientLight);
 
     const mainLight = new THREE.DirectionalLight('#FFFFFF', highContrast ? 3.0 : 1.8);
     mainLight.position.set(8, 15, 8);
     scene.add(mainLight);
 
-    const rimLight = new THREE.DirectionalLight('#9EB4E4', highContrast ? 2.5 : 1.2);
+    const rimLight = new THREE.DirectionalLight('#1D49B4', highContrast ? 2.5 : 1.2); // Blue rim lighting
     rimLight.position.set(-8, 5, -8);
     scene.add(rimLight);
 
@@ -254,10 +254,10 @@ export default function ThreeVisualizer({
 
     // Materials
     const mats = {
-      machineBody: new THREE.MeshStandardMaterial({ color: '#4D72C1', metalness: 0.6, roughness: 0.4 }),
-      secondaryMetal: new THREE.MeshStandardMaterial({ color: '#9EB4E4', metalness: 0.7, roughness: 0.3 }),
-      darkMechanicalParts: new THREE.MeshStandardMaterial({ color: '#3B4B6F', metalness: 0.5, roughness: 0.5 }),
-      shafts: new THREE.MeshStandardMaterial({ color: '#C2CAD9', metalness: 0.9, roughness: 0.2 }),
+      machineBody: new THREE.MeshStandardMaterial({ color: '#1D49B4', metalness: 0.85, roughness: 0.25 }), // Metallic blue surfaces
+      secondaryMetal: new THREE.MeshStandardMaterial({ color: '#9EB4E4', metalness: 0.9, roughness: 0.2 }), // Steel highlights
+      darkMechanicalParts: new THREE.MeshStandardMaterial({ color: '#3B4B6F', metalness: 0.8, roughness: 0.3 }), // Deep shadows
+      shafts: new THREE.MeshStandardMaterial({ color: '#C2CAD9', metalness: 0.95, roughness: 0.15 }),
       workpiece: new THREE.MeshStandardMaterial({ color: '#B87333', metalness: 0.95, roughness: 0.15 }),
       cuttingTool: new THREE.MeshStandardMaterial({ color: '#D6D9DA', metalness: 0.95, roughness: 0.1 }),
       safetyParts: new THREE.MeshStandardMaterial({ color: '#1D49B4', metalness: 0.2, roughness: 0.4 }),

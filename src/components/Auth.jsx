@@ -37,8 +37,8 @@ export default function Auth({ onLoginSuccess }) {
     if (!canvasContainerRef.current) return;
     
     const container = canvasContainerRef.current;
-    const width = container.clientWidth || 500;
-    const height = container.clientHeight || 500;
+    const width = container.clientWidth || window.innerWidth;
+    const height = container.clientHeight || window.innerHeight;
     
     const scene = new THREE.Scene();
     scene.fog = new THREE.FogExp2('#CBD5E1', 0.05);
@@ -123,6 +123,27 @@ export default function Auth({ onLoginSuccess }) {
     collar.rotation.x = Math.PI / 2;
     group.add(collar);
     
+    let currentScale = 0.6;
+    let targetScale = 1.1;
+    let targetX = -1.5;
+
+    const updatePositionAndScale = () => {
+      const w = window.innerWidth;
+      if (w > 900) {
+        targetScale = 1.25;
+        targetX = -1.5;
+      } else if (w > 600) {
+        targetScale = 0.95;
+        targetX = -0.6;
+      } else {
+        targetScale = 0.68;
+        targetX = 0;
+      }
+      group.position.x = targetX;
+    };
+    updatePositionAndScale();
+    group.scale.set(currentScale, currentScale, currentScale);
+
     let animationFrameId;
     const clock = new THREE.Clock();
     
@@ -130,6 +151,11 @@ export default function Auth({ onLoginSuccess }) {
     
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
+      
+      if (currentScale < targetScale) {
+        currentScale += (targetScale - currentScale) * 0.05;
+        group.scale.set(currentScale, currentScale, currentScale);
+      }
       
       if (!prefersReducedMotion) {
         group.rotation.z += 0.003;
@@ -147,11 +173,12 @@ export default function Auth({ onLoginSuccess }) {
     
     const handleResize = () => {
       if (!container) return;
-      const w = container.clientWidth;
-      const h = container.clientHeight;
+      const w = container.clientWidth || window.innerWidth;
+      const h = container.clientHeight || window.innerHeight;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
+      updatePositionAndScale();
     };
     
     window.addEventListener('resize', handleResize);
@@ -267,92 +294,31 @@ export default function Auth({ onLoginSuccess }) {
         position: 'relative'
       }}
     >
-      {/* Subtle Ambient Lighting Blobs in Background */}
-      <div 
-        style={{
-          position: 'absolute',
-          top: '20%',
-          left: '10%',
-          width: '400px',
-          height: '400px',
-          background: 'radial-gradient(circle, rgba(158, 180, 228, 0.1) 0%, transparent 70%)',
-          borderRadius: '50%',
-          pointerEvents: 'none',
-          animation: 'float-ambient-left 15s infinite alternate ease-in-out'
-        }}
-      />
-      <div 
-        style={{
-          position: 'absolute',
-          bottom: '15%',
-          right: '15%',
-          width: '500px',
-          height: '500px',
-          background: 'radial-gradient(circle, rgba(194, 202, 217, 0.1) 0%, transparent 70%)',
-          borderRadius: '50%',
-          pointerEvents: 'none',
-          animation: 'float-ambient-right 18s infinite alternate ease-in-out'
-        }}
-      />
-
-      {/* LEFT SIDE: Three.js Mechanical Visual */}
-      <div 
-        className="desktop-only"
-        style={{
-          flex: 1.2,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'linear-gradient(135deg, #E2E8F0 0%, #CBD5E1 100%)',
-          position: 'relative',
-          overflow: 'hidden',
-          borderRight: '1px solid var(--ambient-grey)'
-        }}
-      >
+      {/* 3D mechanical workshop background scene */}
+      <div className="login-canvas-container">
         <div ref={canvasContainerRef} style={{ width: '100%', height: '100%' }} />
-        
-        {/* Soft overlay text for mechanical atmosphere */}
-        <div style={{
-          position: 'absolute',
-          bottom: '30px',
-          left: '30px',
-          color: 'var(--shadow-navy)',
-          fontFamily: 'var(--mono-font)',
-          fontSize: '11px',
-          lineHeight: '1.6',
-          opacity: 0.8
-        }}>
-          <div>SYSTEM: VIRTUAL_LAB_SIMULATION</div>
-          <div>ASSET: INDUSTRIAL_MILLING_SHAFT</div>
-          <div>STATUS: ACTIVE_STANDBY</div>
-        </div>
       </div>
 
-      {/* RIGHT SIDE: Login Form Panel */}
-      <div 
-        style={{
-          flex: 1,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '40px 20px',
-          background: 'var(--surface-bg)',
-          zIndex: 10
-        }}
-      >
+      {/* Subtle readability overlay separating 3D visuals and login content */}
+      <div className="login-overlay" />
+
+      {/* Floating Login Card Container */}
+      <div className="login-card-container">
         <div 
           className="glass-panel anim-slide-up"
           style={{
             width: '100%',
             maxWidth: isLogin ? '420px' : '520px',
             padding: '36px',
-            background: '#FFFFFF',
-            border: '1px solid var(--ambient-grey)',
-            boxShadow: '0 10px 30px rgba(59, 75, 111, 0.08)',
+            background: 'rgba(22, 29, 48, 0.7)',
+            backdropFilter: 'blur(16px)',
+            border: '1px solid rgba(59, 75, 111, 0.5)',
+            boxShadow: '0 15px 35px rgba(0, 0, 0, 0.3)',
             borderRadius: '8px',
             display: 'flex',
             flexDirection: 'column',
-            gap: '24px'
+            gap: '24px',
+            position: 'relative'
           }}
         >
           {/* Header */}
