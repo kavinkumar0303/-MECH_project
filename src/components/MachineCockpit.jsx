@@ -168,6 +168,38 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
   // Experiment
   const [expVariables, setExpVariables] = useState({});
 
+  const MACHINE_TOOLS = {
+    lathe: ['Turning Tool', 'Facing Tool', 'Parting Tool', 'Threading Tool', 'Boring Tool'],
+    welding: ['SMAW Electrode', 'GTAW Torch', 'GMAW Gun', 'FCAW Torch'],
+    shaper: ['Shaper Tool Bit', 'Slotting Tool', 'Keyway Tool'],
+    planer: ['Planing Tool', 'Broad-Nosed Tool', 'Grooving Tool'],
+    milling: ['End Mill', 'Face Mill', 'Slab Mill', 'T-Slot Cutter'],
+    casting: ['Graphite Crucible', 'Steel Ladle', 'Bottom Pour Ladle'],
+    moulding: ['Compactor', 'Pattern Lifter', 'Vent Wire', 'Sand Shovel']
+  };
+
+  const [isPowerOn, setIsPowerOn] = useState(false);
+  const [spindleDirection, setSpindleDirection] = useState('Clockwise');
+  const [chuckStatus, setChuckStatus] = useState('Closed');
+  const [activeRightTab, setActiveRightTab] = useState('tools');
+  const [wavePhase, setWavePhase] = useState(0);
+  const [selectedTool, setSelectedTool] = useState('Turning Tool');
+
+  // Sync selectedTool and isPowerOn with simulator
+  useEffect(() => {
+    setSelectedTool(MACHINE_TOOLS[selectedId]?.[0] || 'Turning Tool');
+    setIsPowerOn(false);
+  }, [selectedId]);
+
+  // Wave phase telemetry oscillator animation
+  useEffect(() => {
+    if (!isPowerOn) return;
+    const interval = setInterval(() => {
+      setWavePhase(p => (p + 15) % 360);
+    }, 50);
+    return () => clearInterval(interval);
+  }, [isPowerOn]);
+
   // Part selection
   const [selectedPartId, setSelectedPartId] = useState(null);
   const activePart = machine.parts.find(p => p.id === selectedPartId) || machine.parts[0];
@@ -725,7 +757,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 70px)', background: 'var(--bg-primary)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 70px)', background: 'var(--bg-primary)', overflow: 'hidden' }}>
       
       {/* 1. Category Switcher (1-7 machines) */}
       <div 
@@ -733,8 +765,8 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
           display: 'flex', 
           gap: '8px', 
           padding: '12px 24px', 
-          borderBottom: '1px solid var(--border-light)',
-          background: 'var(--surface)'
+          borderBottom: '1px solid var(--border)',
+          background: 'rgba(11, 23, 51, 0.65)'
         }}
       >
         {Object.values(MACHINES).map((m) => (
@@ -744,92 +776,449 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
             style={{
               padding: '8px 16px',
               borderRadius: '4px',
-              border: '1px solid ' + (selectedId === m.id ? m.color : 'var(--border-light)'),
-              background: selectedId === m.id ? `${m.color}12` : 'transparent',
-              color: selectedId === m.id ? m.color : 'var(--color-text-secondary)',
+              border: '1px solid ' + (selectedId === m.id ? 'var(--brand-primary)' : 'rgba(61, 114, 193, 0.15)'),
+              background: selectedId === m.id ? 'rgba(29, 73, 180, 0.15)' : 'transparent',
+              color: selectedId === m.id ? '#FFFFFF' : 'var(--text-secondary)',
               fontWeight: '700',
               textTransform: 'uppercase',
               fontSize: '11px',
               cursor: 'pointer',
-              transition: 'all 0.2s'
+              transition: 'all 0.2s',
+              outline: 'none'
             }}
           >
-            {m.id.toUpperCase()}
+            {m.name.replace(' Machine', '').replace(' Station', '').replace(' Furnace', '').replace(' Bay', '')}
           </button>
         ))}
       </div>
 
+      {/* 2. 9-Stage Learning Navigation (Horizontal Subtabs Bar) */}
+      <div 
+        style={{ 
+          display: 'flex', 
+          gap: '8px', 
+          padding: '8px 24px', 
+          background: 'rgba(11, 23, 51, 0.45)',
+          borderBottom: '1px solid var(--border)',
+          overflowX: 'auto',
+          whiteSpace: 'nowrap',
+          scrollbarWidth: 'none'
+        }}
+      >
+        {[
+          { id: 'explorer', label: '1. Explore Parts', icon: Eye },
+          { id: 'identify', label: '2. Identify Part', icon: Compass },
+          { id: 'safety', label: '3. Safety Locker', icon: ShieldAlert },
+          { id: 'setup', label: '4. Setup Assembly', icon: Wrench },
+          { id: 'operate', label: '5. Operate Simulator', icon: Activity },
+          { id: 'experiments', label: '6. Experiment Lab', icon: Sliders },
+          { id: 'troubleshooting', label: '7. Troubleshooting', icon: HelpCircle },
+          { id: 'inspect', label: '8. Inspect Part', icon: Crop },
+          { id: 'scorecard', label: '9. Performance Card', icon: ShieldAlert }
+        ].map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeSubTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveSubTab(tab.id)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '6px 14px',
+                borderRadius: '20px',
+                border: '1px solid ' + (isActive ? 'var(--brand-primary)' : 'rgba(61, 114, 193, 0.15)'),
+                background: isActive ? 'var(--brand-primary)' : 'rgba(11, 23, 51, 0.25)',
+                color: isActive ? '#FFFFFF' : 'var(--text-secondary)',
+                fontWeight: '600',
+                fontSize: '11px',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                flexShrink: 0
+              }}
+              onMouseEnter={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.borderColor = 'var(--brand-secondary)';
+                  e.currentTarget.style.color = '#FFFFFF';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.borderColor = 'rgba(61, 114, 193, 0.15)';
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                }
+              }}
+            >
+              <Icon size={12} style={{ color: isActive ? '#FFFFFF' : 'var(--brand-secondary)' }} />
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
       {/* Main split viewport layout */}
-      <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1.2fr 3fr 1.5fr', height: '100%', overflow: 'hidden' }}>
+      <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '320px 1fr 340px', height: 'calc(100% - 92px)', overflow: 'hidden' }}>
         
-        {/* LEFT COLUMN: 9-Stage Learning Navigation */}
+        {/* COLUMN 1: CONTROLS & INPUT PANELS */}
         <div 
           style={{ 
-            borderRight: '1px solid var(--border-light)', 
-            padding: '20px', 
+            borderRight: '1px solid var(--border)', 
+            padding: '24px', 
             display: 'flex', 
             flexDirection: 'column', 
-            gap: '16px',
-            background: 'var(--surface)',
+            gap: '20px',
+            background: 'rgba(11, 23, 51, 0.4)',
             overflowY: 'auto'
           }}
         >
-          <div>
-            <h3 style={{ fontSize: '18px', fontWeight: '800', color: 'var(--text-primary)' }}>{machine.name}</h3>
-            <span style={{ fontSize: '12px', fontStyle: 'italic', color: 'var(--text-secondary)', lineHeight: '1.4' }}>"{machine.tagline}"</span>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-            {[
-              { id: 'explorer', label: '1. Explore Parts', icon: Eye },
-              { id: 'identify', label: '2. Identify Part', icon: Compass },
-              { id: 'safety', label: '3. Safety Locker', icon: ShieldAlert },
-              { id: 'setup', label: '4. Setup Assembly', icon: Wrench },
-              { id: 'operate', label: '5. Operate Simulator', icon: Activity },
-              { id: 'experiments', label: '6. Experiment Lab', icon: Sliders },
-              { id: 'troubleshooting', label: '7. Troubleshooting', icon: HelpCircle },
-              { id: 'inspect', label: '8. Inspect Part', icon: Crop },
-              { id: 'scorecard', label: '9. Performance Card', icon: ShieldAlert }
-            ].map((tab) => {
-              const Icon = tab.icon;
-              return (
+          {activeSubTab === 'operate' ? (
+            // CUSTOM SIMULATOR CONTROLS CARD
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#FFFFFF', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
+                  Controls
+                </h3>
+                {isPowerOn ? (
+                  <span style={{ fontSize: '10px', color: 'var(--color-green)', fontWeight: '700', letterSpacing: '0.5px' }}>● ACTIVE</span>
+                ) : (
+                  <span style={{ fontSize: '10px', color: 'var(--text-secondary)', fontWeight: '700', letterSpacing: '0.5px' }}>○ STANDBY</span>
+                )}
+              </div>
+              
+              {/* Power Toggle */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(11, 23, 51, 0.65)', border: '1px solid rgba(61, 114, 193, 0.2)', padding: '12px', borderRadius: '6px' }}>
+                <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Power Drive</span>
                 <button
-                  key={tab.id}
-                  onClick={() => setActiveSubTab(tab.id)}
+                  onClick={() => setIsPowerOn(!isPowerOn)}
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px',
-                    padding: '8px 12px',
-                    borderRadius: '6px',
+                    padding: '6px 14px',
+                    borderRadius: '4px',
                     border: 'none',
-                    background: activeSubTab === tab.id ? 'rgba(29, 73, 180, 0.08)' : 'transparent',
-                    color: activeSubTab === tab.id ? machine.color : 'var(--text-secondary)',
+                    background: isPowerOn ? 'var(--brand-primary)' : 'rgba(255,255,255,0.08)',
+                    color: '#FFFFFF',
+                    fontSize: '11px',
+                    fontWeight: '700',
                     cursor: 'pointer',
-                    textAlign: 'left',
-                    fontWeight: activeSubTab === tab.id ? '700' : '500',
-                    fontSize: '11.5px',
+                    minWidth: '60px',
                     transition: 'all 0.2s'
                   }}
                 >
-                  <Icon size={14} />
-                  <span>{tab.label}</span>
+                  {isPowerOn ? 'ON' : 'OFF'}
                 </button>
-              );
-            })}
-          </div>
+              </div>
 
-          <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '12px', fontSize: '11px', color: 'var(--color-text-secondary)', lineHeight: '1.4' }}>
-            <strong>Safety/Workflow Status:</strong><br/>
-            {safetyPassed ? '✓ Safety Compliant' : '⚠ Safety Verification Required'}<br/>
-            {setupPassed ? '✓ Workpiece Clamped' : '⚠ Setup Mounting Required'}
-          </div>
+              {/* Spindle direction */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(11, 23, 51, 0.65)', border: '1px solid rgba(61, 114, 193, 0.2)', padding: '12px', borderRadius: '6px' }}>
+                <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Spindle Axis</span>
+                <button
+                  onClick={() => setSpindleDirection(p => p === 'Clockwise' ? 'Counter-CW' : 'Clockwise')}
+                  style={{
+                    padding: '6px 10px',
+                    borderRadius: '4px',
+                    border: '1px solid rgba(61, 114, 193, 0.25)',
+                    background: 'transparent',
+                    color: '#FFFFFF',
+                    fontSize: '11px',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  {spindleDirection}
+                </button>
+              </div>
+
+              {/* Speed range */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(11, 23, 51, 0.65)', border: '1px solid rgba(61, 114, 193, 0.2)', padding: '12px', borderRadius: '6px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
+                  <span style={{ color: 'var(--text-secondary)', fontWeight: '600' }}>Spindle Speed</span>
+                  <span style={{ color: '#FFFFFF', fontWeight: '700', fontFamily: 'var(--mono-font)' }}>{simParams.speed} RPM</span>
+                </div>
+                <input 
+                  type="range" 
+                  min={machine.simulator.paramRanges.speed.min} 
+                  max={machine.simulator.paramRanges.speed.max} 
+                  value={simParams.speed} 
+                  onChange={(e) => setSimParams({...simParams, speed: parseInt(e.target.value)})} 
+                  style={{ width: '100%', accentColor: 'var(--brand-primary)' }} 
+                />
+              </div>
+
+              {/* Feed Rate range */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(11, 23, 51, 0.65)', border: '1px solid rgba(61, 114, 193, 0.2)', padding: '12px', borderRadius: '6px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
+                  <span style={{ color: 'var(--text-secondary)', fontWeight: '600' }}>Feed Rate</span>
+                  <span style={{ color: '#FFFFFF', fontWeight: '700', fontFamily: 'var(--mono-font)' }}>{simParams.feed} mm/rev</span>
+                </div>
+                <input 
+                  type="range" 
+                  min={machine.simulator.paramRanges.feed.min*100} 
+                  max={machine.simulator.paramRanges.feed.max*100} 
+                  value={simParams.feed*100} 
+                  onChange={(e) => setSimParams({...simParams, feed: parseFloat((parseInt(e.target.value)/100).toFixed(2))})} 
+                  style={{ width: '100%', accentColor: 'var(--brand-primary)' }} 
+                />
+              </div>
+
+              {/* Chuck status */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(11, 23, 51, 0.65)', border: '1px solid rgba(61, 114, 193, 0.2)', padding: '12px', borderRadius: '6px' }}>
+                <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Chuck Clamps</span>
+                <div style={{ display: 'flex', gap: '4px' }}>
+                  <button
+                    onClick={() => setChuckStatus('Open')}
+                    style={{
+                      padding: '5px 10px',
+                      borderRadius: '3px',
+                      border: 'none',
+                      background: chuckStatus === 'Open' ? 'var(--brand-primary)' : 'rgba(255,255,255,0.05)',
+                      color: '#FFFFFF',
+                      fontSize: '10px',
+                      fontWeight: '700',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Open
+                  </button>
+                  <button
+                    onClick={() => setChuckStatus('Closed')}
+                    style={{
+                      padding: '5px 10px',
+                      borderRadius: '3px',
+                      border: 'none',
+                      background: chuckStatus === 'Closed' ? 'var(--brand-primary)' : 'rgba(255,255,255,0.05)',
+                      color: '#FFFFFF',
+                      fontSize: '10px',
+                      fontWeight: '700',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+
+              {/* Tool dropdown */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Cutting Tool Bit</span>
+                <select
+                  value={selectedTool}
+                  onChange={(e) => {
+                    setSelectedTool(e.target.value);
+                    setSimTool(e.target.value);
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    borderRadius: '4px',
+                    border: '1px solid rgba(61, 114, 193, 0.25)',
+                    background: 'rgba(11, 23, 51, 0.85)',
+                    color: '#FFFFFF',
+                    fontSize: '12px',
+                    outline: 'none',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {(MACHINE_TOOLS[selectedId] || ['Turning Tool']).map(t => (
+                    <option key={t} value={t}>{t}</option>
+                  ))}
+                </select>
+              </div>
+
+            </div>
+          ) : (
+            // SIDEBAR CONTROLS FOR THE OTHER 8 SUB-TABS
+            <>
+              {activeSubTab === 'explorer' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#FFFFFF' }}>{machine.name}</h3>
+                  <span style={{ fontSize: '11px', fontStyle: 'italic', color: 'var(--text-secondary)', lineHeight: '1.4' }}>"{machine.tagline}"</span>
+                  <div style={{ borderTop: '1px solid var(--border)', paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <span className="telemetry-label">Operational Overview</span>
+                    <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{machine.overview}</p>
+                  </div>
+                </div>
+              )}
+
+              {activeSubTab === 'identify' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#FFFFFF' }}>Part Challenge</h3>
+                  {identifyTargetPart && (
+                    <div style={{ padding: '12px', background: 'rgba(11,23,51,0.5)', border: '1px solid var(--border)', borderRadius: '4px' }}>
+                      <p style={{ fontSize: '12px', color: '#FFF', fontWeight: 'bold' }}>
+                        Click the component representing the <span style={{ color: 'var(--brand-secondary)' }}>[ {identifyTargetPart.name} ]</span>.
+                      </p>
+                    </div>
+                  )}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '250px', overflowY: 'auto' }}>
+                    {machine.parts.map((p) => (
+                      <button
+                        key={p.id}
+                        onClick={() => handlePartSelect(p.id)}
+                        style={{
+                          padding: '8px 12px',
+                          background: 'rgba(11,23,51,0.25)',
+                          border: '1px solid rgba(61,114,193,0.15)',
+                          borderRadius: '4px',
+                          color: '#FFFFFF',
+                          fontSize: '11px',
+                          cursor: 'pointer',
+                          textAlign: 'left'
+                        }}
+                      >
+                        {p.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {activeSubTab === 'safety' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#FFFFFF' }}>Safety Locker</h3>
+                  <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Equip appropriate PPE gear parameters before engaging operations.</p>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {Object.keys(safetyItems).map((key) => (
+                      <button
+                        key={key}
+                        onClick={() => handleSafetyToggle(key)}
+                        style={{
+                          padding: '10px 14px',
+                          background: safetyItems[key] ? 'rgba(29, 73, 180, 0.08)' : 'transparent',
+                          border: '1px solid ' + (safetyItems[key] ? 'var(--brand-primary)' : 'var(--border)'),
+                          borderRadius: '4px',
+                          color: '#FFFFFF',
+                          fontSize: '11px',
+                          textAlign: 'left',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {key.toUpperCase()} {safetyItems[key] ? '✓' : '○'}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {activeSubTab === 'setup' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#FFFFFF' }}>Clamping Check</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <button
+                      onClick={() => toggleSetupChecklist('stockSecured')}
+                      style={{
+                        padding: '10px 12px',
+                        background: setupChecklist.stockSecured ? 'rgba(29, 73, 180, 0.08)' : 'transparent',
+                        border: '1px solid ' + (setupChecklist.stockSecured ? 'var(--brand-primary)' : 'var(--border)'),
+                        color: '#FFFFFF', fontSize: '11px', borderRadius: '4px', cursor: 'pointer', textAlign: 'left'
+                      }}
+                    >
+                      Mount Workpiece Stock {setupChecklist.stockSecured ? '✓' : '○'}
+                    </button>
+                    <button
+                      onClick={() => toggleSetupChecklist('toolClamped')}
+                      style={{
+                        padding: '10px 12px',
+                        background: setupChecklist.toolClamped ? 'rgba(29, 73, 180, 0.08)' : 'transparent',
+                        border: '1px solid ' + (setupChecklist.toolClamped ? 'var(--brand-primary)' : 'var(--border)'),
+                        color: '#FFFFFF', fontSize: '11px', borderRadius: '4px', cursor: 'pointer', textAlign: 'left'
+                      }}
+                    >
+                      Clamp Cutting Tool {setupChecklist.toolClamped ? '✓' : '○'}
+                    </button>
+                    <button
+                      onClick={() => toggleSetupChecklist('safetyGuardAligned')}
+                      style={{
+                        padding: '10px 12px',
+                        background: setupChecklist.safetyGuardAligned ? 'rgba(29, 73, 180, 0.08)' : 'transparent',
+                        border: '1px solid ' + (setupChecklist.safetyGuardAligned ? 'var(--brand-primary)' : 'var(--border)'),
+                        color: '#FFFFFF', fontSize: '11px', borderRadius: '4px', cursor: 'pointer', textAlign: 'left'
+                      }}
+                    >
+                      Align Safety Guard Shield {setupChecklist.safetyGuardAligned ? '✓' : '○'}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {activeSubTab === 'experiments' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#FFFFFF' }}>Variables</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                    {machine.experiments.variables.map(v => (
+                      <div key={v.id}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '4px' }}>
+                          <span style={{ color: 'var(--text-secondary)' }}>{v.name}</span>
+                          <strong style={{ color: 'var(--brand-secondary)' }}>{expVariables[v.id] || v.default}</strong>
+                        </div>
+                        <input type="range" min={v.min} max={v.max} step={v.step} value={expVariables[v.id] || v.default} onChange={(e)=>handleVariableChange(v.id, e.target.value)} style={{ width: '100%', accentColor: 'var(--brand-primary)' }} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {activeSubTab === 'troubleshooting' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#FFFFFF' }}>Fault Diagnosis</h3>
+                  <h5 style={{ fontSize: '12px', color: 'var(--brand-secondary)', marginTop: '4px' }}>{machine.troubleshoot[troubleIdx].title}</h5>
+                  <p style={{ fontSize: '11px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{machine.troubleshoot[troubleIdx].desc}</p>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
+                    {machine.troubleshoot[troubleIdx].options.map(opt => (
+                      <button 
+                        key={opt.id} 
+                        onClick={() => setSelectedOptionId(opt.id)} 
+                        style={{ 
+                          padding: '10px 12px', 
+                          background: selectedOptionId === opt.id ? 'rgba(29,73,180,0.08)' : 'transparent', 
+                          border: '1px solid ' + (selectedOptionId === opt.id ? 'var(--brand-primary)' : 'var(--border)'), 
+                          borderRadius: '6px', 
+                          cursor: 'pointer', 
+                          fontSize: '11px', 
+                          textAlign: 'left', 
+                          color: '#FFFFFF' 
+                        }}
+                      >
+                        {opt.text}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {activeSubTab === 'inspect' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#FFFFFF' }}>QC Metrology</h3>
+                  <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                    Trigger metrology tool caliper checks to evaluate finished workpiece size parameters.
+                  </p>
+                  <button 
+                    onClick={handleInspectCaliper}
+                    className="btn-login"
+                    style={{ padding: '10px 16px', display: 'inline-flex', alignSelf: 'flex-start', marginTop: '8px' }}
+                  >
+                    Measure Workpiece
+                  </button>
+                </div>
+              )}
+
+              {activeSubTab === 'scorecard' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#FFFFFF' }}>Scorecard</h3>
+                  <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)' }}>Review final simulation certification credits and compliancy ratings.</p>
+                </div>
+              )}
+            </>
+          )}
         </div>
 
         {/* CENTER COLUMN: Immersive 3D Viewport Window */}
-        <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#050B1B' }}>
           
-          <div style={{ flex: 1, width: '100%', height: '100%' }}>
+          {/* Main Visualizer viewport */}
+          <div style={{ flex: 1, width: '100%', height: activeSubTab === 'operate' ? 'calc(100% - 220px)' : '100%' }}>
             <ThreeVisualizer
               machineId={selectedId}
               selectedPartId={selectedPartId}
@@ -837,7 +1226,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
               onPartSelect={handlePartSelect}
               isExploded={isExploded}
               isCutaway={isCutaway}
-              isPlaying={isPlaying}
+              isPlaying={isPowerOn}
               simStep={simStep}
               simParams={simParams}
               activeSubTab={activeSubTab}
@@ -850,18 +1239,210 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
               activeOperation={activeOperation?.id}
               operationProgress={beforeAfterMode === 'before' ? 0 : operationProgress}
               operationState={operationState}
+              isLogin={false}
             />
           </div>
+
+          {/* BOTTOM DOCK VIEWPORTS ROW */}
+          {activeSubTab === 'operate' && (
+            <div 
+              style={{
+                height: '220px',
+                borderTop: '1px solid var(--border)',
+                background: 'rgba(11, 23, 51, 0.75)',
+                display: 'grid',
+                gridTemplateColumns: '1.2fr 1fr 1.2fr',
+                gap: '16px',
+                padding: '16px',
+                boxSizing: 'border-box',
+                zIndex: 10
+              }}
+            >
+              {/* Card 1: Machine Status Telemetry */}
+              <div 
+                className="glass-panel"
+                style={{
+                  background: 'rgba(11, 23, 51, 0.45)',
+                  border: '1px solid rgba(61, 114, 193, 0.2)',
+                  borderRadius: '6px',
+                  padding: '12px 16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Machine Status</span>
+                    <span style={{ fontSize: '10px', color: isPowerOn ? 'var(--color-green)' : 'var(--text-secondary)', fontWeight: '700' }}>
+                      {isPowerOn ? '● Running' : '○ Standby'}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px', color: 'var(--text-secondary)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>Speed Dial</span>
+                      <span style={{ color: '#FFFFFF', fontWeight: '700' }}>{isPowerOn ? simParams.speed : 0} RPM</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>Feed Depth</span>
+                      <span style={{ color: '#FFFFFF', fontWeight: '700' }}>{simParams.feed} mm/s</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>Engine Temp</span>
+                      <span style={{ color: '#FFFFFF', fontWeight: '700' }}>{isPowerOn ? Math.round(35 + simParams.speed * 0.02) : 23} °C</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Oscilloscope Real-time Telemetry wave */}
+                <div style={{ height: '35px', width: '100%', marginTop: '6px', overflow: 'hidden' }}>
+                  <svg width="100%" height="35" style={{ background: 'rgba(11, 23, 51, 0.85)', borderRadius: '4px' }}>
+                    <path 
+                      d={`M 0,17.5 L ${Array.from({ length: 25 }, (_, i) => {
+                        const x = (i / 24) * 200;
+                        const y = 17.5 + (isPowerOn ? Math.sin((i * 15 + wavePhase) * Math.PI / 180) * 12 : 0);
+                        return `${x},${y}`;
+                      }).join(' L ')}`}
+                      fill="none" 
+                      stroke="var(--brand-secondary)" 
+                      strokeWidth="1.5" 
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Card 2: Spindle Close-up Live View */}
+              <div 
+                className="glass-panel"
+                style={{
+                  background: 'rgba(11, 23, 51, 0.45)',
+                  border: '1px solid rgba(61, 114, 193, 0.2)',
+                  borderRadius: '6px',
+                  padding: '12px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '6px',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
+              >
+                <span style={{ fontSize: '11px', fontWeight: '800', color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Live View</span>
+                
+                {/* Styled close-up chamber graphic */}
+                <div 
+                  style={{ 
+                    flex: 1, 
+                    background: 'radial-gradient(circle, #0F1A34 0%, #080E1C 100%)', 
+                    borderRadius: '4px',
+                    position: 'relative',
+                    border: '1px solid rgba(61, 114, 193, 0.15)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  {/* Spindle wheel */}
+                  <div 
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      border: '3px dashed var(--brand-secondary)',
+                      transform: `rotate(${isPowerOn ? wavePhase * 2 : 0}deg)`,
+                      transition: isPowerOn ? 'none' : 'transform 0.5s ease-out'
+                    }}
+                  />
+                  {/* Cutter tooltip */}
+                  <div 
+                    style={{
+                      position: 'absolute',
+                      right: '15px',
+                      width: '20px',
+                      height: '8px',
+                      background: 'var(--text-secondary)',
+                      borderRadius: '2px'
+                    }}
+                  />
+                  {/* sparks generator overlay */}
+                  {isPowerOn && Array.from({ length: 4 }).map((_, idx) => (
+                    <div 
+                      key={idx}
+                      style={{
+                        position: 'absolute',
+                        width: '3px',
+                        height: '3px',
+                        background: '#3D72C1',
+                        boxShadow: '0 0 6px #9EB4E4',
+                        borderRadius: '50%',
+                        left: '42px',
+                        top: '24px',
+                        animation: `spark-fly 0.5s infinite linear`,
+                        animationDelay: `${idx * 0.1}s`
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Card 3: Material Specifications info */}
+              <div 
+                className="glass-panel"
+                style={{
+                  background: 'rgba(11, 23, 51, 0.45)',
+                  border: '1px solid rgba(61, 114, 193, 0.2)',
+                  borderRadius: '6px',
+                  padding: '12px 16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <div>
+                  <span style={{ fontSize: '11px', fontWeight: '800', color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Material Info</span>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', fontSize: '11px', color: 'var(--text-secondary)', marginTop: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>Raw Material:</span>
+                      <strong style={{ color: '#FFFFFF' }}>{machine.simulator.materialOptions[0]?.split(' ')[0] || 'Steel'}</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>Width stock:</span>
+                      <strong style={{ color: '#FFFFFF' }}>50 mm</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>Length stock:</span>
+                      <strong style={{ color: '#FFFFFF' }}>200 mm</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <button 
+                  onClick={resetSimulator}
+                  className="btn-login"
+                  style={{
+                    width: '100%',
+                    padding: '6px',
+                    borderRadius: '4px',
+                    fontSize: '11px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Reset Simulation
+                </button>
+              </div>
+
+            </div>
+          )}
 
           {/* Workpiece Operations Floating Panel */}
           {isWorkpieceSelected(selectedPartId, selectedId) && (
             <div style={{
               position: 'absolute',
-              bottom: '50px',
+              bottom: activeSubTab === 'operate' ? '240px' : '50px',
               left: '20px',
               width: '320px',
-              background: 'rgba(16, 24, 32, 0.95)',
-              border: '1px solid var(--accent-orange)',
+              background: 'rgba(11, 23, 51, 0.95)',
+              border: '1px solid var(--brand-secondary)',
               borderRadius: '6px',
               padding: '16px',
               zIndex: 100,
@@ -872,7 +1453,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
               color: '#FFF'
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <strong style={{ fontSize: '12px', color: 'var(--accent-orange)', fontFamily: 'var(--mono-font)' }}>
+                <strong style={{ fontSize: '12px', color: 'var(--brand-secondary)', fontFamily: 'var(--mono-font)' }}>
                   {machine.name.toUpperCase()} OPERATIONS
                 </strong>
                 <button
@@ -880,7 +1461,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                   style={{
                     background: 'transparent',
                     border: 'none',
-                    color: 'var(--color-text-secondary)',
+                    color: 'var(--text-secondary)',
                     cursor: 'pointer',
                     fontSize: '12px'
                   }}
@@ -889,7 +1470,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                 </button>
               </div>
 
-              <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-light)', paddingBottom: '8px' }}>
+              <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>
                 <button
                   onClick={() => setPracticeMode(true)}
                   style={{
@@ -897,9 +1478,9 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                     padding: '6px',
                     fontSize: '9px',
                     borderRadius: '2px',
-                    border: '1px solid ' + (practiceMode ? 'var(--accent-orange)' : 'var(--border)'),
-                    background: practiceMode ? 'rgba(242,140,40,0.1)' : 'transparent',
-                    color: practiceMode ? 'var(--accent-orange)' : 'var(--color-text-secondary)',
+                    border: '1px solid ' + (practiceMode ? 'var(--brand-primary)' : 'var(--border)'),
+                    background: practiceMode ? 'rgba(29, 73, 180, 0.1)' : 'transparent',
+                    color: practiceMode ? 'var(--brand-primary)' : 'var(--text-secondary)',
                     fontWeight: 'bold',
                     cursor: 'pointer',
                     fontFamily: 'var(--mono-font)'
@@ -914,9 +1495,9 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                     padding: '6px',
                     fontSize: '9px',
                     borderRadius: '2px',
-                    border: '1px solid ' + (!practiceMode ? 'var(--accent-orange)' : 'var(--border)'),
-                    background: !practiceMode ? 'rgba(242,140,40,0.1)' : 'transparent',
-                    color: !practiceMode ? 'var(--accent-orange)' : 'var(--color-text-secondary)',
+                    border: '1px solid ' + (!practiceMode ? 'var(--brand-primary)' : 'var(--border)'),
+                    background: !practiceMode ? 'rgba(29, 73, 180, 0.1)' : 'transparent',
+                    color: !practiceMode ? 'var(--brand-primary)' : 'var(--text-secondary)',
                     fontWeight: 'bold',
                     cursor: 'pointer',
                     fontFamily: 'var(--mono-font)'
@@ -939,10 +1520,10 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                         disabled={isLocked}
                         style={{
                           padding: '6px 10px',
-                          background: isFocused ? 'rgba(242, 140, 40, 0.15)' : isCompleted ? 'rgba(82, 183, 136, 0.08)' : 'rgba(255,255,255,0.02)',
-                          border: '1px solid ' + (isFocused ? 'var(--accent-orange)' : isCompleted ? 'var(--color-green)' : isLocked ? 'var(--border-light)' : 'var(--border)'),
+                          background: isFocused ? 'rgba(29, 73, 180, 0.15)' : isCompleted ? 'rgba(82, 183, 136, 0.08)' : 'rgba(255,255,255,0.02)',
+                          border: '1px solid ' + (isFocused ? 'var(--brand-primary)' : isCompleted ? 'var(--success)' : isLocked ? 'var(--border)' : 'var(--border)'),
                           borderRadius: '4px',
-                          color: isLocked ? '#555' : isCompleted ? 'var(--color-green)' : '#FFF',
+                          color: isLocked ? '#555' : isCompleted ? 'var(--success)' : '#FFF',
                           fontSize: '11px',
                           textAlign: 'left',
                           cursor: isLocked ? 'not-allowed' : 'pointer',
@@ -963,9 +1544,9 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
               {activeOperation && operationState === 'PREVIEW' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <div style={{ background: 'rgba(255,255,255,0.02)', padding: '10px', border: '1px solid var(--border)', borderRadius: '4px' }}>
-                    <div style={{ fontSize: '9px', color: 'var(--accent-orange)', fontWeight: 'bold' }}>PREVIEW OPERATION</div>
+                    <div style={{ fontSize: '9px', color: 'var(--brand-secondary)', fontWeight: 'bold' }}>PREVIEW OPERATION</div>
                     <div style={{ fontSize: '12px', fontWeight: 'bold', margin: '4px 0' }}>{activeOperation.name.toUpperCase()}</div>
-                    <div style={{ fontSize: '11px', color: 'var(--color-text-secondary)', lineHeight: '1.4' }}>{activeOperation.description}</div>
+                    <div style={{ fontSize: '11px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{activeOperation.description}</div>
                     <div style={{ fontSize: '11.5px', marginTop: '6px' }}>
                       <strong>Work Area:</strong> {activeOperation.workArea}<br/>
                       <strong>Required Tool:</strong> {activeOperation.tool}
@@ -977,8 +1558,8 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                       onClick={handleStartOperationSim}
                       style={{
                         flex: 1,
-                        background: 'var(--color-green)',
-                        color: '#000',
+                        background: 'var(--success)',
+                        color: '#FFF',
                         border: 'none',
                         padding: '8px',
                         borderRadius: '4px',
@@ -1035,9 +1616,9 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                         flex: 1,
                         padding: '6px',
                         background: 'rgba(255, 23, 68, 0.1)',
-                        border: '1px solid var(--color-red)',
+                        border: '1px solid var(--danger)',
                         borderRadius: '4px',
-                        color: 'var(--color-red)',
+                        color: 'var(--danger)',
                         cursor: 'pointer'
                       }}
                     >
@@ -1049,7 +1630,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
 
               {activeOperation && operationState === 'COMPLETED' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <div style={{ background: 'rgba(0, 230, 118, 0.08)', border: '1px solid var(--color-green)', color: 'var(--color-green)', padding: '10px', borderRadius: '4px', fontSize: '11px', lineHeight: '1.4' }}>
+                  <div style={{ background: 'rgba(0, 230, 118, 0.08)', border: '1px solid var(--success)', color: 'var(--success)', padding: '10px', borderRadius: '4px', fontSize: '11px', lineHeight: '1.4' }}>
                     ✓ {activeOperation.name.toUpperCase()} COMPLETED SUCCESSFUL!<br/>
                     <span style={{ color: '#FFF', fontSize: '10.5px' }}>{activeOperation.educationalExplanation}</span>
                   </div>
@@ -1075,9 +1656,9 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                       style={{
                         padding: '6px 12px',
                         background: 'rgba(255, 109, 0, 0.1)',
-                        border: '1px solid var(--accent-orange)',
+                        border: '1px solid var(--brand-secondary)',
                         borderRadius: '4px',
-                        color: 'var(--accent-orange)',
+                        color: 'var(--brand-secondary)',
                         cursor: 'pointer'
                       }}
                     >
@@ -1089,8 +1670,8 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                     onClick={() => handleCloseOperationCard()}
                     style={{
                       width: '100%',
-                      background: machine.color,
-                      color: '#000',
+                      background: 'var(--brand-primary)',
+                      color: '#FFF',
                       border: 'none',
                       padding: '8px',
                       borderRadius: '4px',
@@ -1107,7 +1688,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
             </div>
           )}
 
-          {/* Viewport toggles */}
+          {/* Viewport camera/mode toggles */}
           <div 
             style={{ 
               position: 'absolute', 
@@ -1124,9 +1705,9 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
               <button
                 onClick={() => { setIsExploded(!isExploded); if (assemblyComplete) resetAssembly(); }}
                 style={{
-                  background: isExploded ? 'rgba(242, 140, 40, 0.12)' : 'rgba(21, 23, 25, 0.85)',
-                  border: '1px solid ' + (isExploded ? 'var(--accent-orange)' : 'var(--border)'),
-                  color: isExploded ? 'var(--accent-orange)' : 'var(--text-primary)',
+                  background: isExploded ? 'rgba(29, 73, 180, 0.15)' : 'rgba(11, 23, 51, 0.85)',
+                  border: '1px solid ' + (isExploded ? 'var(--brand-primary)' : 'var(--border)'),
+                  color: isExploded ? '#FFFFFF' : 'var(--text-secondary)',
                   borderRadius: '6px',
                   padding: '8px 14px',
                   fontSize: '11px',
@@ -1142,9 +1723,9 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
               <button
                 onClick={() => setIsCutaway(!isCutaway)}
                 style={{
-                  background: isCutaway ? 'rgba(242, 140, 40, 0.12)' : 'rgba(21, 23, 25, 0.85)',
-                  border: '1px solid ' + (isCutaway ? 'var(--accent-orange)' : 'var(--border)'),
-                  color: isCutaway ? 'var(--accent-orange)' : 'var(--text-primary)',
+                  background: isCutaway ? 'rgba(29, 73, 180, 0.15)' : 'rgba(11, 23, 51, 0.85)',
+                  border: '1px solid ' + (isCutaway ? 'var(--brand-primary)' : 'var(--border)'),
+                  color: isCutaway ? '#FFFFFF' : 'var(--text-secondary)',
                   borderRadius: '6px',
                   padding: '8px 14px',
                   fontSize: '11px',
@@ -1169,9 +1750,9 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                   key={cam.id}
                   onClick={() => setCameraMode(cam.id)}
                   style={{
-                    background: cameraMode === cam.id ? 'rgba(242, 140, 40, 0.12)' : 'rgba(21, 23, 25, 0.85)',
-                    border: '1px solid ' + (cameraMode === cam.id ? 'var(--accent-orange)' : 'var(--border)'),
-                    color: cameraMode === cam.id ? 'var(--accent-orange)' : 'var(--text-primary)',
+                    background: cameraMode === cam.id ? 'rgba(29, 73, 180, 0.15)' : 'rgba(11, 23, 51, 0.85)',
+                    border: '1px solid ' + (cameraMode === cam.id ? 'var(--brand-primary)' : 'var(--border)'),
+                    color: cameraMode === cam.id ? '#FFFFFF' : 'var(--text-secondary)',
                     borderRadius: '4px',
                     padding: '6px 10px',
                     fontSize: '10px',
@@ -1184,490 +1765,319 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
               ))}
             </div>
           </div>
+
         </div>
 
-        {/* RIGHT COLUMN: Interactive Control Panels */}
+        {/* COLUMN 3: STATUS / DIALOGUE / METROLOGY FEEDBACK */}
         <div 
           style={{ 
-            borderLeft: '1px solid var(--border-light)', 
-            padding: '20px', 
+            borderLeft: '1px solid var(--border)', 
+            padding: '24px', 
             display: 'flex', 
             flexDirection: 'column', 
             gap: '20px',
-            background: 'var(--surface)',
+            background: 'rgba(11, 23, 51, 0.4)',
             overflowY: 'auto'
           }}
         >
-          {isWorkpieceSelected(selectedPartId, selectedId) ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', color: 'var(--text-primary)' }}>
-              <span className="telemetry-label">WORKPIECE / OPERATIONS</span>
-              <div style={{ background: 'var(--bg-primary)', border: '1px solid var(--border)', padding: '12px', borderRadius: '4px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
-                  <span>Material:</span>
-                  <strong style={{ color: machine.color }}>Steel</strong>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
-                  <span>Status:</span>
-                  <strong style={{ color: 'var(--color-green)' }}>{operationState}</strong>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
-                  <span>Operations Available:</span>
-                  <strong style={{ color: 'var(--primary-blue)' }}>{machine.operations.length}</strong>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
-                  <span>Last Operation:</span>
-                  <strong style={{ color: '#FFF' }}>
-                    {operationHistory.length > 0 ? machine.operations.find(o=>o.id===operationHistory[operationHistory.length-1])?.name || 'None' : 'None'}
-                  </strong>
-                </div>
-              </div>
-
-              <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '12px' }}>
-                <span className="telemetry-label">Select Action</span>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '8px' }}>
-                  {machine.operations.map((op, idx) => {
-                    const isCompleted = operationHistory.includes(op.id);
-                    const isFocused = focusedOpIdx === idx;
-                    return (
-                      <button
-                        key={op.id}
-                        onClick={() => handleSelectOperation(op)}
-                        style={{
-                          padding: '8px 12px',
-                          background: isCompleted ? 'rgba(82, 183, 136, 0.08)' : isFocused ? 'rgba(242,140,40,0.05)' : 'transparent',
-                          border: '1px solid ' + (isFocused ? 'var(--accent-orange)' : 'var(--border)'),
-                          color: isCompleted ? 'var(--color-green)' : '#FFF',
-                          borderRadius: '4px',
-                          fontSize: '11px',
-                          textAlign: 'left',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          justifyContent: 'space-between'
-                        }}
-                      >
-                        <span>{op.name}</span>
-                        {isCompleted && <span>✓</span>}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          ) : activeSubTab === 'explorer' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <span className="telemetry-label">3D Component Inspector</span>
+          {activeSubTab === 'operate' ? (
+            // OPERATE MODE SUB-TABS (Tools, Measurement, Settings)
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', height: '100%' }}>
               
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '250px', overflowY: 'auto', paddingRight: '4px' }}>
-                {machine.parts.map((p) => {
-                  const isSelected = selectedPartId === p.id;
-                  const isFocused = focusedPartId === p.id;
-                  return (
-                    <button
-                      key={p.id}
-                      onClick={() => handlePartSelect(p.id)}
-                      onFocus={() => setFocusedPartId(p.id)}
-                      onBlur={() => { if (focusedPartId === p.id) setFocusedPartId(null); }}
-                      style={{
-                        padding: '8px 12px',
-                        background: isSelected ? 'rgba(29, 73, 180, 0.08)' : 'rgba(194, 202, 217, 0.08)',
-                        border: isFocused ? '2px solid var(--primary-blue)' : '1px solid ' + (isSelected ? 'var(--primary-blue)' : 'var(--border)'),
-                        borderRadius: '4px',
-                        color: isSelected ? 'var(--primary-blue)' : 'var(--text-primary)',
-                        textAlign: 'left',
-                        fontSize: '11px',
-                        fontWeight: isSelected ? '700' : '500',
-                        cursor: 'pointer',
-                        boxShadow: isFocused ? '0 0 8px var(--primary-blue)' : 'none',
-                        outline: 'none',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center'
-                      }}
-                    >
-                      <span>{p.name.toUpperCase()}</span>
-                      {isSelected && <span style={{ fontSize: '10px' }}>●</span>}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {activePart && (
-                <div style={{ borderLeft: `3px solid ${machine.color}`, paddingLeft: '12px', borderTop: '1px solid var(--border-light)', paddingTop: '12px' }}>
-                  <h4 style={{ fontSize: '14px', fontWeight: '800', color: '#FFF' }}>{activePart.name}</h4>
-                  <p style={{ fontSize: '11.5px', color: 'var(--color-text-secondary)', marginTop: '4px', lineHeight: '1.4' }}>
-                    {activePart.desc}
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Identify Part Game */}
-          {activeSubTab === 'identify' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <span className="telemetry-label">Part Identification Challenge</span>
-              {identifyTargetPart && (
-                <div style={{ padding: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)', borderRadius: '4px' }}>
-                  <p style={{ fontSize: '12px', color: '#FFF', fontWeight: 'bold' }}>
-                    Goal: Click the <span style={{ color: machine.color }}>[ {identifyTargetPart.name} ]</span> on the 3D model, or select it below.
-                  </p>
-                </div>
-              )}
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '200px', overflowY: 'auto' }}>
-                {machine.parts.map((p) => (
+              {/* Sidebar Header Tabs switcher */}
+              <div 
+                style={{ 
+                  display: 'flex', 
+                  borderBottom: '1px solid rgba(61, 114, 193, 0.25)', 
+                  paddingBottom: '4px',
+                  gap: '8px'
+                }}
+              >
+                {['tools', 'measurement', 'settings'].map(tabId => (
                   <button
-                    key={p.id}
-                    onClick={() => handlePartSelect(p.id)}
+                    key={tabId}
+                    onClick={() => setActiveRightTab(tabId)}
                     style={{
-                      padding: '8px',
-                      background: 'rgba(255,255,255,0.01)',
-                      border: '1px solid var(--border)',
-                      borderRadius: '4px',
-                      color: '#FFF',
+                      flex: 1,
+                      padding: '8px 4px',
+                      background: 'transparent',
+                      border: 'none',
+                      borderBottom: activeRightTab === tabId ? '2px solid var(--brand-primary)' : '2px solid transparent',
+                      color: activeRightTab === tabId ? '#FFFFFF' : 'var(--text-secondary)',
                       fontSize: '11px',
+                      fontWeight: '700',
                       cursor: 'pointer',
-                      textAlign: 'left'
+                      textTransform: 'uppercase',
+                      transition: 'all 0.2s'
                     }}
                   >
-                    {p.name}
+                    {tabId}
                   </button>
                 ))}
               </div>
 
-              {identifyFeedback && (
-                <div style={{
-                  padding: '10px',
-                  borderRadius: '4px',
-                  background: identifySuccess ? 'rgba(0, 230, 118, 0.08)' : 'rgba(255, 23, 68, 0.08)',
-                  border: '1px solid ' + (identifySuccess ? 'var(--color-green)' : 'var(--color-red)'),
-                  color: identifySuccess ? 'var(--color-green)' : 'var(--color-red)',
-                  fontSize: '11.5px',
-                  lineHeight: '1.4'
-                }}>
-                  {identifyFeedback}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Safety Locker */}
-          {activeSubTab === 'safety' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', height: '100%', justifyContent: 'space-between' }}>
-              <div>
-                <span className="telemetry-label">Safety Compliance Check</span>
-                <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', marginTop: '4px' }}>
-                  Select required PPE before starting operations.
-                </p>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '12px' }}>
-                  {[
-                    { id: 'goggles', label: 'Safety Goggles' },
-                    { id: 'gloves', label: 'Heavy Duty Leather Gloves' },
-                    { id: 'clothing', label: 'Tight Shop Clothing' },
-                    { id: 'shoes', label: 'Steel Safety Shoes' },
-                    { id: 'shield', label: 'Welding UV Visor Mask' }
-                  ].map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => handleSafetyToggle(item.id)}
-                      style={{
-                        padding: '10px',
-                        background: safetyItems[item.id] ? 'rgba(242, 140, 40, 0.05)' : 'var(--surface)',
-                        border: '1px solid ' + (safetyItems[item.id] ? 'var(--accent-orange)' : 'var(--border)'),
-                        borderRadius: '6px',
-                        cursor: 'pointer',
-                        fontSize: '12px',
-                        textAlign: 'left',
-                        color: '#FFF',
-                        transition: 'all 0.2s'
-                      }}
-                    >
-                      {item.label} {safetyItems[item.id] ? '✓' : ''}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                {safetyFeedback && (
-                  <div style={{ 
-                    padding: '10px', 
-                    borderRadius: '4px', 
-                    background: safetyPassed ? 'rgba(0, 230, 118, 0.08)' : 'rgba(255, 23, 68, 0.08)',
-                    border: '1px solid ' + (safetyPassed ? 'var(--color-green)' : 'var(--color-red)'),
-                    color: safetyPassed ? 'var(--color-green)' : 'var(--color-red)',
-                    fontSize: '11px',
-                    lineHeight: '1.4',
-                    marginBottom: '10px'
-                  }}>
-                    {safetyFeedback}
+              {/* Tab Outputs Panel */}
+              <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
+                {activeRightTab === 'tools' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {(MACHINE_TOOLS[selectedId] || ['Turning Tool']).map(t => {
+                      const isSelected = selectedTool === t;
+                      return (
+                        <div
+                          key={t}
+                          onClick={() => {
+                            setSelectedTool(t);
+                            setSimTool(t);
+                          }}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            padding: '12px',
+                            background: isSelected ? 'rgba(29, 73, 180, 0.08)' : 'rgba(11, 23, 51, 0.45)',
+                            border: '1px solid ' + (isSelected ? 'var(--brand-primary)' : 'rgba(61, 114, 193, 0.15)'),
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s'
+                          }}
+                        >
+                          {/* Mini desaturated illustration box representing tool */}
+                          <div 
+                            style={{
+                              width: '32px',
+                              height: '32px',
+                              borderRadius: '4px',
+                              background: 'rgba(29, 73, 180, 0.15)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              flexShrink: 0
+                            }}
+                          >
+                            <Settings size={16} style={{ color: 'var(--brand-secondary)' }} />
+                          </div>
+                          
+                          <span style={{ fontSize: '12px', fontWeight: '700', color: isSelected ? '#FFFFFF' : 'var(--text-secondary)' }}>
+                            {t}
+                          </span>
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
-                <button 
-                  onClick={checkSafety}
-                  className="btn-primary"
-                  style={{ width: '100%', justifyContent: 'center' }}
-                >
-                  VERIFY COMPLIANCE
-                </button>
-              </div>
-            </div>
-          )}
 
-          {/* Setup Assembly */}
-          {activeSubTab === 'setup' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', height: '100%', justifyContent: 'space-between' }}>
-              <div>
-                <span className="telemetry-label">Assembly & Clamping Workbench</span>
-                <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', marginTop: '4px' }}>
-                  Mount and clamp raw materials to get machine ready.
-                </p>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '12px' }}>
-                  <button
-                    onClick={() => toggleSetupChecklist('stockSecured')}
-                    style={{
-                      padding: '10px',
-                      background: setupChecklist.stockSecured ? 'rgba(82, 183, 136, 0.08)' : 'transparent',
-                      border: '1px solid ' + (setupChecklist.stockSecured ? 'var(--color-green)' : 'var(--border)'),
-                      color: '#FFF', fontSize: '11.5px', borderRadius: '4px', cursor: 'pointer', textAlign: 'left'
-                    }}
-                  >
-                    Mount Raw Workpiece Stock {setupChecklist.stockSecured ? '✓' : ''}
-                  </button>
-                  <button
-                    onClick={() => toggleSetupChecklist('toolClamped')}
-                    style={{
-                      padding: '10px',
-                      background: setupChecklist.toolClamped ? 'rgba(82, 183, 136, 0.08)' : 'transparent',
-                      border: '1px solid ' + (setupChecklist.toolClamped ? 'var(--color-green)' : 'var(--border)'),
-                      color: '#FFF', fontSize: '11.5px', borderRadius: '4px', cursor: 'pointer', textAlign: 'left'
-                    }}
-                  >
-                    Clamp Cutting Tool bit {setupChecklist.toolClamped ? '✓' : ''}
-                  </button>
-                  <button
-                    onClick={() => toggleSetupChecklist('safetyGuardAligned')}
-                    style={{
-                      padding: '10px',
-                      background: setupChecklist.safetyGuardAligned ? 'rgba(82, 183, 136, 0.08)' : 'transparent',
-                      border: '1px solid ' + (setupChecklist.safetyGuardAligned ? 'var(--color-green)' : 'var(--border)'),
-                      color: '#FFF', fontSize: '11.5px', borderRadius: '4px', cursor: 'pointer', textAlign: 'left'
-                    }}
-                  >
-                    Align Protective Shield Shield {setupChecklist.safetyGuardAligned ? '✓' : ''}
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                {setupPassed ? (
-                  <div style={{ padding: '10px', background: 'rgba(0, 230, 118, 0.08)', border: '1px solid var(--color-green)', color: 'var(--color-green)', borderRadius: '4px', fontSize: '11px' }}>
-                    ✓ Workpiece setup lock complete. Simulator ready!
+                {activeRightTab === 'measurement' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <div style={{ background: 'rgba(11,23,51,0.5)', border: '1px solid rgba(61, 114, 193, 0.25)', padding: '16px', borderRadius: '6px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
+                        <span style={{ color: 'var(--text-secondary)' }}>Quality Standard</span>
+                        <strong style={{ color: 'var(--brand-secondary)' }}>ISO 2768</strong>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
+                        <span style={{ color: 'var(--text-secondary)' }}>Target Depth</span>
+                        <strong style={{ color: '#FFFFFF' }}>36.00 mm</strong>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
+                        <span style={{ color: 'var(--text-secondary)' }}>Tolerance Range</span>
+                        <strong style={{ color: '#FFFFFF' }}>± 0.05 mm</strong>
+                      </div>
+                    </div>
                   </div>
-                ) : (
-                  <div style={{ padding: '10px', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border)', fontSize: '11px' }}>
-                    Mount raw metal workpiece to proceed.
+                )}
+
+                {activeRightTab === 'settings' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '12px', color: 'var(--text-secondary)', cursor: 'pointer' }}>
+                      <input type="checkbox" defaultChecked style={{ accentColor: 'var(--brand-primary)' }} />
+                      Enable Lubricant Coolant
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '12px', color: 'var(--text-secondary)', cursor: 'pointer' }}>
+                      <input type="checkbox" defaultChecked style={{ accentColor: 'var(--brand-primary)' }} />
+                      Engage Automatic Feed Gear
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '12px', color: 'var(--text-secondary)', cursor: 'pointer' }}>
+                      <input type="checkbox" style={{ accentColor: 'var(--brand-primary)' }} />
+                      Imperial Units system (in)
+                    </label>
                   </div>
                 )}
               </div>
+
             </div>
-          )}
-
-          {/* Operate Simulator */}
-          {activeSubTab === 'operate' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <span className="telemetry-label">Operation Simulator Cockpit</span>
-              
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>Status:</span>
-                {machineState === 'READY' && <span style={{ color: '#FFF', fontSize: '10px', fontWeight: 'bold' }}>● READY</span>}
-                {machineState === 'RUNNING' && <span style={{ color: 'var(--color-green)', fontSize: '10px', fontWeight: 'bold' }}>● RUNNING</span>}
-                {machineState === 'WARNING' && <span style={{ color: 'var(--color-red)', fontSize: '10px', fontWeight: 'bold' }}>⚠ WARNING</span>}
-                {machineState === 'COMPLETED' && <span style={{ color: 'var(--color-green)', fontSize: '10px', fontWeight: 'bold' }}>✓ COMPLETED</span>}
-              </div>
-
-              {!safetyPassed || !setupPassed ? (
-                <div style={{ padding: '12px', background: 'rgba(255, 109, 0, 0.08)', border: '1px solid var(--accent-orange)', color: 'var(--accent-orange)', fontSize: '11px', borderRadius: '4px' }}>
-                  ⚠ ACCESS LOCKED: Verify safety checklist (tab 3) and workpiece mounting (tab 4) before operation.
-                </div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <div>
-                    <h5 style={{ fontSize: '11px', color: '#FFF' }}>Workpiece Material:</h5>
-                    <div style={{ padding: '8px', border: '1px solid var(--border)', background: 'rgba(0,0,0,0.2)', borderRadius: '4px', fontSize: '11px' }}>
-                      {machine.simulator.materialOptions[0]}
+          ) : (
+            // OUTPUT PANELS FOR THE OTHER 8 SUB-TABS
+            <>
+              {activeSubTab === 'explorer' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <span className="telemetry-label">Component Details</span>
+                  {activePart && (
+                    <div style={{ borderLeft: `3px solid var(--brand-primary)`, paddingLeft: '12px', background: 'rgba(11,23,51,0.25)', padding: '16px', borderRadius: '4px' }}>
+                      <h4 style={{ fontSize: '13px', fontWeight: '800', color: '#FFFFFF', marginBottom: '8px' }}>{activePart.name}</h4>
+                      <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{activePart.desc}</p>
                     </div>
-                  </div>
-
-                  <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
-                      <span>Cutting Parameters Speed (RPM / Current):</span>
-                      <strong>{simParams.speed}</strong>
-                    </div>
-                    <input type="range" min={machine.simulator.paramRanges.speed.min} max={machine.simulator.paramRanges.speed.max} value={simParams.speed} onChange={(e) => setSimParams({...simParams, speed: parseInt(e.target.value)})} style={{ width: '100%', accentColor: machine.color }} />
-                  </div>
-
-                  <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
-                      <span>Feed Rate (mm/rev):</span>
-                      <strong>{simParams.feed}</strong>
-                    </div>
-                    <input type="range" min={machine.simulator.paramRanges.feed.min*100} max={machine.simulator.paramRanges.feed.max*100} value={simParams.feed*100} onChange={(e) => setSimParams({...simParams, feed: parseFloat((parseInt(e.target.value)/100).toFixed(2))})} style={{ width: '100%', accentColor: machine.color }} />
-                  </div>
-
-                  {isSimRunning ? (
-                    <div style={{ background: 'rgba(0,0,0,0.2)', padding: '10px', border: '1px solid var(--border)', borderRadius: '4px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px' }}>
-                        <span>Machining Progress...</span>
-                        <span>{simProgressPercent}%</span>
-                      </div>
-                      <div style={{ height: '4px', background: 'var(--border)', borderRadius: '2px', marginTop: '6px', overflow: 'hidden' }}>
-                        <div style={{ height: '100%', width: `${simProgressPercent}%`, background: machine.color }}></div>
-                      </div>
-                    </div>
-                  ) : (
-                     <button onClick={handleStartSim} className="btn-primary" style={{ background: 'var(--success)', border: '1px solid var(--success)', color: '#FFFFFF' }}>
-                       START 3D OPERATION
-                     </button>
                   )}
                 </div>
               )}
 
-              {simFeedback && (
-                <div style={{ padding: '10px', background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border)', borderRadius: '4px', fontSize: '11px' }}>
-                  {simFeedback}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Experiment Lab */}
-          {activeSubTab === 'experiments' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <span className="telemetry-label">Variables Optimization Lab</span>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {machine.experiments.variables.map(v => (
-                  <div key={v.id}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '4px' }}>
-                      <span>{v.name}</span>
-                      <strong style={{ color: machine.color }}>{expVariables[v.id] || v.default}</strong>
+              {activeSubTab === 'identify' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <span className="telemetry-label">Diagnostics Response</span>
+                  {identifyFeedback && (
+                    <div style={{
+                      padding: '12px',
+                      borderRadius: '4px',
+                      background: identifySuccess ? 'rgba(46, 125, 50, 0.08)' : 'rgba(198, 40, 40, 0.08)',
+                      border: '1px solid ' + (identifySuccess ? 'var(--success)' : 'var(--danger)'),
+                      color: identifySuccess ? 'var(--success)' : 'var(--danger)',
+                      fontSize: '11.5px',
+                      lineHeight: '1.4'
+                    }}>
+                      {identifyFeedback}
                     </div>
-                    <input type="range" min={v.min} max={v.max} step={v.step} value={expVariables[v.id] || v.default} onChange={(e)=>handleVariableChange(v.id, e.target.value)} style={{ width: '100%', accentColor: machine.color }} />
-                  </div>
-                ))}
-              </div>
+                  )}
+                </div>
+              )}
 
-              {expResults && (
-                <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {activeSubTab === 'safety' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', height: '100%', justifyContent: 'space-between' }}>
+                  <div>
+                    <span className="telemetry-label">Compliance Evaluation</span>
+                    {safetyFeedback && (
+                      <div style={{
+                        padding: '10px',
+                        background: safetyPassed ? 'rgba(46,125,50,0.08)' : 'rgba(198,40,40,0.08)',
+                        border: '1px solid ' + (safetyPassed ? 'var(--success)' : 'var(--danger)'),
+                        color: safetyPassed ? 'var(--success)' : 'var(--danger)',
+                        borderRadius: '4px',
+                        fontSize: '11px',
+                        lineHeight: '1.4',
+                        marginTop: '10px'
+                      }}>
+                        {safetyFeedback}
+                      </div>
+                    )}
+                  </div>
+                  <button 
+                    onClick={checkSafety}
+                    className="btn-login"
+                    style={{ width: '100%', justifyContent: 'center' }}
+                  >
+                    Verify Safety Compliance
+                  </button>
+                </div>
+              )}
+
+              {activeSubTab === 'setup' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <span className="telemetry-label">Mounting Status</span>
+                  {setupPassed ? (
+                    <div style={{ padding: '12px', background: 'rgba(46,125,50,0.08)', border: '1px solid var(--success)', color: 'var(--success)', borderRadius: '4px', fontSize: '11px' }}>
+                      ✓ Workpiece stock clamping completed. Simulator ready to run!
+                    </div>
+                  ) : (
+                    <div style={{ padding: '12px', background: 'rgba(11,23,51,0.25)', border: '1px solid var(--border)', borderRadius: '4px', fontSize: '11px', color: 'var(--text-secondary)' }}>
+                      Mount and secure raw stock metal to initiate operation.
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {activeSubTab === 'experiments' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   <span className="telemetry-label">Lab Telemetry Outputs</span>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
-                    <span>Material Removal Rate:</span>
-                    <strong style={{ color: 'var(--accent-orange)' }}>{expResults.mrr} mm³/s</strong>
+                  {expResults && (
+                    <div style={{ background: 'rgba(11,23,51,0.5)', border: '1px solid rgba(61, 114, 193, 0.25)', padding: '16px', borderRadius: '6px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
+                        <span style={{ color: 'var(--text-secondary)' }}>Material Removal Rate:</span>
+                        <strong style={{ color: 'var(--brand-primary)' }}>{expResults.mrr} mm³/s</strong>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
+                        <span style={{ color: 'var(--text-secondary)' }}>Cutting Heat Temp:</span>
+                        <strong style={{ color: 'var(--brand-secondary)' }}>{expResults.temp} °C</strong>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
+                        <span style={{ color: 'var(--text-secondary)' }}>{expResults.roughnessLabel}:</span>
+                        <strong style={{ color: 'var(--accent-light)' }}>{expResults.roughness}</strong>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {activeSubTab === 'troubleshooting' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', height: '100%', justifyContent: 'space-between' }}>
+                  <div>
+                    <span className="telemetry-label">Diagnostics Response</span>
+                    {troubleFeedback && (
+                      <div style={{ 
+                        padding: '10px', 
+                        borderRadius: '4px', 
+                        background: troublePassed ? 'rgba(46,125,50,0.08)' : 'rgba(198,40,40,0.08)', 
+                        border: '1px solid ' + (troublePassed ? 'var(--success)' : 'var(--danger)'), 
+                        color: troublePassed ? 'var(--success)' : 'var(--danger)', 
+                        fontSize: '11px', 
+                        lineHeight: '1.4', 
+                        marginTop: '10px' 
+                      }}>
+                        {troubleFeedback}
+                      </div>
+                    )}
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
-                    <span>Cutting Heat Temp:</span>
-                    <strong style={{ color: 'var(--accent-amber)' }}>{expResults.temp} °C</strong>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
-                    <span>{expResults.roughnessLabel}:</span>
-                    <strong style={{ color: 'var(--color-green)' }}>{expResults.roughness}</strong>
+                  <button 
+                    onClick={handleCheckTroubleshoot} 
+                    disabled={!selectedOptionId} 
+                    className="btn-login" 
+                    style={{ width: '100%', justifyContent: 'center' }}
+                  >
+                    Submit Diagnosis
+                  </button>
+                </div>
+              )}
+
+              {activeSubTab === 'inspect' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <span className="telemetry-label">Metrology Report</span>
+                  {inspectFeedback && (
+                    <div style={{
+                      padding: '12px',
+                      borderRadius: '4px',
+                      background: inspectSuccess ? 'rgba(46,125,50,0.08)' : 'rgba(198,40,40,0.08)',
+                      border: '1px solid ' + (inspectSuccess ? 'var(--success)' : 'var(--danger)'),
+                      color: inspectSuccess ? 'var(--success)' : 'var(--danger)',
+                      fontSize: '11.5px',
+                      lineHeight: '1.4'
+                    }}>
+                      {inspectFeedback}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {activeSubTab === 'scorecard' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <span className="telemetry-label">Performance Scorecard</span>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', background: 'rgba(11,23,51,0.5)', border: '1px solid rgba(61, 114, 193, 0.25)', padding: '16px', borderRadius: '6px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
+                      <span style={{ color: 'var(--text-secondary)' }}>Safety Rating:</span>
+                      <strong style={{ color: 'var(--success)' }}>100% compliant</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
+                      <span style={{ color: 'var(--text-secondary)' }}>Machining Accuracy:</span>
+                      <strong style={{ color: 'var(--brand-secondary)' }}>Within ±0.02 mm</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
+                      <span style={{ color: 'var(--text-secondary)' }}>XP Awarded:</span>
+                      <strong style={{ color: 'var(--brand-primary)' }}>+250 XP</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
+                      <span style={{ color: 'var(--text-secondary)' }}>Badge Earned:</span>
+                      <strong style={{ color: 'var(--accent-light)', textTransform: 'uppercase' }}>{selectedId} apprentice</strong>
+                    </div>
                   </div>
                 </div>
               )}
-            </div>
+            </>
           )}
-
-          {/* Troubleshooting */}
-          {activeSubTab === 'troubleshooting' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', height: '100%', justifyContent: 'space-between' }}>
-              <div>
-                <span className="telemetry-label">Machine Fault Diagnostics</span>
-                <h5 style={{ fontSize: '13px', color: '#FFF', marginTop: '6px' }}>{machine.troubleshoot[troubleIdx].title}</h5>
-                <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', marginTop: '4px' }}>{machine.troubleshoot[troubleIdx].desc}</p>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '12px' }}>
-                  {machine.troubleshoot[troubleIdx].options.map(opt => (
-                    <button key={opt.id} onClick={() => setSelectedOptionId(opt.id)} style={{ padding: '10px', background: selectedOptionId === opt.id ? 'rgba(242, 140, 40, 0.05)' : 'transparent', border: '1px solid ' + (selectedOptionId === opt.id ? 'var(--accent-orange)' : 'var(--border)'), borderRadius: '6px', cursor: 'pointer', fontSize: '11.5px', textAlign: 'left', color: '#FFF' }}>
-                      {opt.text}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                {troubleFeedback && (
-                  <div style={{ padding: '10px', borderRadius: '4px', background: troublePassed ? 'rgba(0, 230, 118, 0.08)' : 'rgba(255, 23, 68, 0.08)', border: '1px solid ' + (troublePassed ? 'var(--color-green)' : 'var(--color-red)'), color: troublePassed ? 'var(--color-green)' : 'var(--color-red)', fontSize: '11px', lineHeight: '1.4', marginBottom: '10px' }}>
-                    {troubleFeedback}
-                  </div>
-                )}
-                 <button onClick={handleCheckTroubleshoot} disabled={!selectedOptionId} className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>SUBMIT DIAGNOSIS</button>
-              </div>
-            </div>
-          )}
-
-          {/* Inspect Part */}
-          {activeSubTab === 'inspect' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', height: '100%', justifyContent: 'space-between' }}>
-              <div>
-                <span className="telemetry-label">Quality Control Metrology</span>
-                <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', marginTop: '4px' }}>
-                  Use digital calipers to measure target dimension tolerances of finished part.
-                </p>
-
-                 <button 
-                   onClick={handleInspectCaliper}
-                   className="btn-primary"
-                   style={{ marginTop: '12px' }}
-                 >
-                   Measure Workpiece
-                 </button>
-              </div>
-
-              {inspectFeedback && (
-                <div style={{
-                  padding: '12px',
-                  borderRadius: '4px',
-                  background: inspectSuccess ? 'rgba(0, 230, 118, 0.08)' : 'rgba(255, 23, 68, 0.08)',
-                  border: '1px solid ' + (inspectSuccess ? 'var(--color-green)' : 'var(--color-red)'),
-                  color: inspectSuccess ? 'var(--color-green)' : 'var(--color-red)',
-                  fontSize: '11.5px',
-                  lineHeight: '1.4'
-                }}>
-                  {inspectFeedback}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Scorecard */}
-          {activeSubTab === 'scorecard' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <span className="telemetry-label">Completed Performance Scorecard</span>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border)', padding: '16px', borderRadius: '6px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
-                  <span>Safety Rating:</span>
-                  <strong style={{ color: 'var(--color-green)' }}>100% compliant</strong>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
-                  <span>Machining Accuracy:</span>
-                  <strong style={{ color: 'var(--accent-orange)' }}>Within ±0.02 mm</strong>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
-                  <span>XP Awarded:</span>
-                  <strong style={{ color: 'var(--accent-orange)' }}>+400 XP</strong>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
-                  <span>Earned Certification Badge:</span>
-                  <strong style={{ color: 'var(--accent-amber)' }}>{selectedId.toUpperCase()} APPRENTICE</strong>
-                </div>
-              </div>
-            </div>
-          )}
-
         </div>
 
       </div>
