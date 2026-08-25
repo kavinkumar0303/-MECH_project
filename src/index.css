@@ -1,32 +1,30 @@
 :root {
-  --brand-primary: #1D49B4;
-  --brand-secondary: #3D72C1;
-  --deep-navy: #0B1733;
-  --shadow-navy: #3B4B6F;
-  --robot-highlight: #4D72C1;
-  --robot-mid: #9EB4E4;
-  --ambient-grey: #C2CAD9;
-  --surface-bg: #F5F5F5;
-  --text-primary: #FFFFFF;
-  --text-secondary: #9EB4E4;
+  --brand-primary: #3865BE;
+  --brand-secondary: #1E5BBA;
+  --deep-navy: #010816;
+  --shadow-navy: #18243D;
+  --robot-highlight: #3865BE;
+  --robot-mid: #C4D6EE;
+  --ambient-grey: #C4D6EE;
+  --surface-bg: #010816;
+  --text-primary: #D3D9E9;
+  --text-secondary: #C4D6EE;
 
-  --primary-blue: #1D49B4;
-  --secondary-blue: #3D72C1;
-  --cool-grey-blue: #C2CAD9;
-  --background: #0B1733;
-  --text-headline: #FFFFFF;
+  --primary-blue: #3865BE;
+  --secondary-blue: #1E5BBA;
+  --cool-grey-blue: #C4D6EE;
+  --background: #010816;
+  --text-headline: #D3D9E9;
 
-  --bg-primary: #0B1733;
-  --bg-secondary: #112147;
-  --surface: #16264F;
-  --steel-light: #9EB4E4;
-  --accent-orange: #1D49B4;
-  --accent-amber: #3D72C1;
-  --text-primary: #FFFFFF;
-  --text-secondary: #9EB4E4;
+  --bg-primary: #010816;
+  --bg-secondary: #03142E;
+  --surface: #03142E;
+  --steel-light: #C4D6EE;
+  --accent-orange: #3865BE;
+  --accent-amber: #1E5BBA;
   
-  --border: #3B4B6F;
-  --border-active: #3D72C1;
+  --border: #18243D;
+  --border-active: #1E5BBA;
   
   --success: #2E7D32;
   --warning: #EF6C00;
@@ -45,9 +43,9 @@
 body {
   background-color: var(--bg-primary);
   background-image: 
-    radial-gradient(circle at 50% 50%, rgba(61, 114, 193, 0.2) 0%, var(--bg-primary) 100%),
-    linear-gradient(0deg, transparent 24%, rgba(61, 114, 193, 0.08) 25%, rgba(61, 114, 193, 0.08) 26%, transparent 27%, transparent 74%, rgba(61, 114, 193, 0.08) 75%, rgba(61, 114, 193, 0.08) 76%, transparent 77%),
-    linear-gradient(90deg, transparent 24%, rgba(61, 114, 193, 0.08) 25%, rgba(61, 114, 193, 0.08) 26%, transparent 27%, transparent 74%, rgba(61, 114, 193, 0.08) 75%, rgba(61, 114, 193, 0.08) 76%, transparent 77%);
+    radial-gradient(circle at 50% 50%, rgba(30, 91, 186, 0.15) 0%, var(--bg-primary) 100%),
+    linear-gradient(0deg, transparent 24%, rgba(30, 91, 186, 0.05) 25%, rgba(30, 91, 186, 0.05) 26%, transparent 27%, transparent 74%, rgba(30, 91, 186, 0.05) 75%, rgba(30, 91, 186, 0.05) 76%, transparent 77%),
+    linear-gradient(90deg, transparent 24%, rgba(30, 91, 186, 0.05) 25%, rgba(30, 91, 186, 0.05) 26%, transparent 27%, transparent 74%, rgba(30, 91, 186, 0.05) 75%, rgba(30, 91, 186, 0.05) 76%, transparent 77%);
   background-size: 100% 100%, 40px 40px, 40px 40px;
   background-attachment: fixed;
   color: var(--text-primary);

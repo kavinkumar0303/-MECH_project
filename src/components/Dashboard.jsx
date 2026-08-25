@@ -154,7 +154,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
             key={card.id}
             className="glass-panel"
             style={{
-              background: 'rgba(11, 23, 51, 0.65)',
+              background: 'rgba(6, 31, 70, 0.65)',
               border: '1px solid rgba(61, 114, 193, 0.25)',
               borderRadius: '8px',
               overflow: 'hidden',

@@ -362,7 +362,7 @@ export default function Auth({ onLoginSuccess }) {
       </div>
 
       {/* 2. Visual readability overlay */}
-      <div className="login-overlay" style={{ background: 'linear-gradient(to right, rgba(11, 23, 51, 0.15) 0%, rgba(11, 23, 51, 0.8) 100%)' }} />
+      <div className="login-overlay" style={{ background: 'linear-gradient(to right, rgba(1, 8, 22, 0.15) 0%, rgba(1, 8, 22, 0.8) 100%)' }} />
 
       {/* 3. Left Branding Overlay Text */}
       <div 
@@ -442,7 +442,7 @@ export default function Auth({ onLoginSuccess }) {
             width: '100%',
             maxWidth: isLogin ? '400px' : '500px',
             padding: '36px',
-            background: 'rgba(11, 23, 51, 0.75)',
+            background: 'rgba(3, 20, 46, 0.75)',
             backdropFilter: 'blur(16px)',
             border: '1px solid rgba(61, 114, 193, 0.35)',
             boxShadow: '0 0 20px rgba(29, 73, 180, 0.2), 0 15px 35px rgba(0, 0, 0, 0.4)',
@@ -472,7 +472,7 @@ export default function Auth({ onLoginSuccess }) {
           {isLogin && (
             <div 
               style={{
-                background: 'rgba(11, 23, 51, 0.45)',
+                background: 'rgba(6, 31, 70, 0.45)',
                 border: '1px solid rgba(61, 114, 193, 0.25)',
                 borderRadius: '6px',
                 padding: '10px 14px',
@@ -529,7 +529,7 @@ export default function Auth({ onLoginSuccess }) {
                   <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                     Username
                   </label>
-                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(11, 23, 51, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
                     <User size={14} style={{ color: 'var(--text-secondary)' }} />
                     <input 
                       type="text" 
@@ -547,7 +547,7 @@ export default function Auth({ onLoginSuccess }) {
                   <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                     Password
                   </label>
-                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(11, 23, 51, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
                     <Lock size={14} style={{ color: 'var(--text-secondary)' }} />
                     <input 
                       type={showPassword ? 'text' : 'password'}
@@ -595,7 +595,7 @@ export default function Auth({ onLoginSuccess }) {
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                       Student Name
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(11, 23, 51, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
                       <User size={14} style={{ color: 'var(--text-secondary)' }} />
                       <input 
                         type="text" 
@@ -612,7 +612,7 @@ export default function Auth({ onLoginSuccess }) {
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                       Student ID
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(11, 23, 51, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
                       <Lock size={14} style={{ color: 'var(--text-secondary)' }} />
                       <input 
                         type="text" 
@@ -631,7 +631,7 @@ export default function Auth({ onLoginSuccess }) {
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                       College
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(11, 23, 51, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
                       <School size={14} style={{ color: 'var(--text-secondary)' }} />
                       <input 
                         type="text" 
@@ -648,7 +648,7 @@ export default function Auth({ onLoginSuccess }) {
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                       Department
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(11, 23, 51, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
                       <BookOpen size={14} style={{ color: 'var(--text-secondary)' }} />
                       <input 
                         type="text" 
@@ -666,7 +666,7 @@ export default function Auth({ onLoginSuccess }) {
                   <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                     Email Address
                   </label>
-                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(11, 23, 51, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
                     <Mail size={14} style={{ color: 'var(--text-secondary)' }} />
                     <input 
                       type="email" 
@@ -684,7 +684,7 @@ export default function Auth({ onLoginSuccess }) {
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                       Password
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(11, 23, 51, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
                       <Lock size={14} style={{ color: 'var(--text-secondary)' }} />
                       <input 
                         type={showPassword ? 'text' : 'password'}
@@ -701,7 +701,7 @@ export default function Auth({ onLoginSuccess }) {
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                       Confirm
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(11, 23, 51, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
                       <Lock size={14} style={{ color: 'var(--text-secondary)' }} />
                       <input 
                         type={showPassword ? 'text' : 'password'}

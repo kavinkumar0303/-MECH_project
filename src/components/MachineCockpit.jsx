@@ -766,7 +766,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
           gap: '8px', 
           padding: '12px 24px', 
           borderBottom: '1px solid var(--border)',
-          background: 'rgba(11, 23, 51, 0.65)'
+          background: 'rgba(3, 20, 46, 0.65)'
         }}
       >
         {Object.values(MACHINES).map((m) => (
@@ -798,7 +798,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
           display: 'flex', 
           gap: '8px', 
           padding: '8px 24px', 
-          background: 'rgba(11, 23, 51, 0.45)',
+          background: 'rgba(3, 20, 46, 0.45)',
           borderBottom: '1px solid var(--border)',
           overflowX: 'auto',
           whiteSpace: 'nowrap',
@@ -829,7 +829,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                 padding: '6px 14px',
                 borderRadius: '20px',
                 border: '1px solid ' + (isActive ? 'var(--brand-primary)' : 'rgba(61, 114, 193, 0.15)'),
-                background: isActive ? 'var(--brand-primary)' : 'rgba(11, 23, 51, 0.25)',
+                background: isActive ? 'var(--brand-primary)' : 'rgba(3, 20, 46, 0.25)',
                 color: isActive ? '#FFFFFF' : 'var(--text-secondary)',
                 fontWeight: '600',
                 fontSize: '11px',
@@ -868,7 +868,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
             display: 'flex', 
             flexDirection: 'column', 
             gap: '20px',
-            background: 'rgba(11, 23, 51, 0.4)',
+            background: 'rgba(3, 20, 46, 0.4)',
             overflowY: 'auto'
           }}
         >
@@ -887,7 +887,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
               </div>
               
               {/* Power Toggle */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(11, 23, 51, 0.65)', border: '1px solid rgba(61, 114, 193, 0.2)', padding: '12px', borderRadius: '6px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.2)', padding: '12px', borderRadius: '6px' }}>
                 <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Power Drive</span>
                 <button
                   onClick={() => setIsPowerOn(!isPowerOn)}
@@ -909,7 +909,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
               </div>
 
               {/* Spindle direction */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(11, 23, 51, 0.65)', border: '1px solid rgba(61, 114, 193, 0.2)', padding: '12px', borderRadius: '6px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.2)', padding: '12px', borderRadius: '6px' }}>
                 <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Spindle Axis</span>
                 <button
                   onClick={() => setSpindleDirection(p => p === 'Clockwise' ? 'Counter-CW' : 'Clockwise')}
@@ -930,7 +930,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
               </div>
 
               {/* Speed range */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(11, 23, 51, 0.65)', border: '1px solid rgba(61, 114, 193, 0.2)', padding: '12px', borderRadius: '6px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.2)', padding: '12px', borderRadius: '6px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
                   <span style={{ color: 'var(--text-secondary)', fontWeight: '600' }}>Spindle Speed</span>
                   <span style={{ color: '#FFFFFF', fontWeight: '700', fontFamily: 'var(--mono-font)' }}>{simParams.speed} RPM</span>
@@ -946,7 +946,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
               </div>
 
               {/* Feed Rate range */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(11, 23, 51, 0.65)', border: '1px solid rgba(61, 114, 193, 0.2)', padding: '12px', borderRadius: '6px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.2)', padding: '12px', borderRadius: '6px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
                   <span style={{ color: 'var(--text-secondary)', fontWeight: '600' }}>Feed Rate</span>
                   <span style={{ color: '#FFFFFF', fontWeight: '700', fontFamily: 'var(--mono-font)' }}>{simParams.feed} mm/rev</span>
@@ -962,7 +962,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
               </div>
 
               {/* Chuck status */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(11, 23, 51, 0.65)', border: '1px solid rgba(61, 114, 193, 0.2)', padding: '12px', borderRadius: '6px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(6, 31, 70, 0.65)', border: '1px solid rgba(61, 114, 193, 0.2)', padding: '12px', borderRadius: '6px' }}>
                 <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)' }}>Chuck Clamps</span>
                 <div style={{ display: 'flex', gap: '4px' }}>
                   <button
@@ -1012,7 +1012,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                     padding: '10px',
                     borderRadius: '4px',
                     border: '1px solid rgba(61, 114, 193, 0.25)',
-                    background: 'rgba(11, 23, 51, 0.85)',
+                    background: 'rgba(6, 31, 70, 0.85)',
                     color: '#FFFFFF',
                     fontSize: '12px',
                     outline: 'none',
@@ -1044,7 +1044,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#FFFFFF' }}>Part Challenge</h3>
                   {identifyTargetPart && (
-                    <div style={{ padding: '12px', background: 'rgba(11,23,51,0.5)', border: '1px solid var(--border)', borderRadius: '4px' }}>
+                    <div style={{ padding: '12px', background: 'rgba(6, 31, 70, 0.5)', border: '1px solid var(--border)', borderRadius: '4px' }}>
                       <p style={{ fontSize: '12px', color: '#FFF', fontWeight: 'bold' }}>
                         Click the component representing the <span style={{ color: 'var(--brand-secondary)' }}>[ {identifyTargetPart.name} ]</span>.
                       </p>
@@ -1057,8 +1057,8 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                         onClick={() => handlePartSelect(p.id)}
                         style={{
                           padding: '8px 12px',
-                          background: 'rgba(11,23,51,0.25)',
-                          border: '1px solid rgba(61,114,193,0.15)',
+                          background: 'var(--card-bg)',
+                          border: '1px solid var(--border)',
                           borderRadius: '4px',
                           color: '#FFFFFF',
                           fontSize: '11px',
@@ -1249,7 +1249,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
               style={{
                 height: '220px',
                 borderTop: '1px solid var(--border)',
-                background: 'rgba(11, 23, 51, 0.75)',
+                background: 'rgba(3, 20, 46, 0.85)',
                 display: 'grid',
                 gridTemplateColumns: '1.2fr 1fr 1.2fr',
                 gap: '16px',
@@ -1262,8 +1262,8 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
               <div 
                 className="glass-panel"
                 style={{
-                  background: 'rgba(11, 23, 51, 0.45)',
-                  border: '1px solid rgba(61, 114, 193, 0.2)',
+                  background: 'rgba(6, 31, 70, 0.55)',
+                  border: '1px solid rgba(30, 91, 186, 0.25)',
                   borderRadius: '6px',
                   padding: '12px 16px',
                   display: 'flex',
@@ -1296,7 +1296,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
 
                 {/* Oscilloscope Real-time Telemetry wave */}
                 <div style={{ height: '35px', width: '100%', marginTop: '6px', overflow: 'hidden' }}>
-                  <svg width="100%" height="35" style={{ background: 'rgba(11, 23, 51, 0.85)', borderRadius: '4px' }}>
+                  <svg width="100%" height="35" style={{ background: 'rgba(3, 20, 46, 0.85)', borderRadius: '4px' }}>
                     <path 
                       d={`M 0,17.5 L ${Array.from({ length: 25 }, (_, i) => {
                         const x = (i / 24) * 200;
@@ -1315,8 +1315,8 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
               <div 
                 className="glass-panel"
                 style={{
-                  background: 'rgba(11, 23, 51, 0.45)',
-                  border: '1px solid rgba(61, 114, 193, 0.2)',
+                  background: 'rgba(6, 31, 70, 0.55)',
+                  border: '1px solid rgba(30, 91, 186, 0.25)',
                   borderRadius: '6px',
                   padding: '12px',
                   display: 'flex',
@@ -1332,10 +1332,10 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                 <div 
                   style={{ 
                     flex: 1, 
-                    background: 'radial-gradient(circle, #0F1A34 0%, #080E1C 100%)', 
+                    background: 'radial-gradient(circle, #061F46 0%, #03142E 100%)', 
                     borderRadius: '4px',
                     position: 'relative',
-                    border: '1px solid rgba(61, 114, 193, 0.15)',
+                    border: '1px solid rgba(30, 91, 186, 0.25)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center'
@@ -1371,8 +1371,8 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                         position: 'absolute',
                         width: '3px',
                         height: '3px',
-                        background: '#3D72C1',
-                        boxShadow: '0 0 6px #9EB4E4',
+                        background: '#3865BE',
+                        boxShadow: '0 0 6px #C4D6EE',
                         borderRadius: '50%',
                         left: '42px',
                         top: '24px',
@@ -1388,8 +1388,8 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
               <div 
                 className="glass-panel"
                 style={{
-                  background: 'rgba(11, 23, 51, 0.45)',
-                  border: '1px solid rgba(61, 114, 193, 0.2)',
+                  background: 'rgba(6, 31, 70, 0.55)',
+                  border: '1px solid rgba(30, 91, 186, 0.25)',
                   borderRadius: '6px',
                   padding: '12px 16px',
                   display: 'flex',
@@ -1441,7 +1441,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
               bottom: activeSubTab === 'operate' ? '240px' : '50px',
               left: '20px',
               width: '320px',
-              background: 'rgba(11, 23, 51, 0.95)',
+              background: 'rgba(3, 20, 46, 0.95)',
               border: '1px solid var(--brand-secondary)',
               borderRadius: '6px',
               padding: '16px',
@@ -1705,7 +1705,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
               <button
                 onClick={() => { setIsExploded(!isExploded); if (assemblyComplete) resetAssembly(); }}
                 style={{
-                  background: isExploded ? 'rgba(29, 73, 180, 0.15)' : 'rgba(11, 23, 51, 0.85)',
+                  background: isExploded ? 'rgba(56, 101, 190, 0.15)' : 'rgba(6, 31, 70, 0.85)',
                   border: '1px solid ' + (isExploded ? 'var(--brand-primary)' : 'var(--border)'),
                   color: isExploded ? '#FFFFFF' : 'var(--text-secondary)',
                   borderRadius: '6px',
@@ -1723,7 +1723,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
               <button
                 onClick={() => setIsCutaway(!isCutaway)}
                 style={{
-                  background: isCutaway ? 'rgba(29, 73, 180, 0.15)' : 'rgba(11, 23, 51, 0.85)',
+                  background: isCutaway ? 'rgba(56, 101, 190, 0.15)' : 'rgba(6, 31, 70, 0.85)',
                   border: '1px solid ' + (isCutaway ? 'var(--brand-primary)' : 'var(--border)'),
                   color: isCutaway ? '#FFFFFF' : 'var(--text-secondary)',
                   borderRadius: '6px',
@@ -1750,7 +1750,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                   key={cam.id}
                   onClick={() => setCameraMode(cam.id)}
                   style={{
-                    background: cameraMode === cam.id ? 'rgba(29, 73, 180, 0.15)' : 'rgba(11, 23, 51, 0.85)',
+                    background: cameraMode === cam.id ? 'rgba(56, 101, 190, 0.15)' : 'rgba(6, 31, 70, 0.85)',
                     border: '1px solid ' + (cameraMode === cam.id ? 'var(--brand-primary)' : 'var(--border)'),
                     color: cameraMode === cam.id ? '#FFFFFF' : 'var(--text-secondary)',
                     borderRadius: '4px',
@@ -1776,7 +1776,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
             display: 'flex', 
             flexDirection: 'column', 
             gap: '20px',
-            background: 'rgba(11, 23, 51, 0.4)',
+            background: 'rgba(3, 20, 46, 0.4)',
             overflowY: 'auto'
           }}
         >
@@ -1834,7 +1834,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                             alignItems: 'center',
                             gap: '12px',
                             padding: '12px',
-                            background: isSelected ? 'rgba(29, 73, 180, 0.08)' : 'rgba(11, 23, 51, 0.45)',
+                            background: isSelected ? 'rgba(56, 101, 190, 0.08)' : 'rgba(6, 31, 70, 0.45)',
                             border: '1px solid ' + (isSelected ? 'var(--brand-primary)' : 'rgba(61, 114, 193, 0.15)'),
                             borderRadius: '6px',
                             cursor: 'pointer',
@@ -1868,7 +1868,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
 
                 {activeRightTab === 'measurement' && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                    <div style={{ background: 'rgba(11,23,51,0.5)', border: '1px solid rgba(61, 114, 193, 0.25)', padding: '16px', borderRadius: '6px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ background: 'rgba(6, 31, 70, 0.5)', border: '1px solid rgba(61, 114, 193, 0.25)', padding: '16px', borderRadius: '6px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
                         <span style={{ color: 'var(--text-secondary)' }}>Quality Standard</span>
                         <strong style={{ color: 'var(--brand-secondary)' }}>ISO 2768</strong>
@@ -1911,7 +1911,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   <span className="telemetry-label">Component Details</span>
                   {activePart && (
-                    <div style={{ borderLeft: `3px solid var(--brand-primary)`, paddingLeft: '12px', background: 'rgba(11,23,51,0.25)', padding: '16px', borderRadius: '4px' }}>
+                    <div style={{ borderLeft: `3px solid var(--brand-primary)`, paddingLeft: '12px', background: 'rgba(6, 31, 70, 0.25)', padding: '16px', borderRadius: '4px' }}>
                       <h4 style={{ fontSize: '13px', fontWeight: '800', color: '#FFFFFF', marginBottom: '8px' }}>{activePart.name}</h4>
                       <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{activePart.desc}</p>
                     </div>
@@ -1975,7 +1975,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                       ✓ Workpiece stock clamping completed. Simulator ready to run!
                     </div>
                   ) : (
-                    <div style={{ padding: '12px', background: 'rgba(11,23,51,0.25)', border: '1px solid var(--border)', borderRadius: '4px', fontSize: '11px', color: 'var(--text-secondary)' }}>
+                    <div style={{ padding: '12px', background: 'rgba(6, 31, 70, 0.25)', border: '1px solid var(--border)', borderRadius: '4px', fontSize: '11px', color: 'var(--text-secondary)' }}>
                       Mount and secure raw stock metal to initiate operation.
                     </div>
                   )}
@@ -1986,7 +1986,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   <span className="telemetry-label">Lab Telemetry Outputs</span>
                   {expResults && (
-                    <div style={{ background: 'rgba(11,23,51,0.5)', border: '1px solid rgba(61, 114, 193, 0.25)', padding: '16px', borderRadius: '6px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ background: 'rgba(6, 31, 70, 0.5)', border: '1px solid rgba(61, 114, 193, 0.25)', padding: '16px', borderRadius: '6px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
                         <span style={{ color: 'var(--text-secondary)' }}>Material Removal Rate:</span>
                         <strong style={{ color: 'var(--brand-primary)' }}>{expResults.mrr} mm³/s</strong>
@@ -2056,7 +2056,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
               {activeSubTab === 'scorecard' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   <span className="telemetry-label">Performance Scorecard</span>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', background: 'rgba(11,23,51,0.5)', border: '1px solid rgba(61, 114, 193, 0.25)', padding: '16px', borderRadius: '6px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', background: 'rgba(6, 31, 70, 0.5)', border: '1px solid rgba(61, 114, 193, 0.25)', padding: '16px', borderRadius: '6px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
                       <span style={{ color: 'var(--text-secondary)' }}>Safety Rating:</span>
                       <strong style={{ color: 'var(--success)' }}>100% compliant</strong>
