@@ -1,30 +1,30 @@
 :root {
-  --brand-primary: #004643;
-  --brand-secondary: #0A625D;
-  --deep-navy: #003532;
-  --shadow-navy: #002F2D;
-  --robot-highlight: #0A625D;
-  --robot-mid: #D9E8E5;
-  --ambient-grey: #D8D2C5;
-  --surface-bg: #F0EDE5;
-  --text-primary: #F0EDE5;
-  --text-secondary: #D8D2C5;
+  --brand-primary: #0A5CFF;
+  --brand-secondary: #003EB3;
+  --deep-navy: #F8FAFC;
+  --shadow-navy: #E2E8F0;
+  --robot-highlight: #0A5CFF;
+  --robot-mid: #E2E8F0;
+  --ambient-grey: #64748B;
+  --surface-bg: #FFFFFF;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
 
-  --primary-blue: #004643;
-  --secondary-blue: #0A625D;
-  --cool-grey-blue: #D8D2C5;
-  --background: #003532;
-  --text-headline: #F0EDE5;
+  --primary-blue: #0A5CFF;
+  --secondary-blue: #003EB3;
+  --cool-grey-blue: #64748B;
+  --background: #F8FAFC;
+  --text-headline: #0F172A;
 
-  --bg-primary: #003532;
-  --bg-secondary: #004643;
-  --surface: #004643;
-  --steel-light: #D9E8E5;
-  --accent-orange: #004643;
-  --accent-amber: #0A625D;
+  --bg-primary: #F8FAFC;
+  --bg-secondary: #FFFFFF;
+  --surface: #FFFFFF;
+  --steel-light: #E2E8F0;
+  --accent-orange: #0A5CFF;
+  --accent-amber: #003EB3;
   
-  --border: rgba(10, 98, 93, 0.25);
-  --border-active: #0A625D;
+  --border: #E2E8F0;
+  --border-active: #0A5CFF;
   
   --success: #2E7D32;
   --warning: #EF6C00;
@@ -43,9 +43,9 @@
 body {
   background-color: var(--bg-primary);
   background-image: 
-    radial-gradient(circle at 50% 50%, rgba(10, 98, 93, 0.15) 0%, var(--bg-primary) 100%),
-    linear-gradient(0deg, transparent 24%, rgba(10, 98, 93, 0.04) 25%, rgba(10, 98, 93, 0.04) 26%, transparent 27%, transparent 74%, rgba(10, 98, 93, 0.04) 75%, rgba(10, 98, 93, 0.04) 76%, transparent 77%),
-    linear-gradient(90deg, transparent 24%, rgba(10, 98, 93, 0.04) 25%, rgba(10, 98, 93, 0.04) 26%, transparent 27%, transparent 74%, rgba(10, 98, 93, 0.04) 75%, rgba(10, 98, 93, 0.04) 76%, transparent 77%);
+    radial-gradient(circle at 50% 50%, rgba(10, 92, 255, 0.03) 0%, var(--bg-primary) 100%),
+    linear-gradient(0deg, transparent 24%, rgba(10, 92, 255, 0.02) 25%, rgba(10, 92, 255, 0.02) 26%, transparent 27%, transparent 74%, rgba(10, 92, 255, 0.02) 75%, rgba(10, 92, 255, 0.02) 76%, transparent 77%),
+    linear-gradient(90deg, transparent 24%, rgba(10, 92, 255, 0.02) 25%, rgba(10, 92, 255, 0.02) 26%, transparent 27%, transparent 74%, rgba(10, 92, 255, 0.02) 75%, rgba(10, 92, 255, 0.02) 76%, transparent 77%);
   background-size: 100% 100%, 40px 40px, 40px 40px;
   background-attachment: fixed;
   color: var(--text-primary);
@@ -517,25 +517,25 @@ body.high-contrast .glow-btn-orange:hover {
 
 .btn-login {
   background: var(--brand-primary) !important;
-  color: #F0EDE5 !important;
+  color: #FFFFFF !important;
   border: 1px solid var(--brand-primary) !important;
   border-radius: 4px !important;
   font-weight: 700 !important;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  box-shadow: 0 2px 4px rgba(0, 70, 67, 0.08) !important;
+  box-shadow: 0 2px 4px rgba(10, 92, 255, 0.08) !important;
 }
 .btn-login:hover:not(:disabled) {
   background: var(--brand-secondary) !important;
   border-color: var(--brand-secondary) !important;
   transform: translateY(-1.5px) !important;
-  box-shadow: 0 4px 12px rgba(10, 98, 93, 0.15) !important;
+  box-shadow: 0 4px 12px rgba(10, 92, 255, 0.15) !important;
 }
 .btn-login:active:not(:disabled) {
   transform: translateY(0) scale(0.985) !important;
 }
 
 input::placeholder {
-  color: var(--shadow-navy) !important;
+  color: var(--cool-grey-blue) !important;
   opacity: 0.65;
 }
 
@@ -555,7 +555,7 @@ input::placeholder {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(to right, rgba(0, 53, 50, 0.15) 0%, rgba(0, 53, 50, 0.85) 100%);
+  background: linear-gradient(to right, rgba(248, 250, 252, 0.15) 0%, rgba(248, 250, 252, 0.8) 100%);
   z-index: 2;
   pointer-events: none;
 }
@@ -573,7 +573,7 @@ input::placeholder {
 
 @media (max-width: 900px) {
   .login-overlay {
-    background: radial-gradient(circle, rgba(0, 53, 50, 0.3) 0%, rgba(0, 53, 50, 0.9) 100%);
+    background: radial-gradient(circle, rgba(248, 250, 252, 0.3) 0%, rgba(248, 250, 252, 0.9) 100%);
   }
   .login-card-container {
     justify-content: center;

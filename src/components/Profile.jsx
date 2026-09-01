@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { User, Mail, School, BookOpen, AlertTriangle, LogOut } from 'lucide-react';
 
@@ -46,7 +47,7 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
 
   return (
     <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '32px', maxWidth: '800px', margin: '0 auto', width: '100%' }}>
-      
+
       {/* Title */}
       <div>
         <h2 style={{ fontSize: '22px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.8px', color: 'var(--text-primary)' }}>
@@ -58,10 +59,10 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '32px', alignItems: 'start' }}>
-        
+
         {/* Left Card: Avatar and quick details */}
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '16px', background: 'var(--bg-secondary)', border: '1px solid var(--border)' }}>
-          <div 
+          <div
             style={{
               width: '80px',
               height: '80px',
@@ -102,12 +103,12 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
           <h3 style={{ fontSize: '15px', fontWeight: '800', color: 'var(--text-primary)' }}>Affiliation Settings</h3>
 
           {message && (
-            <div 
-              style={{ 
-                padding: '10px 14px', 
-                borderRadius: '4px', 
-                background: 'rgba(46, 125, 50, 0.08)', 
-                border: '1px solid var(--success)', 
+            <div
+              style={{
+                padding: '10px 14px',
+                borderRadius: '4px',
+                background: 'rgba(46, 125, 50, 0.08)',
+                border: '1px solid var(--success)',
                 color: 'var(--success)',
                 fontSize: '12px'
               }}
@@ -123,10 +124,10 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
               </label>
               <div style={{ display: 'flex', alignItems: 'center', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '4px', padding: '10px', gap: '8px' }}>
                 <User size={16} style={{ color: 'var(--text-secondary)' }} />
-                <input 
-                  type="text" 
-                  name="name" 
-                  value={formData.name} 
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
                   onChange={handleChange}
                   style={{ background: 'none', border: 'none', color: 'var(--text-primary)', fontSize: '13px', width: '100%', outline: 'none' }}
                 />
@@ -139,10 +140,10 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
               </label>
               <div style={{ display: 'flex', alignItems: 'center', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '4px', padding: '10px', gap: '8px' }}>
                 <Mail size={16} style={{ color: 'var(--text-secondary)' }} />
-                <input 
-                  type="email" 
-                  name="email" 
-                  value={formData.email} 
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
                   onChange={handleChange}
                   style={{ background: 'none', border: 'none', color: 'var(--text-primary)', fontSize: '13px', width: '100%', outline: 'none' }}
                 />
@@ -156,10 +157,10 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
                 </label>
                 <div style={{ display: 'flex', alignItems: 'center', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '4px', padding: '10px', gap: '8px' }}>
                   <School size={16} style={{ color: 'var(--text-secondary)' }} />
-                  <input 
-                    type="text" 
-                    name="college" 
-                    value={formData.college} 
+                  <input
+                    type="text"
+                    name="college"
+                    value={formData.college}
                     onChange={handleChange}
                     style={{ background: 'none', border: 'none', color: 'var(--text-primary)', fontSize: '13px', width: '100%', outline: 'none' }}
                   />
@@ -172,10 +173,10 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
                 </label>
                 <div style={{ display: 'flex', alignItems: 'center', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '4px', padding: '10px', gap: '8px' }}>
                   <BookOpen size={16} style={{ color: 'var(--text-secondary)' }} />
-                  <input 
-                    type="text" 
-                    name="department" 
-                    value={formData.department} 
+                  <input
+                    type="text"
+                    name="department"
+                    value={formData.department}
                     onChange={handleChange}
                     style={{ background: 'none', border: 'none', color: 'var(--text-primary)', fontSize: '13px', width: '100%', outline: 'none' }}
                   />
@@ -183,8 +184,8 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
               </div>
             </div>
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="btn-primary"
               style={{ padding: '12px', justifyContent: 'center' }}
             >
@@ -202,7 +203,7 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
                 Wipe your local storage progress parameters to verify onboarding walkthroughs.
               </p>
             </div>
-            <button 
+            <button
               onClick={handleResetProgress}
               style={{
                 background: 'none',
