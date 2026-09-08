@@ -70,26 +70,45 @@ export default function WorkshopAI() {
       <button 
         className="ai-floating-btn"
         onClick={() => setIsOpen(!isOpen)}
-        style={{ color: 'var(--accent-orange)' }}
+        style={{
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          width: '56px',
+          height: '56px',
+          borderRadius: '50%',
+          background: 'linear-gradient(135deg, #FF5376 0%, #E040FB 50%, #7928CA 100%)',
+          color: '#FFFFFF',
+          border: '1px solid rgba(255, 255, 255, 0.4)',
+          boxShadow: '0 8px 30px rgba(224, 64, 251, 0.4), 0 0 20px rgba(255, 83, 118, 0.3)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          zIndex: 9999,
+          transition: 'all 0.3s ease'
+        }}
         title="Ask Workshop AI"
       >
-        {isOpen ? <X size={24} /> : <MessageSquare size={24} />}
+        {isOpen ? <X size={26} /> : <MessageSquare size={26} />}
       </button>
 
       {/* Expandable Chat Drawer */}
       {isOpen && (
         <div 
-          className="glass-panel"
+          className="anim-slide-up"
           style={{
             position: 'fixed',
             bottom: '90px',
             right: '24px',
-            width: '360px',
-            height: '480px',
-            zIndex: 1000,
-            background: 'var(--bg-secondary)',
-            borderColor: 'var(--accent-orange)',
-            boxShadow: '0 10px 40px rgba(242, 140, 40, 0.15)',
+            width: '380px',
+            height: '520px',
+            zIndex: 10000,
+            background: 'rgba(22, 6, 54, 0.95)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(224, 64, 251, 0.35)',
+            borderRadius: '20px',
+            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(224, 64, 251, 0.25)',
             display: 'flex',
             flexDirection: 'column',
             padding: 0,
@@ -99,22 +118,32 @@ export default function WorkshopAI() {
           {/* Chat Header */}
           <div 
             style={{
-              padding: '16px',
-              borderBottom: '1px solid var(--border)',
-              background: 'rgba(29, 73, 180, 0.05)',
+              padding: '16px 20px',
+              borderBottom: '1px solid rgba(224, 64, 251, 0.2)',
+              background: 'linear-gradient(135deg, rgba(255, 83, 118, 0.15) 0%, rgba(121, 40, 202, 0.2) 100%)',
               display: 'flex',
               alignItems: 'center',
-              gap: '10px'
+              justifyContent: 'space-between'
             }}
           >
-            <Cpu size={20} style={{ color: 'var(--primary-blue)' }} />
-            <div>
-              <h4 style={{ fontSize: '13px', fontWeight: '800', color: 'var(--text-primary)', textTransform: 'uppercase' }}>WORKSHOP CO-PILOT</h4>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <span style={{ width: '6px', height: '6px', borderRadius: '3px', background: 'var(--success)' }}></span>
-                <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>Knowledge Base Online</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(255, 83, 118, 0.2)', border: '1px solid #FF5376', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Cpu size={20} style={{ color: '#00F5D4' }} />
+              </div>
+              <div>
+                <h4 style={{ fontSize: '13px', fontWeight: '900', color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.5px', margin: 0 }}>WORKSHOP AI CO-PILOT</h4>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+                  <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#00F5D4', boxShadow: '0 0 8px #00F5D4' }}></span>
+                  <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.7)', fontWeight: '600' }}>Knowledge Engine Active</span>
+                </div>
               </div>
             </div>
+            <button 
+              onClick={() => setIsOpen(false)}
+              style={{ background: 'none', border: 'none', color: 'rgba(255, 255, 255, 0.5)', cursor: 'pointer', padding: '4px' }}
+            >
+              <X size={18} />
+            </button>
           </div>
 
           {/* Chat Messages */}
@@ -125,13 +154,14 @@ export default function WorkshopAI() {
                 style={{
                   alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
                   maxWidth: '85%',
-                  background: msg.sender === 'user' ? 'rgba(29, 73, 180, 0.08)' : 'var(--surface)',
-                  border: msg.sender === 'user' ? '1px solid var(--primary-blue)' : '1px solid var(--border)',
-                  borderRadius: msg.sender === 'user' ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
-                  padding: '10px 14px',
+                  background: msg.sender === 'user' ? 'linear-gradient(135deg, rgba(255, 83, 118, 0.3) 0%, rgba(121, 40, 202, 0.4) 100%)' : 'rgba(32, 12, 74, 0.8)',
+                  border: msg.sender === 'user' ? '1px solid rgba(255, 83, 118, 0.5)' : '1px solid rgba(224, 64, 251, 0.25)',
+                  borderRadius: msg.sender === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
+                  padding: '12px 16px',
                   fontSize: '13px',
-                  lineHeight: '1.4',
-                  color: 'var(--text-primary)'
+                  lineHeight: '1.5',
+                  color: '#FFFFFF',
+                  boxShadow: msg.sender === 'user' ? '0 4px 15px rgba(255, 83, 118, 0.15)' : 'none'
                 }}
               >
                 {msg.text}
@@ -142,8 +172,8 @@ export default function WorkshopAI() {
 
           {/* Quick Click Prompts */}
           {messages.length === 1 && (
-            <div style={{ padding: '0 12px 12px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <span style={{ fontSize: '9px', color: 'var(--text-secondary)', fontWeight: '700', paddingLeft: '4px', letterSpacing: '0.5px' }}>
+            <div style={{ padding: '0 16px 12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span style={{ fontSize: '10px', color: '#00F5D4', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase' }}>
                 SUGGESTED ENQUIRIES
               </span>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
@@ -152,22 +182,25 @@ export default function WorkshopAI() {
                     key={idx}
                     onClick={() => handleSend(p.query)}
                     style={{
-                      background: 'rgba(194, 202, 217, 0.1)',
-                      border: '1px solid var(--border)',
-                      borderRadius: '4px',
-                      padding: '4px 8px',
+                      background: 'rgba(32, 12, 74, 0.7)',
+                      border: '1px solid rgba(224, 64, 251, 0.3)',
+                      borderRadius: '14px',
+                      padding: '6px 12px',
                       fontSize: '11px',
-                      color: 'var(--text-secondary)',
+                      fontWeight: '600',
+                      color: '#E0E7FF',
                       cursor: 'pointer',
                       transition: 'all 0.2s'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--primary-blue)';
-                      e.currentTarget.style.color = 'var(--primary-blue)';
+                      e.currentTarget.style.borderColor = '#00F5D4';
+                      e.currentTarget.style.color = '#00F5D4';
+                      e.currentTarget.style.boxShadow = '0 0 10px rgba(0, 245, 212, 0.2)';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--border)';
-                      e.currentTarget.style.color = 'var(--text-secondary)';
+                      e.currentTarget.style.borderColor = 'rgba(224, 64, 251, 0.3)';
+                      e.currentTarget.style.color = '#E0E7FF';
+                      e.currentTarget.style.boxShadow = 'none';
                     }}
                   >
                     {p.label}
@@ -178,21 +211,21 @@ export default function WorkshopAI() {
           )}
 
           {/* Chat Input */}
-          <div style={{ padding: '12px', borderTop: '1px solid var(--border)', background: 'rgba(194, 202, 217, 0.15)' }}>
+          <div style={{ padding: '14px', borderTop: '1px solid rgba(224, 64, 251, 0.2)', background: 'rgba(13, 2, 33, 0.6)' }}>
             <div style={{ display: 'flex', gap: '8px' }}>
               <input 
                 type="text" 
-                placeholder="Ask details..."
+                placeholder="Ask about lathe speeds, welding, safety..."
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 style={{
                   flex: 1,
-                  background: 'var(--surface)',
-                  border: '1px solid var(--border)',
-                  borderRadius: '4px',
-                  padding: '8px 12px',
-                  color: 'var(--text-primary)',
+                  background: 'rgba(32, 12, 74, 0.7)',
+                  border: '1px solid rgba(224, 64, 251, 0.3)',
+                  borderRadius: '20px',
+                  padding: '10px 16px',
+                  color: '#FFFFFF',
                   fontSize: '13px',
                   outline: 'none'
                 }}
@@ -200,20 +233,21 @@ export default function WorkshopAI() {
               <button 
                 onClick={() => handleSend()}
                 style={{
-                  background: 'var(--accent-orange)',
-                  color: '#151719',
+                  background: 'linear-gradient(135deg, #FF5376 0%, #7928CA 100%)',
+                  color: '#FFFFFF',
                   border: 'none',
-                  borderRadius: '4px',
-                  width: '36px',
-                  height: '36px',
+                  borderRadius: '50%',
+                  width: '40px',
+                  height: '40px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
-                  transition: 'all 0.2s'
+                  transition: 'all 0.2s',
+                  boxShadow: '0 0 12px rgba(255, 83, 118, 0.35)'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 0 10px rgba(242, 140, 40, 0.4)'}
-                onMouseLeave={(e) => e.currentTarget.style.boxShadow = 'none'}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
               >
                 <Send size={16} />
               </button>

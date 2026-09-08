@@ -63,29 +63,29 @@ export default function Auth({ onLoginSuccess }) {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
     
-    const ambientLight = new THREE.AmbientLight('#E2E8F0', 0.85);
+    const ambientLight = new THREE.AmbientLight('#240A50', 1.2);
     scene.add(ambientLight);
     
-    const keyLight = new THREE.DirectionalLight('#FFFFFF', 1.5);
+    const keyLight = new THREE.DirectionalLight('#FFFFFF', 2.0);
     keyLight.position.set(5, 5, 5);
     scene.add(keyLight);
     
-    const fillLight = new THREE.DirectionalLight('#E2E8F0', 0.9);
+    const fillLight = new THREE.DirectionalLight('#FF5376', 1.2);
     fillLight.position.set(-5, -2, 2);
     scene.add(fillLight);
     
-    const rimLight = new THREE.DirectionalLight('#0A5CFF', 0.85);
+    const rimLight = new THREE.DirectionalLight('#00F5D4', 1.5);
     rimLight.position.set(0, 5, -5);
     scene.add(rimLight);
     
     const group = new THREE.Group();
     scene.add(group);
     
-    // Materials palette matching cobalt blue and chrome white colors
-    const matMain = new THREE.MeshStandardMaterial({ color: '#0A5CFF', roughness: 0.35, metalness: 0.8 });
-    const matAccent = new THREE.MeshStandardMaterial({ color: '#003EB3', roughness: 0.25, metalness: 0.9 });
-    const matReflections = new THREE.MeshStandardMaterial({ color: '#FFFFFF', roughness: 0.2, metalness: 0.95 });
-    const matShadow = new THREE.MeshStandardMaterial({ color: '#E2E8F0', roughness: 0.45, metalness: 0.65 });
+    // Materials palette matching SpaceDrive magenta, purple, cyan, and chrome
+    const matMain = new THREE.MeshStandardMaterial({ color: '#FF5376', roughness: 0.25, metalness: 0.85 });
+    const matAccent = new THREE.MeshStandardMaterial({ color: '#7928CA', roughness: 0.2, metalness: 0.9 });
+    const matReflections = new THREE.MeshStandardMaterial({ color: '#FFFFFF', roughness: 0.15, metalness: 0.95 });
+    const matShadow = new THREE.MeshStandardMaterial({ color: '#160636', roughness: 0.5, metalness: 0.5 });
     
     // Constructing the logo components:
     
@@ -162,7 +162,7 @@ export default function Auth({ onLoginSuccess }) {
     
     const extrudeSettings = { depth: 0.1, bevelEnabled: true, bevelSegments: 2, steps: 1, bevelSize: 0.015, bevelThickness: 0.015 };
     const boltGeom = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-    const bolt = new THREE.Mesh(boltGeom, matReflections);
+    const bolt = new THREE.Mesh(boltGeom, new THREE.MeshStandardMaterial({ color: '#00F5D4', roughness: 0.2, metalness: 0.9, emissive: '#00F5D4', emissiveIntensity: 0.3 }));
     bolt.position.set(0, 0, 0.22); // Slightly forward from gear hub
     gearHub.add(bolt);
     
@@ -173,14 +173,14 @@ export default function Auth({ onLoginSuccess }) {
     pedestal.position.y = -2.5;
     group.add(pedestal);
 
-    // Pedestal Glowing Cobalt Ring
+    // Pedestal Glowing Neon Rings
     const ringGeom = new THREE.TorusGeometry(2.4, 0.06, 12, 64);
-    const glowingRing = new THREE.Mesh(ringGeom, new THREE.MeshBasicMaterial({ color: '#0A5CFF' }));
+    const glowingRing = new THREE.Mesh(ringGeom, new THREE.MeshBasicMaterial({ color: '#FF5376' }));
     glowingRing.position.y = -2.35;
     glowingRing.rotation.x = Math.PI / 2;
     group.add(glowingRing);
     
-    const glowingRing2 = new THREE.Mesh(ringGeom, new THREE.MeshBasicMaterial({ color: '#003EB3' }));
+    const glowingRing2 = new THREE.Mesh(ringGeom, new THREE.MeshBasicMaterial({ color: '#00F5D4' }));
     glowingRing2.position.y = -2.48;
     glowingRing2.rotation.x = Math.PI / 2;
     group.add(glowingRing2);
@@ -351,7 +351,7 @@ export default function Auth({ onLoginSuccess }) {
         minHeight: '100vh',
         width: '100vw',
         display: 'flex',
-        background: 'radial-gradient(circle at center, #004643 0%, #003532 100%)',
+        background: 'radial-gradient(ellipse at center top, #160636 0%, #0D0221 100%)',
         overflow: 'hidden',
         position: 'relative'
       }}
@@ -362,7 +362,7 @@ export default function Auth({ onLoginSuccess }) {
       </div>
 
       {/* 2. Visual readability overlay */}
-      <div className="login-overlay" style={{ background: 'linear-gradient(to right, rgba(0, 53, 50, 0.15) 0%, rgba(0, 53, 50, 0.85) 100%)' }} />
+      <div className="login-overlay" style={{ background: 'radial-gradient(ellipse at 80% 50%, rgba(13, 2, 33, 0.4) 0%, rgba(13, 2, 33, 0.85) 100%)' }} />
 
       {/* 3. Left Branding Overlay Text */}
       <div 
@@ -378,35 +378,41 @@ export default function Auth({ onLoginSuccess }) {
           pointerEvents: 'none'
         }}
       >
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: '20px', background: 'rgba(255, 83, 118, 0.12)', border: '1px solid rgba(255, 83, 118, 0.3)', marginBottom: '16px' }}>
+          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#00F5D4', boxShadow: '0 0 10px #00F5D4' }}></span>
+          <span style={{ fontSize: '11px', fontWeight: '800', color: '#00F5D4', letterSpacing: '1.5px', textTransform: 'uppercase' }}>NEXT-GEN MECHANICAL VIRTUAL LAB</span>
+        </div>
         <h1 style={{ 
-          fontSize: '48px', 
+          fontSize: '52px', 
           fontWeight: '900', 
-          color: '#FFFFFF', 
+          background: 'linear-gradient(135deg, #FFFFFF 0%, #E040FB 50%, #FF5376 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
           margin: 0, 
-          letterSpacing: '1px',
+          letterSpacing: '-0.5px',
           textTransform: 'uppercase',
-          textShadow: '0 4px 15px rgba(255,255,255,0.15), 0 0 35px rgba(29, 73, 180, 0.35)',
-          fontFamily: 'system-ui, -apple-system, sans-serif'
+          lineHeight: '1.05'
         }}>
           Mechanical
         </h1>
         <h2 style={{ 
-          fontSize: '28px', 
+          fontSize: '32px', 
           fontWeight: '800', 
-          color: 'var(--brand-secondary)', 
-          margin: '4px 0 0 0', 
+          color: '#00F5D4', 
+          margin: '6px 0 0 0', 
           letterSpacing: '1px',
           textTransform: 'uppercase',
-          lineHeight: '1.1'
+          lineHeight: '1.1',
+          textShadow: '0 0 20px rgba(0, 245, 212, 0.3)'
         }}>
           Virtual Workshop
         </h2>
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginTop: '16px' }}>
-          <span style={{ fontSize: '11px', fontWeight: '700', color: '#FFFFFF', letterSpacing: '2.5px', opacity: 0.8 }}>LEARN</span>
-          <span style={{ color: 'var(--brand-secondary)', fontSize: '10px' }}>•</span>
-          <span style={{ fontSize: '11px', fontWeight: '700', color: '#FFFFFF', letterSpacing: '2.5px', opacity: 0.8 }}>SIMULATE</span>
-          <span style={{ color: 'var(--brand-secondary)', fontSize: '10px' }}>•</span>
-          <span style={{ fontSize: '11px', fontWeight: '700', color: '#FFFFFF', letterSpacing: '2.5px', opacity: 0.8 }}>MASTER</span>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginTop: '20px' }}>
+          <span style={{ fontSize: '12px', fontWeight: '700', color: '#FFFFFF', letterSpacing: '2px', opacity: 0.9 }}>LEARN</span>
+          <span style={{ color: '#FF5376', fontSize: '12px' }}>•</span>
+          <span style={{ fontSize: '12px', fontWeight: '700', color: '#FFFFFF', letterSpacing: '2px', opacity: 0.9 }}>SIMULATE</span>
+          <span style={{ color: '#00F5D4', fontSize: '12px' }}>•</span>
+          <span style={{ fontSize: '12px', fontWeight: '700', color: '#FFFFFF', letterSpacing: '2px', opacity: 0.9 }}>MASTER</span>
         </div>
       </div>
 
@@ -420,16 +426,16 @@ export default function Auth({ onLoginSuccess }) {
           zIndex: 4,
           display: 'flex',
           alignItems: 'center',
-          gap: '10px',
+          gap: '12px',
           pointerEvents: 'none'
         }}
       >
-        <div style={{ display: 'flex', gap: '3px' }}>
-          <div style={{ width: '4px', height: '14px', background: 'var(--brand-primary)', transform: 'skewX(-15deg)' }} />
-          <div style={{ width: '4px', height: '14px', background: 'var(--brand-secondary)', transform: 'skewX(-15deg)' }} />
-          <div style={{ width: '4px', height: '14px', background: 'var(--accent-light)', transform: 'skewX(-15deg)' }} />
+        <div style={{ display: 'flex', gap: '4px' }}>
+          <div style={{ width: '4px', height: '14px', background: 'var(--brand-primary)', borderRadius: '2px' }} />
+          <div style={{ width: '4px', height: '14px', background: 'var(--brand-secondary)', borderRadius: '2px' }} />
+          <div style={{ width: '4px', height: '14px', background: 'var(--accent-cyan)', borderRadius: '2px' }} />
         </div>
-        <span style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-secondary)', letterSpacing: '0.5px' }}>
+        <span style={{ fontSize: '12px', fontWeight: '600', color: 'rgba(255, 255, 255, 0.5)', letterSpacing: '0.5px' }}>
           Skill Builds Machines. Knowledge Builds Futures.
         </span>
       </div>
@@ -437,16 +443,16 @@ export default function Auth({ onLoginSuccess }) {
       {/* 5. Floating Login Card Container */}
       <div className="login-card-container">
         <div 
-          className="glass-panel anim-slide-up"
+          className="anim-slide-up"
           style={{
             width: '100%',
-            maxWidth: isLogin ? '400px' : '500px',
-            padding: '36px',
-            background: 'rgba(255, 255, 255, 0.9)',
-            backdropFilter: 'blur(16px)',
-            border: '1px solid rgba(10, 92, 255, 0.15)',
-            boxShadow: '0 8px 32px rgba(10, 92, 255, 0.06), 0 12px 24px rgba(15, 23, 42, 0.04)',
-            borderRadius: '8px',
+            maxWidth: isLogin ? '420px' : '520px',
+            padding: '38px',
+            background: 'rgba(22, 6, 54, 0.85)',
+            backdropFilter: 'blur(24px)',
+            border: '1px solid rgba(224, 64, 251, 0.25)',
+            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.6), 0 0 35px rgba(224, 64, 251, 0.15)',
+            borderRadius: '20px',
             display: 'flex',
             flexDirection: 'column',
             gap: '24px',
@@ -454,16 +460,25 @@ export default function Auth({ onLoginSuccess }) {
           }}
         >
           {/* Brand Header Inside Card */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-            <div style={{ position: 'relative', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Settings className="anim-slow-spin" size={34} style={{ color: 'var(--brand-secondary)', animation: 'slow-spin 12s linear infinite' }} />
-              <Zap size={13} style={{ position: 'absolute', color: 'var(--text-primary)', fill: 'var(--brand-secondary)' }} />
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+            <div style={{ 
+              width: '54px', 
+              height: '54px', 
+              borderRadius: '16px',
+              background: 'linear-gradient(135deg, rgba(255, 83, 118, 0.2) 0%, rgba(121, 40, 202, 0.3) 100%)',
+              border: '1px solid rgba(255, 83, 118, 0.4)',
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              boxShadow: '0 0 20px rgba(255, 83, 118, 0.3)'
+            }}>
+              <Settings className="anim-slow-spin" size={28} style={{ color: '#FF5376' }} />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <span style={{ fontSize: '13px', fontWeight: '900', color: 'var(--text-primary)', letterSpacing: '1px', textTransform: 'uppercase' }}>Mechanical</span>
-              <span style={{ fontSize: '8px', fontWeight: '700', color: 'var(--brand-secondary)', letterSpacing: '1.5px', textTransform: 'uppercase', marginTop: '-2px' }}>Virtual Workshop</span>
+              <span style={{ fontSize: '18px', fontWeight: '900', color: '#FFFFFF', letterSpacing: '1px', textTransform: 'uppercase' }}>STUDENT PORTAL</span>
+              <span style={{ fontSize: '11px', fontWeight: '700', color: '#00F5D4', letterSpacing: '1.5px', textTransform: 'uppercase', marginTop: '2px' }}>Virtual Mechanical Lab</span>
             </div>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '12px', textAlign: 'center', marginTop: '6px' }}>
+            <p style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '13px', textAlign: 'center', margin: 0 }}>
               Sign in to continue your workshop training
             </p>
           </div>
@@ -472,33 +487,35 @@ export default function Auth({ onLoginSuccess }) {
           {isLogin && (
             <div 
               style={{
-                background: 'rgba(10, 92, 255, 0.05)',
-                border: '1px solid rgba(10, 92, 255, 0.15)',
-                borderRadius: '6px',
-                padding: '10px 14px',
+                background: 'rgba(32, 12, 74, 0.7)',
+                border: '1px solid rgba(224, 64, 251, 0.3)',
+                borderRadius: '12px',
+                padding: '12px 16px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 gap: '12px'
               }}
             >
-              <div style={{ fontSize: '11px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                <strong style={{ color: 'var(--brand-secondary)' }}>Demo Account</strong><br/>
-                User: <span style={{ fontFamily: 'var(--mono-font)', color: 'var(--text-primary)' }}>student01</span><br/>
-                Pass: <span style={{ fontFamily: 'var(--mono-font)', color: 'var(--text-primary)' }}>demo123</span>
+              <div style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.7)', lineHeight: '1.4' }}>
+                <strong style={{ color: '#00F5D4' }}>Demo Student Access</strong><br/>
+                User: <span style={{ fontFamily: 'var(--mono-font)', color: '#FFFFFF', fontWeight: '700' }}>student01</span> | 
+                Pass: <span style={{ fontFamily: 'var(--mono-font)', color: '#FFFFFF', fontWeight: '700' }}>demo123</span>
               </div>
               <button 
                 type="button"
                 onClick={handleDemoFill}
                 style={{
-                  background: 'rgba(10, 92, 255, 0.1)',
-                  border: '1px solid var(--brand-primary)',
-                  color: 'var(--brand-primary)',
-                  padding: '6px 10px',
-                  borderRadius: '4px',
+                  background: 'linear-gradient(135deg, rgba(255, 83, 118, 0.2) 0%, rgba(121, 40, 202, 0.3) 100%)',
+                  border: '1px solid #FF5376',
+                  color: '#FFFFFF',
+                  padding: '6px 12px',
+                  borderRadius: '16px',
                   fontSize: '11px',
                   fontWeight: '700',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  boxShadow: '0 0 10px rgba(255, 83, 118, 0.25)'
                 }}
               >
                 Auto Fill
@@ -508,14 +525,14 @@ export default function Auth({ onLoginSuccess }) {
 
           {/* Status Messages */}
           {error && (
-            <div style={{ background: 'rgba(198, 40, 40, 0.08)', border: '1px solid var(--danger)', borderRadius: '4px', padding: '10px 14px', color: 'var(--danger)', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid #EF4444', borderRadius: '10px', padding: '10px 14px', color: '#FCA5A5', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <ShieldAlert size={14} />
               <span>{error}</span>
             </div>
           )}
 
           {success && (
-            <div style={{ background: 'rgba(46, 125, 50, 0.08)', border: '1px solid var(--success)', borderRadius: '4px', padding: '10px 14px', color: 'var(--success)', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ background: 'rgba(0, 245, 212, 0.15)', border: '1px solid #00F5D4', borderRadius: '10px', padding: '10px 14px', color: '#00F5D4', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <CheckCircle size={14} />
               <span>{success}</span>
             </div>
@@ -526,17 +543,17 @@ export default function Auth({ onLoginSuccess }) {
             {isLogin ? (
               <>
                 <div>
-                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
-                    Username
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    Username or Student ID
                   </label>
-                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0, 53, 50, 0.65)', border: '1px solid rgba(10, 92, 255, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
-                    <User size={14} style={{ color: 'var(--text-secondary)' }} />
+                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '12px', padding: '12px 14px', gap: '10px' }}>
+                    <User size={16} style={{ color: '#E040FB' }} />
                     <input 
                       type="text" 
                       name="studentId"
                       value={formData.studentId}
                       onChange={handleChange}
-                      placeholder="Enter your username"
+                      placeholder="Enter student01"
                       required
                       style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '13px', width: '100%', outline: 'none' }}
                     />
@@ -544,17 +561,17 @@ export default function Auth({ onLoginSuccess }) {
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                     Password
                   </label>
-                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0, 53, 50, 0.65)', border: '1px solid rgba(10, 92, 255, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
-                    <Lock size={14} style={{ color: 'var(--text-secondary)' }} />
+                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '12px', padding: '12px 14px', gap: '10px' }}>
+                    <Lock size={16} style={{ color: '#E040FB' }} />
                     <input 
                       type={showPassword ? 'text' : 'password'}
                       name="password"
                       value={formData.password}
                       onChange={handleChange}
-                      placeholder="Enter your password"
+                      placeholder="••••••••"
                       required
                       style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '13px', width: '100%', outline: 'none' }}
                     />
@@ -565,7 +582,7 @@ export default function Auth({ onLoginSuccess }) {
                       style={{
                         background: 'none',
                         border: 'none',
-                        color: 'var(--text-secondary)',
+                        color: 'rgba(255, 255, 255, 0.5)',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
@@ -579,137 +596,137 @@ export default function Auth({ onLoginSuccess }) {
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px', marginTop: '4px' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: 'var(--text-secondary)' }}>
-                    <input type="checkbox" defaultChecked style={{ accentColor: 'var(--brand-primary)' }} />
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: 'rgba(255, 255, 255, 0.7)' }}>
+                    <input type="checkbox" defaultChecked style={{ accentColor: '#FF5376' }} />
                     Remember Me
                   </label>
-                  <a href="#forgot" onClick={(e) => { e.preventDefault(); setError('⚠️ Contact department administrator to reset credentials.'); }} style={{ color: 'var(--brand-secondary)', textDecoration: 'none', fontWeight: '500' }}>
+                  <a href="#forgot" onClick={(e) => { e.preventDefault(); setError('⚠️ Contact department administrator to reset credentials.'); }} style={{ color: '#00F5D4', textDecoration: 'none', fontWeight: '600' }}>
                     Forgot password?
                   </a>
                 </div>
               </>
             ) : (
               <>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
                       Student Name
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0, 53, 50, 0.65)', border: '1px solid rgba(10, 92, 255, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
-                      <User size={14} style={{ color: 'var(--text-secondary)' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                      <User size={14} style={{ color: '#E040FB' }} />
                       <input 
                         type="text" 
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
                         placeholder="John Doe"
-                        style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '13px', width: '100%', outline: 'none' }}
+                        style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '12px', width: '100%', outline: 'none' }}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
                       Student ID
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0, 53, 50, 0.65)', border: '1px solid rgba(10, 92, 255, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
-                      <Lock size={14} style={{ color: 'var(--text-secondary)' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                      <Lock size={14} style={{ color: '#E040FB' }} />
                       <input 
                         type="text" 
                         name="studentId"
                         value={formData.studentId}
                         onChange={handleChange}
                         placeholder="STU1029"
-                        style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '13px', width: '100%', outline: 'none' }}
+                        style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '12px', width: '100%', outline: 'none' }}
                       />
                     </div>
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
                       College
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0, 53, 50, 0.65)', border: '1px solid rgba(10, 92, 255, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
-                      <School size={14} style={{ color: 'var(--text-secondary)' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                      <School size={14} style={{ color: '#E040FB' }} />
                       <input 
                         type="text" 
                         name="college"
                         value={formData.college}
                         onChange={handleChange}
                         placeholder="University"
-                        style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '13px', width: '100%', outline: 'none' }}
+                        style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '12px', width: '100%', outline: 'none' }}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
                       Department
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0, 53, 50, 0.65)', border: '1px solid rgba(10, 92, 255, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
-                      <BookOpen size={14} style={{ color: 'var(--text-secondary)' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                      <BookOpen size={14} style={{ color: '#E040FB' }} />
                       <input 
                         type="text" 
                         name="department"
                         value={formData.department}
                         onChange={handleChange}
-                        placeholder="Mech Eng"
-                        style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '13px', width: '100%', outline: 'none' }}
+                        placeholder="Mechanical"
+                        style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '12px', width: '100%', outline: 'none' }}
                       />
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
                     Email Address
                   </label>
-                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0, 53, 50, 0.65)', border: '1px solid rgba(10, 92, 255, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
-                    <Mail size={14} style={{ color: 'var(--text-secondary)' }} />
+                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                    <Mail size={14} style={{ color: '#E040FB' }} />
                     <input 
                       type="email" 
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="name@college.edu"
-                      style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '13px', width: '100%', outline: 'none' }}
+                      style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '12px', width: '100%', outline: 'none' }}
                     />
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
                       Password
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0, 53, 50, 0.65)', border: '1px solid rgba(10, 92, 255, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
-                      <Lock size={14} style={{ color: 'var(--text-secondary)' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                      <Lock size={14} style={{ color: '#E040FB' }} />
                       <input 
                         type={showPassword ? 'text' : 'password'}
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
                         placeholder="••••••••"
-                        style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '13px', width: '100%', outline: 'none' }}
+                        style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '12px', width: '100%', outline: 'none' }}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
                       Confirm
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0, 53, 50, 0.65)', border: '1px solid rgba(10, 92, 255, 0.25)', borderRadius: '4px', padding: '10px 12px', gap: '10px' }}>
-                      <Lock size={14} style={{ color: 'var(--text-secondary)' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                      <Lock size={14} style={{ color: '#E040FB' }} />
                       <input 
                         type={showPassword ? 'text' : 'password'}
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleChange}
                         placeholder="••••••••"
-                        style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '13px', width: '100%', outline: 'none' }}
+                        style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '12px', width: '100%', outline: 'none' }}
                       />
                     </div>
                   </div>
@@ -720,63 +737,52 @@ export default function Auth({ onLoginSuccess }) {
             <button 
               type="submit"
               disabled={isSubmitting}
+              className="space-btn-primary"
               style={{
                 width: '100%',
-                padding: '12px',
-                borderRadius: '4px',
-                border: 'none',
-                background: 'linear-gradient(90deg, #1D49B4 0%, #3D72C1 100%)',
-                color: '#FFFFFF',
-                fontSize: '13px',
-                fontWeight: '700',
+                padding: '14px',
+                borderRadius: '28px',
+                fontSize: '14px',
+                fontWeight: '800',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
                 marginTop: '10px',
-                boxShadow: '0 4px 12px rgba(29, 73, 180, 0.3)',
-                transition: 'all 0.2s'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = '0 0 16px rgba(61, 114, 193, 0.55)';
-                e.currentTarget.style.transform = 'translateY(-1px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(29, 73, 180, 0.3)';
-                e.currentTarget.style.transform = 'translateY(0)';
+                letterSpacing: '0.5px'
               }}
             >
               {isSubmitting ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <div style={{
-                    width: '14px',
-                    height: '14px',
+                    width: '16px',
+                    height: '16px',
                     border: '2px solid rgba(255,255,255,0.4)',
                     borderTopColor: '#FFFFFF',
                     borderRadius: '50%',
                     animation: 'slow-spin 1s linear infinite'
                   }} />
-                  <span>Verifying credentials...</span>
+                  <span>AUTHENTICATING...</span>
                 </div>
               ) : success ? (
-                <span>✓ Access Granted</span>
+                <span>✓ ACCESS GRANTED</span>
               ) : (
                 <>
-                  <span>{isLogin ? 'Login to Workshop' : 'Create Account'}</span>
-                  <ArrowRight size={14} />
+                  <span>{isLogin ? 'ENTER WORKSHOP' : 'CREATE ACCOUNT'}</span>
+                  <ArrowRight size={16} />
                 </>
               )}
             </button>
           </form>
 
-          <div style={{ textAlign: 'center', borderTop: '1px solid rgba(194, 202, 217, 0.15)', paddingTop: '16px' }}>
-            <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+          <div style={{ textAlign: 'center', borderTop: '1px solid rgba(224, 64, 251, 0.2)', paddingTop: '16px' }}>
+            <p style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.6)', margin: 0 }}>
               {isLogin ? "New to the platform?" : "Already have an account?"}{' '}
               <a 
                 href="#toggle" 
                 onClick={(e) => { e.preventDefault(); setIsLogin(!isLogin); setError(''); setSuccess(''); }}
-                style={{ color: 'var(--brand-secondary)', textDecoration: 'none', fontWeight: 'bold' }}
+                style={{ color: '#00F5D4', textDecoration: 'none', fontWeight: '700' }}
               >
                 {isLogin ? 'Create Account' : 'Sign In'}
               </a>

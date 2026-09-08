@@ -84,10 +84,12 @@ export default function DecisionAssistant() {
         
         {step === 1 && (
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--accent-orange)', fontSize: '11px', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', marginBottom: '16px' }}>
-              <Compass size={16} /> Step 1: Workpiece Geometry / Shape
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+              <span className="space-badge-pink">
+                <Compass size={14} /> Step 1: Workpiece Geometry / Shape
+              </span>
             </div>
-            <h3 style={{ fontSize: '17px', fontWeight: '700', marginBottom: '20px', color: 'var(--text-primary)' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '20px', color: '#FFFFFF' }}>
               What is the base shape or geometry of your target component?
             </h3>
             
@@ -103,19 +105,19 @@ export default function DecisionAssistant() {
                   key={opt.id}
                   onClick={() => { setShape(opt.id); setStep(2); }}
                   style={{
-                    background: 'var(--surface)',
-                    border: '1px solid var(--border)',
-                    borderRadius: '4px',
-                    padding: '16px',
+                    background: 'rgba(35, 12, 75, 0.6)',
+                    border: '1px solid rgba(168, 85, 247, 0.25)',
+                    borderRadius: '12px',
+                    padding: '16px 20px',
                     textAlign: 'left',
                     cursor: 'pointer',
-                    transition: 'all 0.2s'
+                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--primary-blue)'; e.currentTarget.style.background = 'rgba(29, 73, 180, 0.03)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--surface)'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#FF5376'; e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 83, 118, 0.2) 0%, rgba(121, 40, 202, 0.35) 100%)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(168, 85, 247, 0.25)'; e.currentTarget.style.background = 'rgba(35, 12, 75, 0.6)'; e.currentTarget.style.transform = 'none'; }}
                 >
-                  <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)' }}>{opt.title}</div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>{opt.desc}</div>
+                  <div style={{ fontSize: '15px', fontWeight: '700', color: '#FFFFFF' }}>{opt.title}</div>
+                  <div style={{ fontSize: '13px', color: '#D8B4FE', marginTop: '4px' }}>{opt.desc}</div>
                 </button>
               ))}
             </div>
@@ -124,10 +126,12 @@ export default function DecisionAssistant() {
 
         {step === 2 && (
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--accent-orange)', fontSize: '11px', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', marginBottom: '16px' }}>
-              <Compass size={16} /> Step 2: Workpiece Material
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+              <span className="space-badge-cyan">
+                <Compass size={14} /> Step 2: Workpiece Material
+              </span>
             </div>
-            <h3 style={{ fontSize: '17px', fontWeight: '700', marginBottom: '20px', color: 'var(--text-primary)' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '20px', color: '#FFFFFF' }}>
               What material class will you be manufacturing?
             </h3>
             
@@ -142,19 +146,19 @@ export default function DecisionAssistant() {
                   key={opt.id}
                   onClick={() => { setMaterial(opt.id); setStep(3); }}
                   style={{
-                    background: 'var(--surface)',
-                    border: '1px solid var(--border)',
-                    borderRadius: '4px',
-                    padding: '16px',
+                    background: 'rgba(35, 12, 75, 0.6)',
+                    border: '1px solid rgba(168, 85, 247, 0.25)',
+                    borderRadius: '12px',
+                    padding: '16px 20px',
                     textAlign: 'left',
                     cursor: 'pointer',
-                    transition: 'all 0.2s'
+                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--primary-blue)'; e.currentTarget.style.background = 'rgba(29, 73, 180, 0.03)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--surface)'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#00F5D4'; e.currentTarget.style.background = 'linear-gradient(135deg, rgba(0, 245, 212, 0.15) 0%, rgba(121, 40, 202, 0.35) 100%)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(168, 85, 247, 0.25)'; e.currentTarget.style.background = 'rgba(35, 12, 75, 0.6)'; e.currentTarget.style.transform = 'none'; }}
                 >
-                  <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)' }}>{opt.title}</div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>{opt.desc}</div>
+                  <div style={{ fontSize: '15px', fontWeight: '700', color: '#FFFFFF' }}>{opt.title}</div>
+                  <div style={{ fontSize: '13px', color: '#D8B4FE', marginTop: '4px' }}>{opt.desc}</div>
                 </button>
               ))}
             </div>
@@ -163,10 +167,12 @@ export default function DecisionAssistant() {
 
         {step === 3 && (
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--accent-orange)', fontSize: '11px', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', marginBottom: '16px' }}>
-              <Compass size={16} /> Step 3: Manufacturing Operation
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+              <span className="space-badge-purple">
+                <Compass size={14} /> Step 3: Manufacturing Operation
+              </span>
             </div>
-            <h3 style={{ fontSize: '17px', fontWeight: '700', marginBottom: '20px', color: 'var(--text-primary)' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '20px', color: '#FFFFFF' }}>
               What specific operation is required for this part?
             </h3>
             
@@ -182,19 +188,19 @@ export default function DecisionAssistant() {
                   key={opt.id}
                   onClick={() => { setOperation(opt.id); setStep(4); }}
                   style={{
-                    background: 'var(--surface)',
-                    border: '1px solid var(--border)',
-                    borderRadius: '4px',
-                    padding: '16px',
+                    background: 'rgba(35, 12, 75, 0.6)',
+                    border: '1px solid rgba(168, 85, 247, 0.25)',
+                    borderRadius: '12px',
+                    padding: '16px 20px',
                     textAlign: 'left',
                     cursor: 'pointer',
-                    transition: 'all 0.2s'
+                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--primary-blue)'; e.currentTarget.style.background = 'rgba(29, 73, 180, 0.03)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--surface)'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#FF5376'; e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 83, 118, 0.2) 0%, rgba(121, 40, 202, 0.35) 100%)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(168, 85, 247, 0.25)'; e.currentTarget.style.background = 'rgba(35, 12, 75, 0.6)'; e.currentTarget.style.transform = 'none'; }}
                 >
-                  <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)' }}>{opt.title}</div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>{opt.desc}</div>
+                  <div style={{ fontSize: '15px', fontWeight: '700', color: '#FFFFFF' }}>{opt.title}</div>
+                  <div style={{ fontSize: '13px', color: '#D8B4FE', marginTop: '4px' }}>{opt.desc}</div>
                 </button>
               ))}
             </div>
@@ -203,18 +209,20 @@ export default function DecisionAssistant() {
 
         {step === 4 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--accent-orange)', fontSize: '11px', fontFamily: 'var(--mono-font)', textTransform: 'uppercase' }}>
-              <Compass size={16} /> Decision Complete
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span className="space-badge-cyan">
+                <Compass size={14} /> Decision Complete
+              </span>
             </div>
             
-            <div style={{ borderLeft: `4px solid ${rec.machine.color}`, background: 'var(--surface)', padding: '20px', borderRadius: '4px', borderTop: '1px solid var(--border)', borderRight: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
-              <span style={{ fontSize: '10px', textTransform: 'uppercase', color: rec.machine.color, fontWeight: '700', fontFamily: 'var(--mono-font)' }}>
+            <div style={{ borderLeft: `4px solid #FF5376`, background: 'rgba(35, 12, 75, 0.7)', padding: '24px', borderRadius: '14px', borderTop: '1px solid rgba(168, 85, 247, 0.3)', borderRight: '1px solid rgba(168, 85, 247, 0.3)', borderBottom: '1px solid rgba(168, 85, 247, 0.3)', boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}>
+              <span style={{ fontSize: '11px', textTransform: 'uppercase', color: '#FF5376', fontWeight: '800', letterSpacing: '0.8px' }}>
                 Recommended Workshop Unit
               </span>
-              <h3 style={{ fontSize: '22px', fontWeight: '800', color: 'var(--text-primary)', margin: '4px 0 12px' }}>
+              <h3 style={{ fontSize: '24px', fontWeight: '900', color: '#FFFFFF', margin: '6px 0 12px' }}>
                 {rec.machine.name}
               </h3>
-              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+              <p style={{ fontSize: '14px', color: '#F0EDE5', lineHeight: '1.6' }}>
                 {rec.explanation}
               </p>
             </div>
@@ -225,38 +233,39 @@ export default function DecisionAssistant() {
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'center', 
-                gap: '12px', 
-                background: 'rgba(194, 202, 217, 0.15)', 
-                padding: '16px', 
-                borderRadius: '4px',
-                border: '1px solid var(--border)',
+                gap: '16px', 
+                background: 'rgba(22, 6, 54, 0.8)', 
+                padding: '18px', 
+                borderRadius: '12px',
+                border: '1px solid rgba(168, 85, 247, 0.25)',
                 flexWrap: 'wrap'
               }}
             >
-              <div style={{ fontSize: '11px', fontFamily: 'var(--mono-font)' }}>
-                Shape: <strong style={{ color: 'var(--accent-orange)' }}>{shape}</strong>
+              <div style={{ fontSize: '12px', color: '#D8B4FE' }}>
+                Shape: <strong style={{ color: '#FF5376' }}>{shape}</strong>
               </div>
-              <div style={{ color: 'var(--text-secondary)' }}>→</div>
-              <div style={{ fontSize: '11px', fontFamily: 'var(--mono-font)' }}>
-                Material: <strong style={{ color: 'var(--accent-orange)' }}>{material}</strong>
+              <div style={{ color: '#00F5D4' }}>→</div>
+              <div style={{ fontSize: '12px', color: '#D8B4FE' }}>
+                Material: <strong style={{ color: '#00F5D4' }}>{material}</strong>
               </div>
-              <div style={{ color: 'var(--text-secondary)' }}>→</div>
-              <div style={{ fontSize: '11px', fontFamily: 'var(--mono-font)' }}>
-                Operation: <strong style={{ color: 'var(--accent-orange)' }}>{operation}</strong>
+              <div style={{ color: '#00F5D4' }}>→</div>
+              <div style={{ fontSize: '12px', color: '#D8B4FE' }}>
+                Operation: <strong style={{ color: '#E040FB' }}>{operation}</strong>
               </div>
-              <div style={{ color: 'var(--text-secondary)' }}>→</div>
-              <div style={{ fontSize: '11px', fontFamily: 'var(--mono-font)', color: 'var(--success)' }}>
-                Tool: <strong>{rec.tool}</strong>
+              <div style={{ color: '#00F5D4' }}>→</div>
+              <div style={{ fontSize: '12px', color: '#00F5D4' }}>
+                Tool: <strong style={{ color: '#FFFFFF' }}>{rec.tool}</strong>
               </div>
             </div>
 
             <div style={{ display: 'flex', gap: '16px' }}>
               <button 
                 onClick={handleReset}
-                className="btn-secondary"
+                className="space-btn-secondary"
                 style={{
                   flex: 1,
-                  justifyContent: 'center'
+                  justifyContent: 'center',
+                  padding: '12px'
                 }}
               >
                 <RefreshCw size={14} /> Start Over

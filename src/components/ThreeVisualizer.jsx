@@ -1,6 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { ProceduralWorkpieceManager } from '../simulation/proceduralWorkpieces';
+import { SIMULATION_OPERATIONS } from '../simulation/simulationConfig';
+import { workshopAudio } from '../simulation/workshopAudio';
+import { Play, Pause, RotateCcw, Volume2, VolumeX, Eye, Flame, Activity, Sparkles, CheckCircle2 } from 'lucide-react';
 
 const labelsData = {
   lathe: [
@@ -93,7 +97,7 @@ export default function ThreeVisualizer({
   isCutaway,
   isPlaying,
   simStep,
-  simParams,
+  simParams = { speed: 750, feed: 0.12, doc: 0.8 },
   activeSubTab,
   assembledParts,
   onAssemblyComplete,
@@ -106,11 +110,20 @@ export default function ThreeVisualizer({
   activeOperation,
   operationProgress = 0,
   operationState = 'IDLE',
+  onSelectOperation,
+  onStartSimulation,
+  onPauseResumeSimulation,
+  onResetSimulation,
+  onUpdateSimParams,
+  beforeAfterMode = 'after',
+  onToggleBeforeAfter,
   isLogin = false
 }) {
   const mountRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isAudioMuted, setIsAudioMuted] = useState(false);
+  const [isDraggingTool, setIsDraggingTool] = useState(false);
 
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
@@ -121,6 +134,7 @@ export default function ThreeVisualizer({
 
   const selectedHelperRef = useRef(null);
   const focusedHelperRef = useRef(null);
+  const hoverHelperRef = useRef(null);
 
   const isPlayingRef = useRef(isPlaying);
   const simParamsRef = useRef(simParams);
@@ -130,6 +144,9 @@ export default function ThreeVisualizer({
   const activeOperationRef = useRef(activeOperation);
   const operationProgressRef = useRef(operationProgress);
   const operationStateRef = useRef(operationState);
+  const selectedPartIdRef = useRef(selectedPartId);
+
+  const machineOperations = SIMULATION_OPERATIONS[machineId] || [];
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -146,7 +163,16 @@ export default function ThreeVisualizer({
     activeOperationRef.current = activeOperation;
     operationProgressRef.current = operationProgress;
     operationStateRef.current = operationState;
-  }, [isPlaying, simParams, simStep, toolPosition, activeOperation, operationProgress, operationState]);
+    selectedPartIdRef.current = selectedPartId;
+
+    // Audio Synchronization
+    if (operationState === 'RUNNING' && !isAudioMuted) {
+      const opId = typeof activeOperation === 'object' ? activeOperation?.id : activeOperation;
+      workshopAudio.playOperationSound(machineId, opId, simParams?.speed || 750);
+    } else {
+      workshopAudio.stopSound();
+    }
+  }, [isPlaying, simParams, simStep, toolPosition, activeOperation, operationProgress, operationState, selectedPartId, machineId, isAudioMuted]);
 
   // Adjust camera targets
   useEffect(() => {
@@ -168,8 +194,8 @@ export default function ThreeVisualizer({
         controls.target.set(0, 0.2, 0);
         break;
       case 'operation':
-        camera.position.set(4, 2.2, 5);
-        controls.target.set(0.2, 0.4, 0.6);
+        camera.position.set(3.8, 2.0, 4.5);
+        controls.target.set(0.1, 0.3, 0.4);
         break;
       case 'default':
       default:
@@ -203,39 +229,43 @@ export default function ThreeVisualizer({
 
     const isDark = !isLogin;
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(isDark ? '#F1F5F9' : '#F1F5F9');
+    scene.background = new THREE.Color('#0D0221');
     sceneRef.current = scene;
 
-    // Solid floor with concrete specular reflections using deep dark canvas background
+    // Floor
     const floorGeo = new THREE.PlaneGeometry(100, 100);
     const floorMat = new THREE.MeshStandardMaterial({ 
-      color: isDark ? '#E2E8F0' : '#F1F5F9', 
-      roughness: 0.5, 
-      metalness: 0.1 
+      color: '#150630', 
+      roughness: 0.8, 
+      metalness: 0.15 
     });
     const floorMesh = new THREE.Mesh(floorGeo, floorMat);
     floorMesh.rotation.x = -Math.PI / 2;
     floorMesh.position.y = -2;
     scene.add(floorMesh);
 
-    // Industrial Dark Wall in the background
+    // Cyber Grid on floor
+    const gridHelper = new THREE.GridHelper(50, 50, 0x7928CA, 0x240A50);
+    gridHelper.position.y = -1.99;
+    scene.add(gridHelper);
+
+    // Wall & pillars
     if (isDark) {
       const wallGeo = new THREE.PlaneGeometry(40, 20);
       const wallMat = new THREE.MeshStandardMaterial({
-        color: '#E2E8F0',
-        roughness: 0.7,
+        color: '#1A083B',
+        roughness: 0.8,
         metalness: 0.1
       });
       const wallMesh = new THREE.Mesh(wallGeo, wallMat);
       wallMesh.position.set(0, 4, -8);
       scene.add(wallMesh);
 
-      // Add structural steel support beams/pillars to create room atmosphere
       const pillarGeo = new THREE.BoxGeometry(0.8, 12, 0.8);
       const pillarMat = new THREE.MeshStandardMaterial({
-        color: '#F1F5F9',
+        color: '#250B52',
         roughness: 0.6,
-        metalness: 0.1
+        metalness: 0.2
       });
       const pillar1 = new THREE.Mesh(pillarGeo, pillarMat);
       pillar1.position.set(-9, 4, -7.8);
@@ -245,11 +275,11 @@ export default function ThreeVisualizer({
       pillar2.position.set(9, 4, -7.8);
       scene.add(pillar2);
 
-      // Add industrial conduit pipes running along the back wall
+      // Conduit pipes
       const pipeGeo = new THREE.CylinderGeometry(0.12, 0.12, 24, 16);
       const pipeMat = new THREE.MeshStandardMaterial({
-        color: '#64748B',
-        metalness: 0.85,
+        color: '#FF5376',
+        metalness: 0.9,
         roughness: 0.2
       });
       
@@ -258,27 +288,22 @@ export default function ThreeVisualizer({
       pipe1.rotation.z = Math.PI / 2;
       scene.add(pipe1);
 
-      const pipe2 = new THREE.Mesh(pipeGeo, pipeMat);
-      pipe2.position.set(0, 5.4, -7.75);
-      pipe2.rotation.z = Math.PI / 2;
-      scene.add(pipe2);
-
-      // Steel pedestal/platform slab under the machine (Base panel background)
+      // Platform slab
       const platformGeo = new THREE.BoxGeometry(6.6, 0.15, 3.2);
       const platformMat = new THREE.MeshStandardMaterial({
-        color: '#FFFFFF',
-        roughness: 0.3,
-        metalness: 0.15
+        color: '#280E58',
+        roughness: 0.4,
+        metalness: 0.3
       });
       const platform = new THREE.Mesh(platformGeo, platformMat);
       platform.position.set(0, -1.92, 0);
       scene.add(platform);
 
-      // Cyan-blue glowing underglow strip (Neon accent blue glow #0A5CFF)
+      // Neon pink/cyan underglow strip
       const underglowGeo = new THREE.BoxGeometry(5.4, 0.04, 0.04);
       const underglowMat = new THREE.MeshStandardMaterial({
-        color: '#0A5CFF',
-        emissive: '#0A5CFF',
+        color: '#FF5376',
+        emissive: '#FF5376',
         emissiveIntensity: 6.0,
         roughness: 0.1
       });
@@ -286,21 +311,24 @@ export default function ThreeVisualizer({
       underglow.position.set(0, -1.83, 0.9);
       scene.add(underglow);
 
-      // Floor ambient bounce glow (#0A5CFF) under the machine base
-      const floorBounceGlow = new THREE.PointLight('#0A5CFF', 5.0, 10);
+      const floorBounceGlow = new THREE.PointLight('#FF5376', 4.0, 10);
       floorBounceGlow.position.set(0, -1.88, 0);
       scene.add(floorBounceGlow);
+
+      const cyanAccentLight = new THREE.PointLight('#00F5D4', 3.0, 8);
+      cyanAccentLight.position.set(0, -1.88, -0.9);
+      scene.add(cyanAccentLight);
     }
 
-    // Custom Canvas radial contact shadow texture under the machine base
+    // Radial shadow
     const shadowCanvas = document.createElement('canvas');
     shadowCanvas.width = 128;
     shadowCanvas.height = 128;
     const ctx = shadowCanvas.getContext('2d');
     const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-    grad.addColorStop(0, 'rgba(15, 23, 42, 0.12)'); // soft shadow center
-    grad.addColorStop(0.5, 'rgba(15, 23, 42, 0.05)');
-    grad.addColorStop(1, 'rgba(15, 23, 42, 0)');
+    grad.addColorStop(0, 'rgba(13, 2, 33, 0.8)');
+    grad.addColorStop(0.5, 'rgba(13, 2, 33, 0.4)');
+    grad.addColorStop(1, 'rgba(13, 2, 33, 0)');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, 128, 128);
 
@@ -313,7 +341,7 @@ export default function ThreeVisualizer({
     });
     const shadowMesh = new THREE.Mesh(shadowGeo, shadowMat);
     shadowMesh.rotation.x = -Math.PI / 2;
-    shadowMesh.position.y = -1.98; // Positioned slightly above floor
+    shadowMesh.position.y = -1.98;
     scene.add(shadowMesh);
 
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
@@ -334,65 +362,37 @@ export default function ThreeVisualizer({
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.maxDistance = 25;
-    controls.minDistance = 3;
+    controls.minDistance = 2.5;
     controlsRef.current = controls;
 
-    // Lighting: Custom industrial blue color grading
-    const ambientLight = new THREE.AmbientLight(isDark ? '#E2E8F0' : '#F1F5F9', highContrast ? 2.2 : 1.5); // Muted green ambient fill
+    // Lighting
+    const ambientLight = new THREE.AmbientLight('#D8B4FE', highContrast ? 2.2 : 1.6);
     scene.add(ambientLight);
 
-    const mainLight = new THREE.DirectionalLight('#FFFFFF', highContrast ? 3.0 : 2.2); // Primary key light (Warm Sand Dune tint)
+    const mainLight = new THREE.DirectionalLight('#FFFFFF', highContrast ? 3.2 : 2.5);
     mainLight.position.set(8, 15, 8);
     scene.add(mainLight);
 
-    const rimLight = new THREE.DirectionalLight('#0A5CFF', highContrast ? 3.0 : 2.5); // Cobalt Blue rim reflections
+    const rimLight = new THREE.DirectionalLight('#00F5D4', highContrast ? 3.0 : 2.2);
     rimLight.position.set(-8, 5, -8);
     scene.add(rimLight);
 
-    const orangeSpotLight = new THREE.PointLight('#FFFFFF', highContrast ? 2.0 : 1.4, 18); // Sand Dune highlight spotlight
-    orangeSpotLight.position.set(-3, 4, 3);
-    scene.add(orangeSpotLight);
+    const magentaSpotLight = new THREE.PointLight('#FF5376', highContrast ? 2.2 : 1.8, 18);
+    magentaSpotLight.position.set(-3, 4, 3);
+    scene.add(magentaSpotLight);
 
-    // Over-head UI accent green key light projecting onto body
-    if (isDark) {
-      const topBlueLight = new THREE.DirectionalLight('#0A5CFF', 3.0);
-      topBlueLight.position.set(2, 8, 6);
-      scene.add(topBlueLight);
-    }
-
-    if (isDark) {
-      // Dual horizontal glowing neon green tubes centered behind the machine
-      const tubeGeo = new THREE.CylinderGeometry(0.06, 0.06, 12, 16);
-      const tubeMat = new THREE.MeshStandardMaterial({ 
-        color: '#0A5CFF',
-        emissive: '#0A5CFF',
-        emissiveIntensity: 6.0,
-        roughness: 0.1
-      });
-      
-      const tube1 = new THREE.Mesh(tubeGeo, tubeMat);
-      tube1.position.set(0, 3.4, -7.9);
-      tube1.rotation.z = Math.PI / 2;
-      scene.add(tube1);
-      
-      const tube2 = new THREE.Mesh(tubeGeo, tubeMat);
-      tube2.position.set(0, 3.7, -7.9);
-      tube2.rotation.z = Math.PI / 2;
-      scene.add(tube2);
-    }
-
-    // Materials: Highly metallic reflective green-grey range desaturated to preserve realistic metallic look
+    // Materials dictionary
     const mats = {
-      machineBody: new THREE.MeshStandardMaterial({ color: isDark ? '#0A5CFF' : '#003EB3', metalness: 0.92, roughness: 0.22 }), // High spec gloss cobalt blue
-      secondaryMetal: new THREE.MeshStandardMaterial({ color: '#FFFFFF', metalness: 0.98, roughness: 0.1 }), // Polished chrome / silver highlights
-      darkMechanicalParts: new THREE.MeshStandardMaterial({ color: isDark ? '#1E293B' : '#334155', metalness: 0.85, roughness: 0.3 }), // Slate charcoal shadow pieces
+      machineBody: new THREE.MeshStandardMaterial({ color: '#2B0F60', metalness: 0.9, roughness: 0.25 }),
+      secondaryMetal: new THREE.MeshStandardMaterial({ color: '#E2E8F0', metalness: 0.98, roughness: 0.1 }),
+      darkMechanicalParts: new THREE.MeshStandardMaterial({ color: '#160830', metalness: 0.85, roughness: 0.3 }),
       shafts: new THREE.MeshStandardMaterial({ color: '#FFFFFF', metalness: 0.98, roughness: 0.08 }), 
-      workpiece: new THREE.MeshStandardMaterial({ color: '#FFFFFF', metalness: 0.95, roughness: 0.15 }), 
-      cuttingTool: new THREE.MeshStandardMaterial({ color: '#FFFFFF', metalness: 0.95, roughness: 0.15 }),
-      safetyParts: new THREE.MeshStandardMaterial({ color: isDark ? '#0A5CFF' : '#003EB3', metalness: 0.3, roughness: 0.3 }),
-      sandMould: new THREE.MeshStandardMaterial({ color: '#475569', roughness: 0.95, metalness: 0.05 }), 
-      moltenMetal: new THREE.MeshStandardMaterial({ color: '#0A5CFF', emissive: '#0A5CFF', emissiveIntensity: 2.0, roughness: 0.1 }), // glowing cobalt blue metal
-      moltenMetalCool: new THREE.MeshStandardMaterial({ color: '#1E293B', metalness: 0.8, roughness: 0.6 })
+      workpiece: new THREE.MeshStandardMaterial({ color: '#E0E7FF', metalness: 0.95, roughness: 0.18 }), 
+      cuttingTool: new THREE.MeshStandardMaterial({ color: '#F8FAFC', metalness: 0.98, roughness: 0.12 }),
+      safetyParts: new THREE.MeshStandardMaterial({ color: '#FF5376', metalness: 0.4, roughness: 0.3 }),
+      sandMould: new THREE.MeshStandardMaterial({ color: '#4A3B63', roughness: 0.95, metalness: 0.05 }), 
+      moltenMetal: new THREE.MeshStandardMaterial({ color: '#FF5376', emissive: '#FF5376', emissiveIntensity: 2.8, roughness: 0.1 }),
+      moltenMetalCool: new THREE.MeshStandardMaterial({ color: '#250B48', metalness: 0.8, roughness: 0.6 })
     };
 
     const machineGroup = new THREE.Group();
@@ -405,15 +405,15 @@ export default function ThreeVisualizer({
       partGroup.add(mesh);
       partGroup.userData = { 
         explodedOffset: offsetVec, 
-        basePosition: new THREE.Vector3(0, 0, 0)
+        basePosition: new THREE.Vector3(0, 0, 0),
+        partId: partId
       };
       machineGroup.add(partGroup);
       groupsRef.current[partId] = partGroup;
     };
 
-    // Lathe Machine
+    // 1. LATHE
     if (machineId === 'lathe') {
-      // Detailed bed group with silver rails
       const bedGroup = new THREE.Group();
       const bedBase = new THREE.Mesh(new THREE.BoxGeometry(7, 0.8, 1.4), mats.machineBody);
       bedGroup.add(bedBase);
@@ -424,11 +424,9 @@ export default function ThreeVisualizer({
       bedGroup.add(rail1, rail2);
       addPart('bed', bedGroup, [0, -1.2, 0]);
 
-      // Gearbox Headstock details
       const headstockGroup = new THREE.Group();
       const hsBase = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.6, 1.4), mats.darkMechanicalParts);
       headstockGroup.add(hsBase);
-      // Speed selectors / gear dials
       for (let i = 0; i < 2; i++) {
         const dial = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.1, 12).rotateX(Math.PI / 2), mats.secondaryMetal);
         dial.position.set(-0.4 + i * 0.8, 0.4, 0.71);
@@ -436,7 +434,6 @@ export default function ThreeVisualizer({
       }
       addPart('headstock', headstockGroup, [-2.6, 0.2, 0]);
 
-      // Detailed 3-Jaw scroll chuck
       const chuckGroup = new THREE.Group();
       const chuckBase = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 0.6, 24).rotateZ(Math.PI / 2), mats.secondaryMetal);
       chuckGroup.add(chuckBase);
@@ -449,43 +446,7 @@ export default function ThreeVisualizer({
       addPart('chuck', chuckGroup, [-1.8, 0.2, 0]);
       addPart('spindle', new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 2.0, 16).rotateZ(Math.PI / 2), mats.shafts), [-2.6, 0.2, 0]);
 
-      // Workpiece Group
-      const wpGroup = new THREE.Group();
-      const mainCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 2.8, 16).rotateZ(Math.PI / 2), mats.workpiece);
-      mainCyl.name = 'main_cylinder';
-      wpGroup.add(mainCyl);
-
-      const taperCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.4, 2.8, 16).rotateZ(Math.PI / 2), mats.workpiece);
-      taperCyl.name = 'taper_cylinder';
-      taperCyl.visible = false;
-      wpGroup.add(taperCyl);
-
-      const contourCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.4, 2.8, 16).rotateZ(Math.PI / 2), mats.workpiece);
-      contourCyl.name = 'contour_cylinder';
-      contourCyl.visible = false;
-      wpGroup.add(contourCyl);
-
-      const boreHole = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 1.8, 16).rotateZ(Math.PI / 2), new THREE.MeshStandardMaterial({ color: '#101010', roughness: 0.9 }));
-      boreHole.name = 'bore_hole';
-      boreHole.position.set(0.6, 0, 0);
-      boreHole.visible = false;
-      wpGroup.add(boreHole);
-
-      const partedPiece = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 0.8, 16).rotateZ(Math.PI / 2), mats.workpiece);
-      partedPiece.name = 'parted_piece';
-      partedPiece.position.set(1.0, 0, 0);
-      partedPiece.visible = false;
-      wpGroup.add(partedPiece);
-
-      const helixPoints = [];
-      for (let t = 0; t < Math.PI * 16; t += 0.1) {
-        helixPoints.push(new THREE.Vector3(-1.2 + (t / (Math.PI * 16)) * 2.4, 0.41 * Math.sin(t), 0.41 * Math.cos(t)));
-      }
-      const helixLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(helixPoints), new THREE.LineBasicMaterial({ color: '#1D49B4', linewidth: 2 }));
-      helixLine.name = 'helix_line';
-      helixLine.visible = false;
-      wpGroup.add(helixLine);
-
+      const wpGroup = ProceduralWorkpieceManager.createLatheWorkpieceGroup(mats);
       addPart('workpiece', wpGroup, [0, -0.6, 0]);
 
       addPart('carriage', new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.4, 1.6), mats.secondaryMetal), [0, 0.5, 1.2]);
@@ -493,9 +454,11 @@ export default function ThreeVisualizer({
       addPart('compound_rest', new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.2, 0.6), mats.secondaryMetal), [0, 1.0, 1.5]);
 
       const toolPostMesh = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.6, 0.4), mats.darkMechanicalParts);
-      toolPostMesh.add(new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.1, 0.1), mats.cuttingTool));
+      const toolBit = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.1, 0.1), mats.cuttingTool);
+      toolBit.position.set(0.1, 0.1, -0.15);
+      toolPostMesh.add(toolBit);
       addPart('tool_post', toolPostMesh, [0.2, 1.2, 1.6]);
-      addPart('cutting_tool', new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.1, 0.1), mats.cuttingTool), [0.3, 1.3, 1.8]);
+      addPart('cutting_tool', new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.1, 0.1), mats.cuttingTool), [0.3, 1.3, 1.8]);
 
       const tailstockGroup = new THREE.Group();
       const tsBody = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.0, 1.0), mats.machineBody);
@@ -503,9 +466,6 @@ export default function ThreeVisualizer({
       const quill = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.9, 12).rotateZ(Math.PI / 2), mats.shafts);
       quill.position.set(-0.4, 0.1, 0);
       tailstockGroup.add(quill);
-      const whRing = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.08, 16).rotateZ(Math.PI / 2), mats.secondaryMetal);
-      whRing.position.set(0.5, 0.1, 0);
-      tailstockGroup.add(whRing);
       addPart('tailstock', tailstockGroup, [2.5, 0.2, 0]);
 
       addPart('lead_screw', new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 6.2, 16).rotateZ(Math.PI / 2), mats.shafts), [0, -0.6, 0.8]);
@@ -515,6 +475,7 @@ export default function ThreeVisualizer({
       hwGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 0.08, 12).rotateX(Math.PI / 2), mats.safetyParts));
       addPart('handwheels', hwGroup, [0, 0, 1.8]);
 
+    // 2. WELDING
     } else if (machineId === 'welding') {
       const table = new THREE.Group();
       table.add(new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.15, 3.2), mats.darkMechanicalParts));
@@ -522,7 +483,10 @@ export default function ThreeVisualizer({
       addPart('welding_machine', new THREE.Mesh(new THREE.BoxGeometry(1.4, 1.2, 1.4), mats.machineBody), [-2.2, 0.2, -0.6]);
 
       const holder = new THREE.Group();
-      holder.add(new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.7).rotateX(Math.PI / 2), mats.darkMechanicalParts));
+      const torchHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.7).rotateX(Math.PI / 2), mats.darkMechanicalParts);
+      const electrodeRod = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.5).rotateX(Math.PI / 4), mats.cuttingTool);
+      electrodeRod.position.set(0, -0.25, 0.25);
+      holder.add(torchHandle, electrodeRod);
       addPart('electrode_holder', holder, [0, 1.3, 0]);
 
       const curve = new THREE.CatmullRomCurve3([new THREE.Vector3(-2.2, -0.2, -0.6), new THREE.Vector3(0, 0.2, 0.8), new THREE.Vector3(0.5, 0.9, 0.2)]);
@@ -534,18 +498,11 @@ export default function ThreeVisualizer({
       addPart('metal_plates', plates, [0, 0, 0]);
       addPart('clamps', new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.4, 0.3), mats.darkMechanicalParts), [-1.2, 1.0, 0.3]);
 
-      // Joint Group
-      const jointGroup = new THREE.Group();
-      jointGroup.add(new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.09, 0.78), mats.darkMechanicalParts));
-      
-      const bead = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.78, 8).rotateZ(Math.PI / 2), mats.secondaryMetal);
-      bead.name = 'weld_bead';
-      bead.visible = false;
-      jointGroup.add(bead);
-      addPart('weld_joint', jointGroup, [0, 0.86, 0]);
-
+      const weldAssembly = ProceduralWorkpieceManager.createWeldingAssembly(mats);
+      addPart('weld_joint', weldAssembly, [0, 0.86, 0]);
       addPart('ppe', new THREE.Mesh(new THREE.SphereGeometry(0.4, 16, 16), mats.darkMechanicalParts), [1.4, 0.9, -1.0]);
 
+    // 3. SHAPER
     } else if (machineId === 'shaper') {
       addPart('base', new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.4, 3.8), mats.darkMechanicalParts), [0, -1.8, 0]);
       addPart('column', new THREE.Mesh(new THREE.BoxGeometry(1.6, 2.6, 2.2), mats.machineBody), [0, -0.3, -0.6]);
@@ -556,7 +513,6 @@ export default function ThreeVisualizer({
       addPart('table', new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.2, 1.6), mats.secondaryMetal), [0, -0.5, 1.2]);
       addPart('vice', new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.35, 1.0), mats.darkMechanicalParts), [0, 0.2, 1.2]);
 
-      // Workpiece
       const wpGroup = new THREE.Group();
       const mainBlock = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.4, 0.8), mats.workpiece);
       mainBlock.name = 'main_block';
@@ -570,10 +526,10 @@ export default function ThreeVisualizer({
 
       addPart('workpiece', wpGroup, [0, 0.45, 1.2]);
 
+    // 4. PLANER
     } else if (machineId === 'planer') {
       addPart('table', new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.3, 5.0), mats.secondaryMetal), [0, -1.1, 0]);
 
-      // Workpiece
       const wpGroup = new THREE.Group();
       const planerBlock = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.6, 2.5), mats.workpiece);
       planerBlock.name = 'planer_block';
@@ -586,23 +542,22 @@ export default function ThreeVisualizer({
       wpGroup.add(planerSlot);
 
       addPart('workpiece', wpGroup, [0, -0.65, 0]);
-
       addPart('housing', new THREE.Mesh(new THREE.BoxGeometry(0.7, 4.2, 1.4), mats.machineBody), [-1.6, 0.5, 0]);
       addPart('cross_rail', new THREE.Mesh(new THREE.BoxGeometry(3.8, 0.6, 0.6), mats.shafts), [0, 1.4, 0]);
       addPart('tool_head', new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.8, 0.4), mats.darkMechanicalParts), [0, 1.2, 0.4]);
       addPart('cutting_tool', new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.4, 0.18), mats.cuttingTool), [0, 0.7, 0.5]);
       addPart('clamps', new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.15, 0.3), mats.darkMechanicalParts), [-0.6, -0.3, -1.0]);
 
+    // 5. MILLING
     } else if (machineId === 'milling') {
       addPart('base', new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.4, 3.4), mats.darkMechanicalParts), [0, -1.8, 0]);
       addPart('column', new THREE.Mesh(new THREE.BoxGeometry(1.6, 4.2, 2.0), mats.machineBody), [0, -0.6, -1.2]);
       addPart('spindle', new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.8), mats.shafts), [0, 1.2, 0.6]);
       addPart('motor_head', new THREE.Mesh(new THREE.BoxGeometry(1.4, 1.2, 1.6), mats.darkMechanicalParts), [0, 1.8, 0.2]);
-      addPart('cutter', new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.6, 8), mats.cuttingTool), [0, 0.5, 0.6]);
+      addPart('cutter', new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.6, 12), mats.cuttingTool), [0, 0.5, 0.6]);
       addPart('table', new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.3, 1.2), mats.secondaryMetal), [0, -0.4, 0.8]);
       addPart('vice', new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.4, 0.9), mats.darkMechanicalParts), [0, -0.1, 0.8]);
 
-      // Workpiece
       const wpGroup = new THREE.Group();
       const millBlock = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.35, 0.6), mats.workpiece);
       millBlock.name = 'mill_block';
@@ -615,11 +570,12 @@ export default function ThreeVisualizer({
       wpGroup.add(millSlot);
 
       addPart('workpiece', wpGroup, [0, 0.2, 0.8]);
-      addPart('handwheels', new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 0.08, 12).rotateZ(Math.PI/2), mats.safetyParts), [1.7, -0.4, 0.8]);
+      addPart('handwheels', new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 0.08, 12).rotateZ(Math.PI / 2), mats.safetyParts), [1.7, -0.4, 0.8]);
 
+    // 6. CASTING
     } else if (machineId === 'casting') {
       const pattern = new THREE.Group();
-      pattern.add(new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.15, 12), mats.workpiece));
+      pattern.add(new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.15, 16), mats.workpiece));
       addPart('pattern', pattern, [-1.6, 0.8, -1.0]);
 
       addPart('cope_flask', new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.6, 2.4), mats.sandMould), [0, 0.1, 0]);
@@ -627,12 +583,20 @@ export default function ThreeVisualizer({
       addPart('sprue', new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.04, 0.6), mats.shafts), [0.6, 0.1, 0]);
       addPart('runner', new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.05, 0.12), mats.moltenMetalCool), [0.2, -0.3, 0]);
       addPart('riser', new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.6), mats.shafts), [-0.6, 0.1, 0]);
-      addPart('ladle', new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.3, 0.6, 12), mats.darkMechanicalParts), [-1.8, 0.8, 0.6]);
+      
+      const ladleGroup = new THREE.Group();
+      ladleGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.3, 0.6, 16), mats.darkMechanicalParts));
+      const stream = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.8, 8), mats.moltenMetal);
+      stream.name = "molten_stream";
+      stream.position.set(0.3, -0.4, 0);
+      stream.visible = false;
+      ladleGroup.add(stream);
+      addPart('ladle', ladleGroup, [-1.8, 0.8, 0.6]);
 
-      // Casting Cavity
-      const cavityInner = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.15, 12), mats.moltenMetalCool);
+      const cavityInner = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.15, 16), mats.moltenMetalCool);
       addPart('casting_cavity', cavityInner, [0, -0.3, 0]);
 
+    // 7. MOULDING
     } else if (machineId === 'moulding') {
       addPart('pattern', new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 0.25, 16), mats.workpiece), [0, -0.2, 0]);
       addPart('cope', new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.6, 2.2), mats.safetyParts), [0, 0.4, 0]);
@@ -651,7 +615,7 @@ export default function ThreeVisualizer({
       g.userData.basePosition.copy(g.position);
     });
 
-    const selectedHelper = new THREE.BoxHelper(new THREE.Mesh(), '#1D49B4');
+    const selectedHelper = new THREE.BoxHelper(new THREE.Mesh(), '#0A5CFF');
     selectedHelper.visible = false;
     scene.add(selectedHelper);
     selectedHelperRef.current = selectedHelper;
@@ -661,8 +625,13 @@ export default function ThreeVisualizer({
     scene.add(focusedHelper);
     focusedHelperRef.current = focusedHelper;
 
+    const hoverHelper = new THREE.BoxHelper(new THREE.Mesh(), '#60A5FA');
+    hoverHelper.visible = false;
+    scene.add(hoverHelper);
+    hoverHelperRef.current = hoverHelper;
+
     // Sparks Particle System
-    const sparkCount = 30;
+    const sparkCount = 40;
     const sparkGeo = new THREE.BufferGeometry();
     const sparkPositions = new Float32Array(sparkCount * 3);
     const sparkVelocities = [];
@@ -670,31 +639,35 @@ export default function ThreeVisualizer({
       sparkPositions[i * 3] = 0;
       sparkPositions[i * 3 + 1] = 0;
       sparkPositions[i * 3 + 2] = 0;
-      sparkVelocities.push(new THREE.Vector3((Math.random() - 0.5) * 2, Math.random() * 2, (Math.random() - 0.5) * 2));
+      sparkVelocities.push(new THREE.Vector3((Math.random() - 0.5) * 3, Math.random() * 2 + 0.5, (Math.random() - 0.5) * 3));
     }
     sparkGeo.setAttribute('position', new THREE.BufferAttribute(sparkPositions, 3));
-    const sparks = new THREE.Points(sparkGeo, new THREE.PointsMaterial({ color: '#3D72C1', size: 0.12, transparent: true, opacity: 0.8 }));
+    const sparks = new THREE.Points(
+      sparkGeo,
+      new THREE.PointsMaterial({ color: '#60A5FA', size: 0.14, transparent: true, opacity: 0.9 })
+    );
     sparks.visible = false;
     scene.add(sparks);
 
     setLoading(false);
     let clock = new THREE.Clock();
 
-    // Workpiece Hover Tooltip Setup
+    // 3D Pointer Tooltip
     let hoveredPartId = null;
     const tooltipDiv = document.createElement('div');
     tooltipDiv.style.position = 'absolute';
-    tooltipDiv.style.background = 'rgba(242, 140, 40, 0.95)';
-    tooltipDiv.style.border = '1px solid #FFF';
+    tooltipDiv.style.background = 'rgba(15, 23, 42, 0.95)';
+    tooltipDiv.style.border = '1px solid #0A5CFF';
     tooltipDiv.style.borderRadius = '4px';
-    tooltipDiv.style.padding = '6px 10px';
-    tooltipDiv.style.color = '#000';
+    tooltipDiv.style.padding = '5px 10px';
+    tooltipDiv.style.color = '#FFF';
     tooltipDiv.style.fontSize = '10px';
     tooltipDiv.style.fontWeight = 'bold';
     tooltipDiv.style.pointerEvents = 'none';
     tooltipDiv.style.display = 'none';
     tooltipDiv.style.zIndex = '100';
-    tooltipDiv.innerHTML = '<div>WORKPIECE</div><div style="font-size:8px;font-weight:normal;">Click to select</div>';
+    tooltipDiv.style.boxShadow = '0 0 10px rgba(10, 92, 255, 0.4)';
+    tooltipDiv.innerHTML = '<div id="tt-title">PART</div><div style="font-size:8.5px;color:#94A3B8;font-weight:normal;">Click to operate on workplane</div>';
     mountRef.current.appendChild(tooltipDiv);
 
     const handleMouseMove = (e) => {
@@ -721,50 +694,35 @@ export default function ThreeVisualizer({
         }
       }
 
-      const isWP = (id) => {
-        if (machineId === 'lathe' && id === 'workpiece') return true;
-        if (machineId === 'welding' && id === 'weld_joint') return true;
-        if (machineId === 'shaper' && id === 'workpiece') return true;
-        if (machineId === 'planer' && id === 'workpiece') return true;
-        if (machineId === 'milling' && id === 'workpiece') return true;
-        if (machineId === 'casting' && id === 'casting_cavity') return true;
-        if (machineId === 'moulding' && id === 'cavity') return true;
-        return false;
-      };
-
-      if (foundPartId && isWP(foundPartId)) {
+      if (foundPartId) {
         hoveredPartId = foundPartId;
+        canvas.style.cursor = 'pointer';
         tooltipDiv.style.left = `${e.clientX - rect.left + 15}px`;
         tooltipDiv.style.top = `${e.clientY - rect.top + 15}px`;
         tooltipDiv.style.display = 'block';
-        
-        const g = groupsRef.current[foundPartId];
-        g.traverse((child) => {
-          if (child.isMesh && child.material) {
-            child.material.emissive?.set('#1D49B4');
-            child.material.emissiveIntensity = 0.5;
-          }
-        });
-      } else {
-        if (hoveredPartId) {
-          const g = groupsRef.current[hoveredPartId];
-          if (g && hoveredPartId !== selectedPartId) {
-            g.traverse((child) => {
-              if (child.isMesh && child.material) {
-                child.material.emissive?.setHex(child.userData.originalEmissive || 0);
-                child.material.emissiveIntensity = 0;
-              }
-            });
-          }
-          hoveredPartId = null;
+        const titleEl = tooltipDiv.querySelector('#tt-title');
+        if (titleEl) {
+          titleEl.textContent = foundPartId.replace(/_/g, ' ').toUpperCase();
         }
+
+        if (hoverHelperRef.current && groupsRef.current[foundPartId]) {
+          hoverHelperRef.current.setFromObject(groupsRef.current[foundPartId]);
+          hoverHelperRef.current.visible = true;
+        }
+      } else {
+        canvas.style.cursor = 'crosshair';
+        hoveredPartId = null;
         tooltipDiv.style.display = 'none';
+        if (hoverHelperRef.current) {
+          hoverHelperRef.current.visible = false;
+        }
       }
     };
 
     const canvasEl = rendererRef.current.domElement;
     canvasEl.addEventListener('mousemove', handleMouseMove);
 
+    // Animation Render Loop
     const animate = () => {
       animFrameIdRef.current = requestAnimationFrame(animate);
       const elapsed = clock.getElapsedTime();
@@ -774,11 +732,12 @@ export default function ThreeVisualizer({
       }
 
       const currentToolPos = toolPositionRef.current || { x: 0, y: 0, z: 0 };
-      const op = activeOperationRef.current;
+      const op = typeof activeOperationRef.current === 'object' ? activeOperationRef.current?.id : activeOperationRef.current;
       const progress = (operationProgressRef.current || 0) / 100;
       const opState = operationStateRef.current;
+      const curSelectedPart = selectedPartIdRef.current;
 
-      // Exploded View Interpolation
+      // Exploded View
       Object.keys(groupsRef.current).forEach((key) => {
         const g = groupsRef.current[key];
         const base = g.userData.basePosition;
@@ -793,7 +752,7 @@ export default function ThreeVisualizer({
         g.position.z = THREE.MathUtils.lerp(g.position.z, targetZ, 0.08);
       });
 
-      // Cutaway View Transparency
+      // Cutaway View
       Object.keys(groupsRef.current).forEach((key) => {
         const g = groupsRef.current[key];
         g.traverse((child) => {
@@ -801,17 +760,17 @@ export default function ThreeVisualizer({
             const isCasing = ['bed', 'column', 'cope', 'drag', 'housing', 'headstock', 'flask', 'sand', 'cope_flask', 'drag_flask'].includes(key);
             if (isCasing) {
               child.material.transparent = isCutaway;
-              child.material.opacity = isCutaway ? 0.18 : 1.0;
+              child.material.opacity = isCutaway ? 0.22 : 1.0;
             }
           }
         });
       });
 
-      // Emissive and breathing highlights
+      // Selection and Focus Emissive Highlights
       Object.keys(groupsRef.current).forEach((key) => {
         const g = groupsRef.current[key];
         const isFocused = focusedPartId === key;
-        const isSelected = selectedPartId === key;
+        const isSelected = curSelectedPart === key;
         
         g.traverse((child) => {
           if (child.isMesh && child.material) {
@@ -819,165 +778,243 @@ export default function ThreeVisualizer({
               child.userData.originalEmissive = child.material.emissive?.getHex() || 0;
             }
             if (isSelected) {
-              child.material.emissive?.set('#1D49B4');
-              child.material.emissiveIntensity = 0.28;
+              child.material.emissive?.set('#0A5CFF');
+              child.material.emissiveIntensity = 0.35;
             } else if (isFocused) {
               child.material.emissive?.set('#3D72C1');
-              child.material.emissiveIntensity = 0.2;
+              child.material.emissiveIntensity = 0.22;
             } else {
               child.material.emissive?.setHex(child.userData.originalEmissive);
               child.material.emissiveIntensity = 0;
             }
           }
         });
-
-        if (isFocused) {
-          const sc = 1.0 + 0.02 * Math.sin(elapsed * 8);
-          g.scale.set(sc, sc, sc);
-        } else {
-          g.scale.set(1, 1, 1);
-        }
       });
 
-      // Bounding Helpers update
-      if (selectedPartId && groupsRef.current[selectedPartId] && selectedHelperRef.current) {
-        selectedHelperRef.current.setFromObject(groupsRef.current[selectedPartId]);
+      // Bounding Box Helpers
+      if (curSelectedPart && groupsRef.current[curSelectedPart] && selectedHelperRef.current) {
+        selectedHelperRef.current.setFromObject(groupsRef.current[curSelectedPart]);
         selectedHelperRef.current.visible = true;
       } else if (selectedHelperRef.current) {
         selectedHelperRef.current.visible = false;
       }
 
-      if (focusedPartId && groupsRef.current[focusedPartId] && focusedPartId !== selectedPartId && focusedHelperRef.current) {
+      if (focusedPartId && groupsRef.current[focusedPartId] && focusedPartId !== curSelectedPart && focusedHelperRef.current) {
         focusedHelperRef.current.setFromObject(groupsRef.current[focusedPartId]);
         focusedHelperRef.current.visible = true;
       } else if (focusedHelperRef.current) {
         focusedHelperRef.current.visible = false;
       }
 
-      // Kinematics operation loops
+      // Spark Particles
+      if (sparks.visible) {
+        const posAttr = sparks.geometry.attributes.position;
+        for (let i = 0; i < sparkCount; i++) {
+          posAttr.array[i * 3] += sparkVelocities[i].x * 0.03;
+          posAttr.array[i * 3 + 1] += sparkVelocities[i].y * 0.03 - 0.015;
+          posAttr.array[i * 3 + 2] += sparkVelocities[i].z * 0.03;
+
+          if (posAttr.array[i * 3 + 1] < -0.6) {
+            posAttr.array[i * 3] = 0;
+            posAttr.array[i * 3 + 1] = 0;
+            posAttr.array[i * 3 + 2] = 0;
+          }
+        }
+        posAttr.needsUpdate = true;
+      }
+
       const runningOrCompleted = (opState === 'RUNNING' || opState === 'COMPLETED');
       const activeRunning = isPlayingRef.current || opState === 'RUNNING';
 
+      // 1. CENTRE LATHE KINEMATICS & PROCEDURAL WORKPIECE
       if (machineId === 'lathe') {
         const chuck = groupsRef.current['chuck'];
         const spindle = groupsRef.current['spindle'];
         const workpiece = groupsRef.current['workpiece'];
         const carriage = groupsRef.current['carriage'];
         const tool = groupsRef.current['tool_post'];
+        const tailstock = groupsRef.current['tailstock'];
 
         if (activeRunning) {
-          if (chuck) chuck.rotation.x += 0.15;
-          if (spindle) spindle.rotation.x += 0.15;
-          if (workpiece) workpiece.rotation.x += 0.15;
+          const spinSpeed = 0.25;
+          if (chuck) chuck.rotation.x += spinSpeed;
+          if (spindle) spindle.rotation.x += spinSpeed;
+          if (workpiece) workpiece.rotation.x += spinSpeed;
         }
 
-        // Jog tool position
-        if (carriage) {
-          carriage.position.x = THREE.MathUtils.lerp(carriage.position.x, currentToolPos.x, 0.15);
-          if (tool) {
+        if (opState === 'RUNNING') {
+          if (carriage && tool) {
+            if (op === 'facing') {
+              carriage.position.x = 0.6;
+              tool.position.z = THREE.MathUtils.lerp(1.6, 0.6, progress);
+            } else if (op === 'taper_turning' || op === 'contour_turning' || op === 'threading' || op === 'knurling') {
+              carriage.position.x = THREE.MathUtils.lerp(0.8, -0.8, progress);
+              tool.position.z = 1.0;
+            } else if (op === 'forming' || op === 'parting_off' || op === 'chamfering') {
+              carriage.position.x = op === 'parting_off' ? 0.3 : 0.6;
+              tool.position.z = THREE.MathUtils.lerp(1.5, 0.8, progress);
+            } else if (op === 'boring') {
+              carriage.position.x = THREE.MathUtils.lerp(1.2, 0.0, progress);
+              tool.position.z = 0.55;
+            } else if (op === 'drilling') {
+              if (tailstock) {
+                tailstock.position.x = THREE.MathUtils.lerp(2.5, 1.6, progress);
+              }
+            }
             tool.position.x = carriage.position.x + 0.2;
-            tool.position.z = THREE.MathUtils.lerp(tool.position.z, currentToolPos.z + 1.6, 0.15);
+          }
+        } else {
+          if (carriage) {
+            carriage.position.x = THREE.MathUtils.lerp(carriage.position.x, currentToolPos.x, 0.15);
+            if (tool) {
+              tool.position.x = carriage.position.x + 0.2;
+              tool.position.z = THREE.MathUtils.lerp(tool.position.z, currentToolPos.z + 1.6, 0.15);
+            }
           }
         }
 
-        // Dynamic workpiece transformations
         if (workpiece) {
-          const mainC = workpiece.getObjectByName('main_cylinder');
-          const taperC = workpiece.getObjectByName('taper_cylinder');
-          const contourC = workpiece.getObjectByName('contour_cylinder');
-          const boreHole = workpiece.getObjectByName('bore_hole');
+          const raw = workpiece.getObjectByName('raw_stock');
+          const facing = workpiece.getObjectByName('facing_mesh');
+          const taper = workpiece.getObjectByName('taper_mesh');
+          const contour = workpiece.getObjectByName('contour_mesh');
+          const form = workpiece.getObjectByName('forming_mesh');
+          const bore = workpiece.getObjectByName('bore_hole_mesh');
+          const chamfer = workpiece.getObjectByName('chamfer_mesh');
+          const partingRemain = workpiece.getObjectByName('parting_remain');
           const partedPiece = workpiece.getObjectByName('parted_piece');
-          const helixLine = workpiece.getObjectByName('helix_line');
+          const helix = workpiece.getObjectByName('helix_mesh');
+          const drill = workpiece.getObjectByName('drill_hole_mesh');
+          const knurl = workpiece.getObjectByName('knurl_mesh');
 
-          if (mainC) mainC.visible = true;
-          if (taperC) taperC.visible = false;
-          if (contourC) contourC.visible = false;
-          if (boreHole) boreHole.visible = false;
+          if (raw) raw.visible = true;
+          if (facing) facing.visible = false;
+          if (taper) taper.visible = false;
+          if (contour) contour.visible = false;
+          if (form) form.visible = false;
+          if (bore) bore.visible = false;
+          if (chamfer) chamfer.visible = false;
+          if (partingRemain) partingRemain.visible = false;
           if (partedPiece) partedPiece.visible = false;
-          if (helixLine) helixLine.visible = false;
+          if (helix) helix.visible = false;
+          if (drill) drill.visible = false;
+          if (knurl) knurl.visible = false;
 
-          if (mainC) {
-            mainC.scale.set(1, 1, 1);
-            mainC.position.set(0, 0, 0);
+          if (raw) {
+            raw.scale.set(1, 1, 1);
+            raw.position.set(0, 0, 0);
           }
 
           if (runningOrCompleted) {
             if (op === 'facing') {
-              if (mainC) mainC.scale.set(1.0 - progress * 0.15, 1, 1);
+              if (raw) raw.visible = false;
+              if (facing) facing.visible = true;
             } else if (op === 'taper_turning') {
-              if (mainC) mainC.visible = false;
-              if (taperC) taperC.visible = true;
+              if (raw) raw.visible = false;
+              if (taper) taper.visible = true;
             } else if (op === 'contour_turning') {
-              if (mainC) mainC.visible = false;
-              if (contourC) contourC.visible = true;
-            } else if (op === 'boring' || op === 'drilling') {
-              if (boreHole) {
-                boreHole.visible = true;
-                boreHole.scale.set(progress * 1.5, 1, 1);
+              if (raw) raw.visible = false;
+              if (contour) contour.visible = true;
+            } else if (op === 'forming') {
+              if (raw) raw.visible = false;
+              if (form) form.visible = true;
+            } else if (op === 'boring') {
+              if (bore) {
+                bore.visible = true;
+                bore.scale.set(THREE.MathUtils.lerp(0.8, 1.3, progress), 1, THREE.MathUtils.lerp(0.8, 1.3, progress));
               }
+            } else if (op === 'chamfering') {
+              if (raw) raw.visible = false;
+              if (chamfer) chamfer.visible = true;
             } else if (op === 'parting_off') {
-              if (mainC) mainC.scale.set(1.0 - progress * 0.35, 1, 1);
+              if (raw) raw.visible = false;
+              if (partingRemain) partingRemain.visible = true;
               if (partedPiece) {
                 partedPiece.visible = true;
-                if (progress >= 1.0) {
-                  partedPiece.position.y = -2.0;
+                if (progress >= 0.95) {
+                  partedPiece.position.y = -1.6;
                   partedPiece.rotation.z = Math.PI / 3;
+                } else {
+                  partedPiece.position.set(0.9, 0, 0);
+                  partedPiece.rotation.z = 0;
                 }
               }
             } else if (op === 'threading') {
-              if (helixLine) {
-                helixLine.visible = true;
-                helixLine.scale.set(progress, 1, 1);
+              if (helix) {
+                helix.visible = true;
+                helix.scale.set(progress, 1, 1);
+              }
+            } else if (op === 'drilling') {
+              if (drill) {
+                drill.visible = true;
+                drill.scale.set(1, 1, progress);
               }
             } else if (op === 'knurling') {
-              if (mainC) {
-                mainC.material.roughness = 0.8;
-                mainC.material.color.set('#A55A1A');
+              if (knurl) {
+                knurl.visible = true;
+                knurl.scale.set(1, 1, progress);
               }
-            } else if (op === 'chamfering') {
-              if (mainC) mainC.scale.set(1, 0.95, 0.95);
             }
 
-            // Spark effects
             if (opState === 'RUNNING') {
               sparks.visible = true;
-              sparks.position.set(tool ? tool.position.x : 0, 0.5, 0.6);
+              sparks.position.set(tool ? tool.position.x : 0.6, 0.4, tool ? tool.position.z : 0.8);
             } else {
               sparks.visible = false;
             }
           }
         }
 
+      // 2. WELDING
       } else if (machineId === 'welding') {
         const torch = groupsRef.current['electrode_holder'];
-        if (torch) {
+        const weldJoint = groupsRef.current['weld_joint'];
+
+        if (opState === 'RUNNING') {
+          if (torch) {
+            torch.position.x = 0;
+            torch.position.y = 1.0;
+            torch.position.z = THREE.MathUtils.lerp(-0.38, 0.38, progress);
+          }
+        } else if (torch) {
           torch.position.x = THREE.MathUtils.lerp(torch.position.x, currentToolPos.x, 0.15);
           torch.position.z = THREE.MathUtils.lerp(torch.position.z, currentToolPos.z, 0.15);
         }
 
-        const weldJoint = groupsRef.current['weld_joint'];
         if (weldJoint) {
-          const bead = weldJoint.getObjectByName('weld_bead');
-          if (bead) {
-            if (runningOrCompleted) {
+          const bead = weldJoint.getObjectByName('weld_bead_mesh');
+          const pool = weldJoint.getObjectByName('molten_pool');
+
+          if (runningOrCompleted) {
+            if (bead) {
               bead.visible = true;
-              bead.scale.set(progress, 1, 1);
-              bead.position.set(-0.39 + progress * 0.39, 0, 0);
-            } else {
-              bead.visible = false;
+              bead.scale.set(1, 1, Math.max(0.01, progress));
+              bead.position.set(0, 0, THREE.MathUtils.lerp(-0.38, 0, progress));
             }
+            if (pool && opState === 'RUNNING') {
+              pool.visible = true;
+              pool.position.set(0, 0.045, THREE.MathUtils.lerp(-0.38, 0.38, progress));
+            } else if (pool) {
+              pool.visible = false;
+            }
+          } else {
+            if (bead) bead.visible = false;
+            if (pool) pool.visible = false;
           }
         }
 
         if (opState === 'RUNNING') {
           sparks.visible = true;
-          sparks.position.set(torch ? torch.position.x : 0, 0.9, torch ? torch.position.z : 0);
-          orangeSpotLight.intensity = 5.0 + Math.sin(elapsed * 50) * 3.0;
-          orangeSpotLight.color.set('#D0F0FF');
+          sparks.position.set(0, 0.9, THREE.MathUtils.lerp(-0.38, 0.38, progress));
+          orangeSpotLight.intensity = 6.0 + Math.sin(elapsed * 45) * 3.5;
+          orangeSpotLight.color.set('#60A5FA');
         } else {
           sparks.visible = false;
+          orangeSpotLight.intensity = 1.4;
+          orangeSpotLight.color.set('#FFFFFF');
         }
 
+      // 3. SHAPER
       } else if (machineId === 'shaper') {
         const toolHead = groupsRef.current['tool_head'];
         const clapper = groupsRef.current['clapper_box'];
@@ -985,20 +1022,30 @@ export default function ThreeVisualizer({
         const workpiece = groupsRef.current['workpiece'];
 
         if (activeRunning) {
-          const strokeTime = (elapsed * 2.0) % (Math.PI * 2);
+          const strokeTime = (elapsed * 2.5) % (Math.PI * 2);
           let strokeRate = 0;
+          let isCutting = false;
           if (strokeTime < Math.PI * 1.4) {
             strokeRate = -1.0 + (strokeTime / (Math.PI * 1.4)) * 2.0;
+            isCutting = true;
           } else {
             const retT = (strokeTime - Math.PI * 1.4) / (Math.PI * 0.6);
             strokeRate = 1.0 - retT * 2.0;
+            isCutting = false;
           }
           if (toolHead) toolHead.position.z = strokeRate * 0.8;
           if (clapper) {
             clapper.position.z = (toolHead ? toolHead.position.z : 0) + 0.1;
-            clapper.rotation.x = strokeRate < 0 ? -0.22 : 0;
+            clapper.rotation.x = !isCutting ? -0.28 : 0;
           }
           if (cuttingTool) cuttingTool.position.z = (toolHead ? toolHead.position.z : 0) + 0.2;
+
+          if (isCutting && opState === 'RUNNING') {
+            sparks.visible = true;
+            sparks.position.set(0, 0.65, (toolHead ? toolHead.position.z : 0) + 1.2);
+          } else {
+            sparks.visible = false;
+          }
         }
 
         if (workpiece) {
@@ -1013,9 +1060,9 @@ export default function ThreeVisualizer({
 
           if (runningOrCompleted) {
             if (op === 'plain_shaping' || op === 'angular_shaping') {
-              if (block) block.scale.set(1, 1.0 - progress * 0.25, 1);
+              if (block) block.scale.set(1, Math.max(0.65, 1.0 - progress * 0.35), 1);
             } else if (op === 'step_shaping') {
-              if (block) block.scale.set(1, 1, 1.0 - progress * 0.2);
+              if (block) block.scale.set(1, 1, Math.max(0.7, 1.0 - progress * 0.3));
             } else if (op === 'slot_cutting' || op === 'keyway_cutting' || op === 'groove_cutting') {
               if (slot) {
                 slot.visible = true;
@@ -1025,6 +1072,7 @@ export default function ThreeVisualizer({
           }
         }
 
+      // 4. PLANER
       } else if (machineId === 'planer') {
         const table = groupsRef.current['table'];
         const workpiece = groupsRef.current['workpiece'];
@@ -1032,9 +1080,15 @@ export default function ThreeVisualizer({
         const pTool = groupsRef.current['cutting_tool'];
 
         if (activeRunning) {
-          if (table) table.position.z = Math.sin(elapsed * 1.2) * 1.4;
-          if (tHead) tHead.position.x = Math.sin(elapsed * 0.15) * 0.6;
+          if (table) table.position.z = Math.sin(elapsed * 1.5) * 1.6;
+          if (tHead) tHead.position.x = Math.sin(elapsed * 0.2) * 0.6;
           if (pTool) pTool.position.x = tHead.position.x;
+          if (opState === 'RUNNING') {
+            sparks.visible = true;
+            sparks.position.set(tHead ? tHead.position.x : 0, 0.2, 0.4);
+          } else {
+            sparks.visible = false;
+          }
         }
 
         if (workpiece) {
@@ -1049,9 +1103,9 @@ export default function ThreeVisualizer({
 
           if (runningOrCompleted) {
             if (op === 'plain_planing' || op === 'vertical_surface_planing') {
-              if (block) block.scale.set(1, 1.0 - progress * 0.25, 1);
+              if (block) block.scale.set(1, Math.max(0.7, 1.0 - progress * 0.3), 1);
             } else if (op === 'step_planing') {
-              if (block) block.scale.set(1.0 - progress * 0.2, 1, 1);
+              if (block) block.scale.set(Math.max(0.7, 1.0 - progress * 0.3), 1, 1);
             } else if (op === 'slot_planing' || op === 'groove_planing' || op === 'keyway_slot_work') {
               if (slot) {
                 slot.visible = true;
@@ -1061,6 +1115,7 @@ export default function ThreeVisualizer({
           }
         }
 
+      // 5. MILLING
       } else if (machineId === 'milling') {
         const cutter = groupsRef.current['cutter'];
         const spindle = groupsRef.current['spindle'];
@@ -1069,17 +1124,31 @@ export default function ThreeVisualizer({
         const workpiece = groupsRef.current['workpiece'];
 
         if (activeRunning) {
-          if (cutter) cutter.rotation.y += 0.3;
-          if (spindle) spindle.rotation.y += 0.3;
+          if (cutter) cutter.rotation.y += 0.4;
+          if (spindle) spindle.rotation.y += 0.4;
         }
 
-        if (table) {
-          table.position.x = THREE.MathUtils.lerp(table.position.x, currentToolPos.x, 0.15);
-          table.position.y = THREE.MathUtils.lerp(table.position.y, currentToolPos.y - 0.4, 0.15);
-          if (vice) {
-            vice.position.x = table.position.x;
-            vice.position.y = table.position.y + 0.3;
+        if (opState === 'RUNNING') {
+          if (table) {
+            table.position.x = THREE.MathUtils.lerp(-0.6, 0.6, progress);
+            table.position.y = -0.3;
+            if (vice) {
+              vice.position.x = table.position.x;
+              vice.position.y = table.position.y + 0.3;
+            }
           }
+          sparks.visible = true;
+          sparks.position.set(0, 0.3, 0.7);
+        } else {
+          if (table) {
+            table.position.x = THREE.MathUtils.lerp(table.position.x, currentToolPos.x, 0.15);
+            table.position.y = THREE.MathUtils.lerp(table.position.y, currentToolPos.y - 0.4, 0.15);
+            if (vice) {
+              vice.position.x = table.position.x;
+              vice.position.y = table.position.y + 0.3;
+            }
+          }
+          sparks.visible = false;
         }
 
         if (workpiece) {
@@ -1094,28 +1163,35 @@ export default function ThreeVisualizer({
 
           if (runningOrCompleted) {
             if (op === 'face_milling' || op === 'plain_milling') {
-              if (block) block.scale.set(1, 1.0 - progress * 0.3, 1);
-            } else if (op === 'slot_milling' || op === 'keyway_milling' || op === 't_slot_cutting') {
+              if (block) block.scale.set(1, Math.max(0.65, 1.0 - progress * 0.35), 1);
+            } else if (op === 'slot_milling' || op === 'keyway_milling' || op === 't_slot_cutting' || op === 'end_milling') {
               if (slot) {
                 slot.visible = true;
                 slot.scale.set(1, 1, progress);
               }
             } else if (op === 'pocket_milling') {
-              if (block) block.scale.set(1.0 - progress * 0.2, 1.0 - progress * 0.2, 1);
+              if (block) block.scale.set(Math.max(0.7, 1.0 - progress * 0.3), Math.max(0.7, 1.0 - progress * 0.3), 1);
             }
           }
         }
 
+      // 6. CASTING
       } else if (machineId === 'casting') {
         const ladle = groupsRef.current['ladle'];
         const cavity = groupsRef.current['casting_cavity'];
         const cope = groupsRef.current['cope_flask'];
         const drag = groupsRef.current['drag_flask'];
 
-        if (activeRunning) {
-          if (ladle) {
-            ladle.rotation.z = THREE.MathUtils.lerp(ladle.rotation.z, -0.6, 0.05);
-            ladle.position.set(-0.6, 0.4, 0);
+        if (ladle) {
+          const stream = ladle.getObjectByName('molten_stream');
+          if (opState === 'RUNNING' && (op === 'pouring' || op === 'filling')) {
+            ladle.rotation.z = THREE.MathUtils.lerp(0, -0.65, Math.min(1, progress * 2));
+            ladle.position.set(-0.5, 0.5, 0);
+            if (stream) stream.visible = true;
+          } else {
+            ladle.rotation.z = THREE.MathUtils.lerp(ladle.rotation.z, 0, 0.1);
+            ladle.position.set(-1.8, 0.8, 0.6);
+            if (stream) stream.visible = false;
           }
         }
 
@@ -1123,46 +1199,56 @@ export default function ThreeVisualizer({
           cavity.traverse((c) => {
             if (c.isMesh) {
               if (runningOrCompleted) {
-                if (op === 'pouring' || op === 'filling' || op === 'solidification') {
+                if (op === 'pouring' || op === 'filling') {
                   c.material = mats.moltenMetal;
-                  c.material.emissiveIntensity = 1.5;
-                } else if (op === 'cooling') {
+                  c.material.emissiveIntensity = 3.0;
+                } else if (op === 'solidification') {
+                  c.material = mats.moltenMetal;
+                  c.material.emissiveIntensity = THREE.MathUtils.lerp(3.0, 0.2, progress);
+                } else if (op === 'casting_removal' || op === 'cooling' || op === 'cleaning' || op === 'inspection') {
                   c.material = mats.moltenMetalCool;
+                  c.material.emissiveIntensity = 0;
                 }
               } else {
                 c.material = mats.moltenMetalCool;
+                c.material.emissiveIntensity = 0;
               }
             }
           });
         }
 
-        // casting removal stage explodes flasks
         if (op === 'casting_removal' && runningOrCompleted) {
-          if (cope) cope.visible = false;
-          if (drag) drag.visible = false;
+          if (cope) cope.position.y = THREE.MathUtils.lerp(cope.position.y, 2.2, 0.08);
+          if (drag) drag.position.y = THREE.MathUtils.lerp(drag.position.y, -1.8, 0.08);
         } else {
-          if (cope) cope.visible = true;
-          if (drag) drag.visible = true;
+          if (cope) cope.position.y = THREE.MathUtils.lerp(cope.position.y, 0.1, 0.1);
+          if (drag) drag.position.y = THREE.MathUtils.lerp(drag.position.y, -0.6, 0.1);
         }
 
+      // 7. MOULDING
       } else if (machineId === 'moulding') {
         const sand = groupsRef.current['sand'];
         const pattern = groupsRef.current['pattern'];
-        
+        const cope = groupsRef.current['cope'];
+
         if (op === 'sand_compaction' && runningOrCompleted) {
-          if (sand) sand.scale.y = 0.82;
-        } else {
-          if (sand) sand.scale.y = 1.0;
+          if (sand) sand.scale.y = THREE.MathUtils.lerp(1.0, 0.82, progress);
+        } else if (sand) {
+          sand.scale.y = 1.0;
         }
 
         if (op === 'pattern_removal' && runningOrCompleted) {
-          if (pattern) pattern.position.y = 1.8;
-        } else {
-          if (pattern) pattern.position.y = -0.2;
+          if (pattern) pattern.position.y = THREE.MathUtils.lerp(-0.2, 1.8, progress);
+        } else if (pattern) {
+          pattern.position.y = -0.2;
+        }
+
+        if (op === 'mould_assembly' && runningOrCompleted) {
+          if (cope) cope.position.y = THREE.MathUtils.lerp(1.2, 0.4, progress);
         }
       }
 
-      // Projects labels onto viewport
+      // 3D Labels
       const labels = labelsData[machineId] || [];
       if (showLabels && cameraRef.current) {
         labels.forEach((lbl) => {
@@ -1220,6 +1306,7 @@ export default function ThreeVisualizer({
       cancelAnimationFrame(animFrameIdRef.current);
       window.removeEventListener('resize', handleResize);
       canvasEl.removeEventListener('mousemove', handleMouseMove);
+      workshopAudio.stopSound();
       if (tooltipDiv && tooltipDiv.parentNode) {
         tooltipDiv.parentNode.removeChild(tooltipDiv);
       }
@@ -1229,7 +1316,7 @@ export default function ThreeVisualizer({
     };
   }, [machineId, isExploded, isCutaway, showLabels]);
 
-  // Handle camera keys (WASD, Arrows, zoom)
+  // Handle camera keys
   useEffect(() => {
     const handleCameraKeydown = (e) => {
       const activeEl = document.activeElement;
@@ -1343,6 +1430,8 @@ export default function ThreeVisualizer({
     }
   };
 
+  const currentOpName = typeof activeOperation === 'object' ? activeOperation?.name : activeOperation;
+
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
       {loading && (
@@ -1359,6 +1448,183 @@ export default function ThreeVisualizer({
         style={{ width: '100%', height: '100%', cursor: 'crosshair' }} 
       />
 
+      {/* 1. ON-PLANE 3D TELEMETRY & AUDIO HUD (Top Center) */}
+      <div style={{
+        position: 'absolute',
+        top: '16px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        background: 'rgba(15, 23, 42, 0.88)',
+        border: '1px solid rgba(10, 92, 255, 0.3)',
+        borderRadius: '30px',
+        padding: '6px 16px',
+        zIndex: 40,
+        boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+        backdropFilter: 'blur(8px)',
+        pointerEvents: 'auto'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#FFF' }}>
+          <Activity size={13} style={{ color: operationState === 'RUNNING' ? 'var(--color-green)' : 'var(--brand-primary)' }} />
+          <span style={{ fontWeight: '800', fontFamily: 'var(--mono-font)' }}>
+            {currentOpName ? currentOpName.toUpperCase() : machineId.toUpperCase()}
+          </span>
+        </div>
+
+        <span style={{ color: 'rgba(255,255,255,0.2)' }}>|</span>
+
+        <div style={{ fontSize: '10.5px', color: '#CBD5E1', display: 'flex', gap: '8px' }}>
+          <span>{simParams?.speed || 750} {machineId === 'welding' ? 'A' : machineId === 'shaper' ? 'SPM' : 'RPM'}</span>
+          <span style={{ color: 'rgba(255,255,255,0.2)' }}>•</span>
+          <span>{simParams?.feed || 0.12} mm</span>
+          <span style={{ color: 'rgba(255,255,255,0.2)' }}>•</span>
+          <span>{simParams?.doc || 0.8} cut</span>
+        </div>
+
+        <span style={{ color: 'rgba(255,255,255,0.2)' }}>|</span>
+
+        {/* Audio Toggle */}
+        <button
+          onClick={() => {
+            const muted = workshopAudio.toggleMute();
+            setIsAudioMuted(muted);
+          }}
+          title="Toggle Procedural Workshop Audio"
+          style={{
+            background: 'transparent',
+            border: 'none',
+            color: isAudioMuted ? 'var(--text-secondary)' : 'var(--brand-primary)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            padding: '2px'
+          }}
+        >
+          {isAudioMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+        </button>
+      </div>
+
+      {/* 2. ON-PLANE 3D OPERATIONS DOCK (Bottom Center Floating Bar) */}
+      <div style={{
+        position: 'absolute',
+        bottom: '48px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        maxWidth: '90%',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        background: 'rgba(15, 23, 42, 0.92)',
+        border: '1px solid rgba(10, 92, 255, 0.35)',
+        borderRadius: '8px',
+        padding: '8px 14px',
+        zIndex: 40,
+        boxShadow: '0 8px 30px rgba(0,0,0,0.6)',
+        backdropFilter: 'blur(10px)',
+        overflowX: 'auto',
+        scrollbarWidth: 'none',
+        pointerEvents: 'auto'
+      }}>
+        {/* Play / Pause / Reset Quick Buttons */}
+        <div style={{ display: 'flex', gap: '6px', marginRight: '6px', borderRight: '1px solid rgba(255,255,255,0.15)', paddingRight: '8px' }}>
+          {operationState === 'RUNNING' ? (
+            <button
+              onClick={onPauseResumeSimulation}
+              title="Pause Simulation"
+              style={{
+                padding: '6px 10px',
+                background: 'rgba(10, 92, 255, 0.2)',
+                border: '1px solid var(--brand-primary)',
+                borderRadius: '4px',
+                color: '#FFF',
+                fontSize: '10px',
+                fontWeight: '800',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+            >
+              <Pause size={12} fill="#FFF" />
+              PAUSE
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                if (onStartSimulation) onStartSimulation();
+              }}
+              title="Start Simulation"
+              style={{
+                padding: '6px 12px',
+                background: 'var(--brand-primary)',
+                border: 'none',
+                borderRadius: '4px',
+                color: '#FFF',
+                fontSize: '10px',
+                fontWeight: '800',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+            >
+              <Play size={12} fill="#FFF" />
+              RUN
+            </button>
+          )}
+
+          <button
+            onClick={() => {
+              if (onResetSimulation) onResetSimulation();
+            }}
+            title="Reset Workpiece to Initial State"
+            style={{
+              padding: '6px 8px',
+              background: 'rgba(255,255,255,0.08)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              borderRadius: '4px',
+              color: '#FFF',
+              fontSize: '10px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center'
+            }}
+          >
+            <RotateCcw size={12} />
+          </button>
+        </div>
+
+        {/* Direct Operation Selection Chips */}
+        <div style={{ display: 'flex', gap: '6px', whiteSpace: 'nowrap' }}>
+          {machineOperations.map((op) => {
+            const isSelected = activeOperation?.id === op.id || activeOperation === op.id;
+            return (
+              <button
+                key={op.id}
+                onClick={() => {
+                  if (onSelectOperation) onSelectOperation(op);
+                }}
+                style={{
+                  padding: '5px 10px',
+                  borderRadius: '4px',
+                  border: '1px solid ' + (isSelected ? 'var(--brand-primary)' : 'rgba(255,255,255,0.12)'),
+                  background: isSelected ? 'rgba(10, 92, 255, 0.25)' : 'rgba(255,255,255,0.04)',
+                  color: isSelected ? '#FFF' : '#CBD5E1',
+                  fontSize: '10.5px',
+                  fontWeight: isSelected ? '800' : '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s'
+                }}
+              >
+                {op.name}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {showLabels && (labelsData[machineId] || []).map((lbl) => (
         <div
           key={lbl.id}
@@ -1366,7 +1632,7 @@ export default function ThreeVisualizer({
           style={{
             position: 'absolute',
             background: 'rgba(16, 24, 32, 0.92)',
-            border: '1px solid var(--accent-orange)',
+            border: '1px solid #0A5CFF',
             borderRadius: '2px',
             padding: '2px 5px',
             fontSize: '8px',
@@ -1377,7 +1643,7 @@ export default function ThreeVisualizer({
             whiteSpace: 'nowrap',
             display: 'none',
             transform: 'translate(-50%, -50%)',
-            boxShadow: '0 0 5px rgba(242, 140, 40, 0.25)',
+            boxShadow: '0 0 5px rgba(10, 92, 255, 0.35)',
             zIndex: 35
           }}
         >
@@ -1392,7 +1658,7 @@ export default function ThreeVisualizer({
               key={lbl.id}
               id={`line-${lbl.id}`}
               x1="0" y1="0" x2="0" y2="0"
-              stroke="#1D49B4"
+              stroke="#0A5CFF"
               strokeWidth="1.2"
               strokeDasharray="2,2"
               style={{ display: 'none' }}
@@ -1410,9 +1676,9 @@ export default function ThreeVisualizer({
           background: 'rgba(16, 24, 32, 0.85)',
           border: '1px solid var(--border)',
           borderRadius: '4px',
-          padding: '6px 16px',
+          padding: '4px 14px',
           display: 'flex',
-          gap: '14px',
+          gap: '12px',
           alignItems: 'center',
           pointerEvents: 'none',
           zIndex: 25,
@@ -1421,17 +1687,17 @@ export default function ThreeVisualizer({
           fontFamily: 'var(--mono-font)',
           color: 'var(--text-secondary)'
         }}>
-          <span><strong style={{ color: 'var(--accent-orange)' }}>W A S D</strong> MOVE</span>
+          <span><strong style={{ color: '#0A5CFF' }}>W A S D</strong> MOVE</span>
           <span style={{ color: 'var(--border)' }}>|</span>
-          <span><strong style={{ color: 'var(--accent-orange)' }}>↑ ↓ ← →</strong> ROTATE</span>
+          <span><strong style={{ color: '#0A5CFF' }}>↑ ↓ ← →</strong> ROTATE</span>
           <span style={{ color: 'var(--border)' }}>|</span>
-          <span><strong style={{ color: 'var(--accent-orange)' }}>+ -</strong> ZOOM</span>
+          <span><strong style={{ color: '#0A5CFF' }}>+ -</strong> ZOOM</span>
           <span style={{ color: 'var(--border)' }}>|</span>
-          <span><strong style={{ color: 'var(--accent-orange)' }}>R</strong> RESET</span>
+          <span><strong style={{ color: '#0A5CFF' }}>R</strong> RESET</span>
           <span style={{ color: 'var(--border)' }}>|</span>
-          <span><strong style={{ color: 'var(--accent-orange)' }}>T</strong> TOP</span>
+          <span><strong style={{ color: '#0A5CFF' }}>T</strong> TOP</span>
           <span style={{ color: 'var(--border)' }}>|</span>
-          <span><strong style={{ color: 'var(--accent-orange)' }}>F</strong> FRONT</span>
+          <span><strong style={{ color: '#0A5CFF' }}>F</strong> FRONT</span>
         </div>
       )}
     </div>

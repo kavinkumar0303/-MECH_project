@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Trophy, ShieldAlert, Award, Bell, Settings } from 'lucide-react';
+import { Search, Trophy, ShieldAlert, Award, Bell, Settings, Sparkles, MessageSquare, HelpCircle } from 'lucide-react';
 import { MACHINES } from '../data/machines';
 
 export default function Navbar({ 
@@ -72,203 +72,244 @@ export default function Navbar({
   const searchResults = getSearchResults();
 
   return (
-    <div 
-      style={{
-        height: '70px',
-        borderBottom: '1px solid var(--border)',
-        background: 'var(--bg-secondary)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 24px',
-        position: 'sticky',
-        top: 0,
-        zIndex: 90
-      }}
-    >
-      {/* Search Bar - styled as Brushed Steel slot */}
-      <div style={{ position: 'relative', width: '320px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '4px', padding: '6px 14px', gap: '8px' }}>
-          <Search size={16} style={{ color: 'var(--text-secondary)' }} />
-          <input 
-            type="text" 
-            placeholder="Search parts, machines, defects..." 
-            value={searchQuery}
-            onChange={handleSearch}
-            onFocus={() => setShowResults(true)}
-            onBlur={() => setTimeout(() => setShowResults(false), 200)}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'var(--text-primary)',
-              fontSize: '12px',
-              width: '100%',
-              outline: 'none'
-            }}
-          />
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', position: 'sticky', top: 0, zIndex: 90 }}>
+      
+      {/* 1. SpaceDrive Top Mini Utility Strip */}
+      <div className="space-top-utility">
+        <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+          <span>support@mechdrive.edu</span>
+          <span style={{ opacity: 0.4 }}>•</span>
+          <span>+91 90000 00000</span>
+          <span style={{ opacity: 0.4 }}>•</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#00F5D4' }}>
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#00F5D4', boxShadow: '0 0 8px #00F5D4' }}></span>
+            Live 3D Simulation Engine
+          </span>
         </div>
 
-        {/* Dropdown Results */}
-        {showResults && searchResults.length > 0 && (
-          <div 
-            style={{
-              position: 'absolute',
-              top: '45px',
-              left: 0,
-              right: 0,
-              background: 'var(--bg-secondary)',
-              border: '1px solid var(--border)',
-              borderRadius: '4px',
-              boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
-              overflow: 'hidden',
-              zIndex: 1000
-            }}
-          >
-            {searchResults.map((res, index) => (
-              <div 
-                key={index}
-                onClick={() => handleResultClick(res)}
-                style={{
-                  padding: '12px 16px',
-                  borderBottom: index === searchResults.length - 1 ? 'none' : '1px solid var(--border)',
-                  cursor: 'pointer',
-                  transition: 'background 0.2s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--surface)'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-              >
-                <div style={{ fontSize: '10px', fontWeight: '700', color: 'var(--primary-blue)', textTransform: 'uppercase', marginBottom: '2px' }}>
-                  {res.type}
-                </div>
-                <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>{res.label}</div>
-                <div style={{ fontSize: '11px', color: 'var(--text-secondary)', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
-                  {res.sub}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+          <span style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }} onClick={() => setShowKeyboardHelp(true)}>
+            <HelpCircle size={12} /> Keyboard Guide (K)
+          </span>
+          <span style={{ opacity: 0.4 }}>•</span>
+          <span style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }} onClick={() => setActiveTab('progress')}>
+            <Trophy size={12} /> Leaderboard
+          </span>
+          <span style={{ opacity: 0.4 }}>•</span>
+          <span style={{ cursor: 'pointer' }} onClick={() => setActiveTab('profile')}>
+            Student ID: #{user?.studentId || 'MECH-704'}
+          </span>
+        </div>
       </div>
 
-      {/* Telemetry Metrics Strip (Cyan details removed) */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Trophy size={16} style={{ color: 'var(--secondary-blue)' }} />
-          <div>
-            <div className="telemetry-label">Workshop XP</div>
-            <div style={{ fontSize: '13px', fontWeight: '800', color: 'var(--primary-blue)', fontFamily: 'var(--mono-font)' }}>
-              {user?.xp?.toLocaleString() || '0'} XP
-            </div>
+      {/* 2. Main SpaceDrive Navbar */}
+      <div 
+        style={{
+          height: '68px',
+          borderBottom: '1px solid rgba(168, 85, 247, 0.25)',
+          background: 'rgba(22, 6, 54, 0.85)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0 28px',
+          boxShadow: '0 8px 30px rgba(13, 2, 33, 0.6)'
+        }}
+      >
+        {/* SpaceDrive Search Capsule */}
+        <div style={{ position: 'relative', width: '380px' }}>
+          <div className="space-search-capsule" style={{ background: 'rgba(255, 255, 255, 0.98)' }}>
+            <Search size={16} style={{ color: '#7928CA', flexShrink: 0 }} />
+            <input 
+              type="text" 
+              placeholder="Search machines, tools, operations..." 
+              value={searchQuery}
+              onChange={handleSearch}
+              onFocus={() => setShowResults(true)}
+              onBlur={() => setTimeout(() => setShowResults(false), 200)}
+            />
+            <span className="space-search-tag">.3D</span>
+            <button 
+              className="space-search-btn"
+              onClick={() => {
+                if (searchResults.length > 0) handleResultClick(searchResults[0]);
+              }}
+            >
+              Search
+            </button>
           </div>
-        </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <ShieldAlert size={16} style={{ color: 'var(--secondary-blue)' }} />
-          <div>
-            <div className="telemetry-label">Safety Rating</div>
-            <div style={{ fontSize: '13px', fontWeight: '800', color: user?.safetyScore >= 85 ? 'var(--success)' : 'var(--primary-blue)', fontFamily: 'var(--mono-font)' }}>
-              {user?.safetyScore || '100'}%
-            </div>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Award size={16} style={{ color: 'var(--secondary-blue)' }} />
-          <div>
-            <div className="telemetry-label">Accuracy</div>
-            <div style={{ fontSize: '13px', fontWeight: '800', color: 'var(--primary-blue)', fontFamily: 'var(--mono-font)' }}>
-              {user?.accuracy || '90'}%
-            </div>
-          </div>
-        </div>
-
-        {/* Compact Settings & Accessibility Dropdown */}
-        <div 
-          onBlur={handleBlur}
-          onKeyDown={handleKeyDown}
-          style={{ position: 'relative', display: 'flex', alignItems: 'center', marginLeft: '12px' }}
-        >
-          <button
-            onClick={() => setShowSettingsMenu(!showSettingsMenu)}
-            aria-label="Settings and Accessibility Menu"
-            aria-haspopup="true"
-            aria-expanded={showSettingsMenu}
-            style={{
-              background: showSettingsMenu ? 'rgba(29, 73, 180, 0.08)' : 'transparent',
-              border: '1px solid ' + (showSettingsMenu ? 'var(--primary-blue)' : 'var(--border)'),
-              color: showSettingsMenu ? 'var(--primary-blue)' : 'var(--text-secondary)',
-              borderRadius: '4px',
-              padding: '6px 10px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.2s',
-              outline: 'none'
-            }}
-            onFocus={(e) => e.currentTarget.style.outline = '2px solid var(--primary-blue)'}
-            onBlur={(e) => e.currentTarget.style.outline = 'none'}
-          >
-            <Settings size={16} />
-          </button>
-
-          {showSettingsMenu && (
+          {/* Dropdown Results */}
+          {showResults && searchResults.length > 0 && (
             <div 
               style={{
                 position: 'absolute',
-                top: 'calc(100% + 8px)',
+                top: '52px',
+                left: 0,
                 right: 0,
-                background: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: '6px',
-                padding: '12px',
-                boxShadow: '0 4px 20px rgba(59, 75, 111, 0.12)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '8px',
-                width: '180px',
-                zIndex: 10005
+                background: 'rgba(26, 8, 64, 0.98)',
+                backdropFilter: 'blur(24px)',
+                WebkitBackdropFilter: 'blur(24px)',
+                border: '1px solid rgba(224, 64, 251, 0.35)',
+                borderRadius: '14px',
+                boxShadow: '0 15px 40px rgba(0, 0, 0, 0.7)',
+                overflow: 'hidden',
+                zIndex: 1000
               }}
             >
-              <div style={{ fontSize: '10px', fontWeight: '800', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
-                Accessibility
-              </div>
-              
-              <button
-                onClick={() => setShowLabels(!showLabels)}
-                className={showLabels ? "btn-primary" : "btn-outline"}
-                style={{ fontSize: '11px', padding: '6px 10px', width: '100%', textTransform: 'uppercase' }}
-              >
-                Labels: {showLabels ? 'ON' : 'OFF'}
-              </button>
-
-              <button
-                onClick={() => setHighContrast(!highContrast)}
-                className={highContrast ? "btn-primary" : "btn-outline"}
-                style={{ fontSize: '11px', padding: '6px 10px', width: '100%', textTransform: 'uppercase' }}
-              >
-                Contrast: {highContrast ? 'ON' : 'OFF'}
-              </button>
-
-              <button
-                onClick={() => {
-                  setShowKeyboardHelp(true);
-                  setShowSettingsMenu(false);
-                }}
-                className="btn-outline"
-                style={{ fontSize: '11px', padding: '6px 10px', width: '100%', textTransform: 'uppercase' }}
-              >
-                Keyboard Help
-              </button>
+              {searchResults.map((res, index) => (
+                <div 
+                  key={index}
+                  onClick={() => handleResultClick(res)}
+                  style={{
+                    padding: '12px 18px',
+                    borderBottom: index === searchResults.length - 1 ? 'none' : '1px solid rgba(168, 85, 247, 0.15)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(121, 40, 202, 0.3)'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                >
+                  <div style={{ fontSize: '10px', fontWeight: '800', color: '#FF5376', textTransform: 'uppercase', marginBottom: '2px', letterSpacing: '0.6px' }}>
+                    {res.type}
+                  </div>
+                  <div style={{ fontSize: '13px', fontWeight: '700', color: '#FFFFFF' }}>{res.label}</div>
+                  <div style={{ fontSize: '11px', color: '#D8B4FE', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
+                    {res.sub}
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
 
-        <div style={{ width: '1px', height: '24px', background: 'var(--border)' }}></div>
+        {/* Telemetry Metrics Strip with Neon Glowing Badges */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          
+          <div className="space-badge-purple" style={{ padding: '8px 16px' }}>
+            <Trophy size={16} style={{ color: '#FF5376' }} />
+            <div>
+              <div style={{ fontSize: '9px', color: '#D8B4FE', letterSpacing: '0.5px' }}>WORKSHOP XP</div>
+              <div style={{ fontSize: '13px', fontWeight: '800', color: '#FFFFFF', fontFamily: 'var(--mono-font)' }}>
+                {user?.xp?.toLocaleString() || '0'} XP
+              </div>
+            </div>
+          </div>
 
-        <div style={{ position: 'relative', cursor: 'pointer' }}>
-          <Bell size={18} style={{ color: 'var(--text-secondary)' }} />
-          <div style={{ position: 'absolute', top: '-4px', right: '-4px', width: '6px', height: '6px', background: 'var(--primary-blue)', borderRadius: '3px' }}></div>
+          <div className="space-badge-cyan" style={{ padding: '8px 16px' }}>
+            <ShieldAlert size={16} style={{ color: '#00F5D4' }} />
+            <div>
+              <div style={{ fontSize: '9px', color: '#00F5D4', letterSpacing: '0.5px' }}>SAFETY SCORE</div>
+              <div style={{ fontSize: '13px', fontWeight: '800', color: '#FFFFFF', fontFamily: 'var(--mono-font)' }}>
+                {user?.safetyScore || '100'}%
+              </div>
+            </div>
+          </div>
+
+          <div className="space-badge-pink" style={{ padding: '8px 16px' }}>
+            <Award size={16} style={{ color: '#FF5376' }} />
+            <div>
+              <div style={{ fontSize: '9px', color: '#FF758C', letterSpacing: '0.5px' }}>ACCURACY</div>
+              <div style={{ fontSize: '13px', fontWeight: '800', color: '#FFFFFF', fontFamily: 'var(--mono-font)' }}>
+                {user?.accuracy || '98'}%
+              </div>
+            </div>
+          </div>
+
+          {/* Settings & Accessibility Dropdown */}
+          <div 
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
+            style={{ position: 'relative', display: 'flex', alignItems: 'center', marginLeft: '6px' }}
+          >
+            <button
+              onClick={() => setShowSettingsMenu(!showSettingsMenu)}
+              aria-label="Settings and Accessibility Menu"
+              aria-haspopup="true"
+              aria-expanded={showSettingsMenu}
+              style={{
+                background: showSettingsMenu ? 'rgba(255, 83, 118, 0.2)' : 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid ' + (showSettingsMenu ? '#FF5376' : 'rgba(168, 85, 247, 0.3)'),
+                color: '#FFFFFF',
+                borderRadius: '50%',
+                width: '38px',
+                height: '38px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.2s',
+                outline: 'none',
+                boxShadow: showSettingsMenu ? '0 0 15px rgba(255, 83, 118, 0.4)' : 'none'
+              }}
+            >
+              <Settings size={16} />
+            </button>
+
+            {showSettingsMenu && (
+              <div 
+                style={{
+                  position: 'absolute',
+                  top: 'calc(100% + 10px)',
+                  right: 0,
+                  background: 'rgba(26, 8, 64, 0.98)',
+                  backdropFilter: 'blur(24px)',
+                  WebkitBackdropFilter: 'blur(24px)',
+                  border: '1px solid rgba(224, 64, 251, 0.3)',
+                  borderRadius: '12px',
+                  padding: '14px',
+                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.6)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '10px',
+                  width: '200px',
+                  zIndex: 10005
+                }}
+              >
+                <div style={{ fontSize: '10px', fontWeight: '800', color: '#D8B4FE', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '2px' }}>
+                  Viewport Settings
+                </div>
+                
+                <button
+                  onClick={() => setShowLabels(!showLabels)}
+                  className={showLabels ? "space-btn-primary" : "space-btn-secondary"}
+                  style={{ fontSize: '11px', padding: '8px 12px', width: '100%', borderRadius: '20px' }}
+                >
+                  3D Labels: {showLabels ? 'ON' : 'OFF'}
+                </button>
+
+                <button
+                  onClick={() => setHighContrast(!highContrast)}
+                  className={highContrast ? "space-btn-primary" : "space-btn-secondary"}
+                  style={{ fontSize: '11px', padding: '8px 12px', width: '100%', borderRadius: '20px' }}
+                >
+                  Contrast: {highContrast ? 'HIGH' : 'DEFAULT'}
+                </button>
+
+                <button
+                  onClick={() => {
+                    setShowKeyboardHelp(true);
+                    setShowSettingsMenu(false);
+                  }}
+                  className="space-btn-secondary"
+                  style={{ fontSize: '11px', padding: '8px 12px', width: '100%', borderRadius: '20px' }}
+                >
+                  Keyboard Shortcuts
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div style={{ width: '1px', height: '24px', background: 'rgba(168, 85, 247, 0.25)' }}></div>
+
+          <div 
+            style={{ position: 'relative', cursor: 'pointer', padding: '8px', borderRadius: '50%', background: 'rgba(255, 255, 255, 0.06)' }}
+            onClick={() => setActiveTab('progress')}
+          >
+            <Bell size={18} style={{ color: '#D8B4FE' }} />
+            <div style={{ position: 'absolute', top: '4px', right: '4px', width: '8px', height: '8px', background: '#FF5376', borderRadius: '50%', boxShadow: '0 0 8px #FF5376' }}></div>
+          </div>
         </div>
       </div>
     </div>
