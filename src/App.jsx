@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import Auth from './components/Auth';
-import LandingPage from './components/LandingPage';
 import Dashboard from './components/Dashboard';
 import WorkshopMap from './components/WorkshopMap';
 import MachineCockpit from './components/MachineCockpit';
@@ -14,8 +13,7 @@ import WorkshopAI from './components/WorkshopAI';
 
 function App() {
   const [user, setUser] = useState(null);
-  const [activeTab, setActiveTab] = useState('landing');
-  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedMachineId, setSelectedMachineId] = useState('lathe');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -138,57 +136,16 @@ function App() {
 
   // Not authenticated
   if (!user) {
-    if (showAuthModal) {
-      return (
-        <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Auth 
-            onLoginSuccess={handleLoginSuccess} 
-            onCancel={() => setShowAuthModal(false)} 
-          />
-        </div>
-      );
-    }
-
     return (
-      <LandingPage 
-        onGetStarted={() => {
-          handleLoginSuccess({
-            name: 'Guest Engineer',
-            studentId: 'student_guest',
-            college: 'Virtual Engineering Institute',
-            department: 'Mechanical Engineering'
-          });
-          setActiveTab('dashboard');
-        }}
-        onLoginClick={() => setShowAuthModal(true)}
-        onSelectMachine={(mId) => {
-          handleLoginSuccess({
-            name: 'Guest Engineer',
-            studentId: 'student_guest',
-            college: 'Virtual Engineering Institute',
-            department: 'Mechanical Engineering'
-          });
-          setSelectedMachineId(mId);
-          setActiveTab('machine_explorer');
-        }}
-      />
+      <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Auth onLoginSuccess={handleLoginSuccess} />
+      </div>
     );
   }
 
   // Render the currently selected tab
   const renderTabContent = () => {
     switch (activeTab) {
-      case 'landing':
-        return (
-          <LandingPage 
-            onGetStarted={() => setActiveTab('dashboard')}
-            onLoginClick={() => setActiveTab('profile')}
-            onSelectMachine={(mId) => {
-              setSelectedMachineId(mId);
-              setActiveTab('machine_explorer');
-            }}
-          />
-        );
       case 'dashboard':
         return (
           <Dashboard 
@@ -275,25 +232,25 @@ function App() {
             top: '24px',
             left: '50%',
             transform: 'translateX(-50%)',
-            background: 'rgba(22, 6, 54, 0.92)',
+            background: 'rgba(17, 28, 51, 0.94)',
             backdropFilter: 'blur(16px)',
-            border: '1px solid #FF5376',
+            border: '1px solid #1D49B4',
             borderRadius: '24px',
             padding: '12px 28px',
             color: '#FFFFFF',
             fontFamily: 'var(--font-heading)',
             fontWeight: 'bold',
             zIndex: 10005,
-            boxShadow: '0 8px 32px rgba(255, 83, 118, 0.35), 0 0 20px rgba(0, 245, 212, 0.2)',
+            boxShadow: '0 8px 32px rgba(29, 73, 180, 0.35), 0 0 20px rgba(158, 180, 228, 0.2)',
             textAlign: 'center',
             pointerEvents: 'none',
             animation: 'slideDown 0.25s ease-out'
           }}
         >
-          <div style={{ fontSize: '13px', fontWeight: '800', color: '#00F5D4', letterSpacing: '0.5px' }}>
+          <div style={{ fontSize: '13px', fontWeight: '800', color: '#9EB4E4', letterSpacing: '0.5px' }}>
             {toastAlert.title}
           </div>
-          <div style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.7)', marginTop: '2px', textTransform: 'uppercase' }}>
+          <div style={{ fontSize: '11px', color: '#C2CAD9', marginTop: '2px', textTransform: 'uppercase' }}>
             {toastAlert.subText}
           </div>
         </div>
@@ -308,7 +265,7 @@ function App() {
             left: 0,
             width: '100vw',
             height: '100vh',
-            background: 'rgba(13, 2, 33, 0.85)',
+            background: 'rgba(13, 21, 39, 0.85)',
             backdropFilter: 'blur(16px)',
             display: 'flex',
             alignItems: 'center',
@@ -319,27 +276,27 @@ function App() {
         >
           <div 
             style={{
-              background: 'rgba(22, 6, 54, 0.95)',
-              border: '1px solid rgba(224, 64, 251, 0.35)',
+              background: 'rgba(17, 28, 51, 0.96)',
+              border: '1px solid rgba(61, 114, 193, 0.35)',
               borderRadius: '20px',
               padding: '32px',
               width: '660px',
               maxWidth: '92%',
-              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(224, 64, 251, 0.25)',
+              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(29, 73, 180, 0.25)',
               color: '#FFFFFF'
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(224, 64, 251, 0.2)', paddingBottom: '16px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(61, 114, 193, 0.25)', paddingBottom: '16px', marginBottom: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(255, 83, 118, 0.2)', border: '1px solid #FF5376', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <span style={{ fontSize: '16px' }}>⌨</span>
+                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(29, 73, 180, 0.2)', border: '1px solid #1D49B4', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ fontSize: '16px', color: '#9EB4E4' }}>⌨</span>
                 </div>
                 <h3 style={{ fontSize: '18px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.8px', color: '#FFFFFF', margin: 0 }}>Command Shortcuts</h3>
               </div>
               <button 
                 onClick={() => setShowKeyboardHelp(false)}
-                style={{ background: 'none', border: 'none', color: 'rgba(255, 255, 255, 0.5)', fontSize: '24px', cursor: 'pointer', fontWeight: '700' }}
+                style={{ background: 'none', border: 'none', color: '#C2CAD9', fontSize: '24px', cursor: 'pointer', fontWeight: '700' }}
               >
                 ×
               </button>
@@ -347,105 +304,105 @@ function App() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', maxHeight: '440px', overflowY: 'auto' }}>
               <div>
-                <h4 style={{ fontSize: '11px', color: '#00F5D4', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid rgba(224, 64, 251, 0.2)', paddingBottom: '6px', marginBottom: '10px', letterSpacing: '1px' }}>Navigation Controls</h4>
+                <h4 style={{ fontSize: '11px', color: '#9EB4E4', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid rgba(61, 114, 193, 0.25)', paddingBottom: '6px', marginBottom: '10px', letterSpacing: '1px' }}>Navigation Controls</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>1 - 7</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Select Machine</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>1 - 7</span>
+                    <span style={{ color: '#C2CAD9' }}>Select Machine</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>Q</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Parts Explorer</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>Q</span>
+                    <span style={{ color: '#C2CAD9' }}>Parts Explorer</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>Z</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>How It Works</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>Z</span>
+                    <span style={{ color: '#C2CAD9' }}>How It Works</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>E</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Safety Locker</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>E</span>
+                    <span style={{ color: '#C2CAD9' }}>Safety Locker</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>X</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Simulator Bay</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>X</span>
+                    <span style={{ color: '#C2CAD9' }}>Simulator Bay</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>C</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Troubleshoot</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>C</span>
+                    <span style={{ color: '#C2CAD9' }}>Troubleshoot</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>V</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Assemble It</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>V</span>
+                    <span style={{ color: '#C2CAD9' }}>Assemble It</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>B</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Experiment Lab</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>B</span>
+                    <span style={{ color: '#C2CAD9' }}>Experiment Lab</span>
                   </div>
                 </div>
 
-                <h4 style={{ fontSize: '11px', color: '#00F5D4', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid rgba(224, 64, 251, 0.2)', paddingBottom: '6px', marginTop: '18px', marginBottom: '10px', letterSpacing: '1px' }}>Global Settings</h4>
+                <h4 style={{ fontSize: '11px', color: '#9EB4E4', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid rgba(61, 114, 193, 0.25)', paddingBottom: '6px', marginTop: '18px', marginBottom: '10px', letterSpacing: '1px' }}>Global Settings</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>H</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>High Contrast</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>H</span>
+                    <span style={{ color: '#C2CAD9' }}>High Contrast</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>L</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Toggle Labels</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>L</span>
+                    <span style={{ color: '#C2CAD9' }}>Toggle Labels</span>
                   </div>
                 </div>
               </div>
 
               <div>
-                <h4 style={{ fontSize: '11px', color: '#00F5D4', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid rgba(224, 64, 251, 0.2)', paddingBottom: '6px', marginBottom: '10px', letterSpacing: '1px' }}>3D Camera Controls</h4>
+                <h4 style={{ fontSize: '11px', color: '#9EB4E4', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid rgba(61, 114, 193, 0.25)', paddingBottom: '6px', marginBottom: '10px', letterSpacing: '1px' }}>3D Camera Controls</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>W / S / A / D</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Move Camera</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>W / S / A / D</span>
+                    <span style={{ color: '#C2CAD9' }}>Move Camera</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>↑ / ↓ / ← / →</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Rotate Orbit</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>↑ / ↓ / ← / →</span>
+                    <span style={{ color: '#C2CAD9' }}>Rotate Orbit</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>+ / -</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Zoom In/Out</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>+ / -</span>
+                    <span style={{ color: '#C2CAD9' }}>Zoom In/Out</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>R</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Reset View</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>R</span>
+                    <span style={{ color: '#C2CAD9' }}>Reset View</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>T</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Top View</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>T</span>
+                    <span style={{ color: '#C2CAD9' }}>Top View</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>F</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Front View</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>F</span>
+                    <span style={{ color: '#C2CAD9' }}>Front View</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>P</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Perspective View</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>P</span>
+                    <span style={{ color: '#C2CAD9' }}>Perspective View</span>
                   </div>
                 </div>
 
-                <h4 style={{ fontSize: '11px', color: '#00F5D4', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid rgba(224, 64, 251, 0.2)', paddingBottom: '6px', marginTop: '18px', marginBottom: '10px', letterSpacing: '1px' }}>Sub-Panel Interaction</h4>
+                <h4 style={{ fontSize: '11px', color: '#9EB4E4', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid rgba(61, 114, 193, 0.25)', paddingBottom: '6px', marginTop: '18px', marginBottom: '10px', letterSpacing: '1px' }}>Sub-Panel Interaction</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>TAB / SHIFT+TAB</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Next/Prev Field</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>TAB / SHIFT+TAB</span>
+                    <span style={{ color: '#C2CAD9' }}>Next/Prev Field</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>SPACE</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Select/Toggle/Play</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>SPACE</span>
+                    <span style={{ color: '#C2CAD9' }}>Select/Toggle/Play</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>ENTER</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Confirm/Select Part</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>ENTER</span>
+                    <span style={{ color: '#C2CAD9' }}>Confirm/Select Part</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF5376', fontWeight: '700' }}>ESC</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Close/Cancel</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>ESC</span>
+                    <span style={{ color: '#C2CAD9' }}>Close/Cancel</span>
                   </div>
                 </div>
               </div>

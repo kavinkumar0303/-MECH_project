@@ -15,7 +15,7 @@ import {
   Mail
 } from 'lucide-react';
 
-export default function Auth({ onLoginSuccess, onCancel }) {
+export default function Auth({ onLoginSuccess }) {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -56,36 +56,36 @@ export default function Auth({ onLoginSuccess, onCancel }) {
     const scene = new THREE.Scene();
     
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.set(0, 0, 10);
+    camera.position.set(0, 0, 7.5);
     
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
     
-    const ambientLight = new THREE.AmbientLight('#240A50', 1.2);
+    const ambientLight = new THREE.AmbientLight('#16233E', 1.5);
     scene.add(ambientLight);
     
     const keyLight = new THREE.DirectionalLight('#FFFFFF', 2.0);
     keyLight.position.set(5, 5, 5);
     scene.add(keyLight);
     
-    const fillLight = new THREE.DirectionalLight('#FF5376', 1.2);
+    const fillLight = new THREE.DirectionalLight('#3D72C1', 1.5);
     fillLight.position.set(-5, -2, 2);
     scene.add(fillLight);
     
-    const rimLight = new THREE.DirectionalLight('#00F5D4', 1.5);
+    const rimLight = new THREE.DirectionalLight('#9EB4E4', 1.6);
     rimLight.position.set(0, 5, -5);
     scene.add(rimLight);
     
     const group = new THREE.Group();
     scene.add(group);
     
-    // Materials palette matching SpaceDrive magenta, purple, cyan, and chrome
-    const matMain = new THREE.MeshStandardMaterial({ color: '#FF5376', roughness: 0.25, metalness: 0.85 });
-    const matAccent = new THREE.MeshStandardMaterial({ color: '#7928CA', roughness: 0.2, metalness: 0.9 });
+    // Materials palette matching Blue Mechanical Theme
+    const matMain = new THREE.MeshStandardMaterial({ color: '#1D49B4', roughness: 0.25, metalness: 0.85 });
+    const matAccent = new THREE.MeshStandardMaterial({ color: '#3D72C1', roughness: 0.2, metalness: 0.9 });
     const matReflections = new THREE.MeshStandardMaterial({ color: '#FFFFFF', roughness: 0.15, metalness: 0.95 });
-    const matShadow = new THREE.MeshStandardMaterial({ color: '#160636', roughness: 0.5, metalness: 0.5 });
+    const matShadow = new THREE.MeshStandardMaterial({ color: '#3B4B6F', roughness: 0.5, metalness: 0.5 });
     
     // Constructing the logo components:
     
@@ -162,8 +162,8 @@ export default function Auth({ onLoginSuccess, onCancel }) {
     
     const extrudeSettings = { depth: 0.1, bevelEnabled: true, bevelSegments: 2, steps: 1, bevelSize: 0.015, bevelThickness: 0.015 };
     const boltGeom = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-    const bolt = new THREE.Mesh(boltGeom, new THREE.MeshStandardMaterial({ color: '#00F5D4', roughness: 0.2, metalness: 0.9, emissive: '#00F5D4', emissiveIntensity: 0.3 }));
-    bolt.position.set(0, 0, 0.22); // Slightly forward from gear hub
+    const bolt = new THREE.Mesh(boltGeom, new THREE.MeshStandardMaterial({ color: '#9EB4E4', roughness: 0.2, metalness: 0.9, emissive: '#1D49B4', emissiveIntensity: 0.35 }));
+    bolt.position.set(0, 0, 0.22);
     gearHub.add(bolt);
     
     group.add(gearHub);
@@ -173,14 +173,14 @@ export default function Auth({ onLoginSuccess, onCancel }) {
     pedestal.position.y = -2.5;
     group.add(pedestal);
 
-    // Pedestal Glowing Neon Rings
+    // Pedestal Glowing Rings
     const ringGeom = new THREE.TorusGeometry(2.4, 0.06, 12, 64);
-    const glowingRing = new THREE.Mesh(ringGeom, new THREE.MeshBasicMaterial({ color: '#FF5376' }));
+    const glowingRing = new THREE.Mesh(ringGeom, new THREE.MeshBasicMaterial({ color: '#1D49B4' }));
     glowingRing.position.y = -2.35;
     glowingRing.rotation.x = Math.PI / 2;
     group.add(glowingRing);
     
-    const glowingRing2 = new THREE.Mesh(ringGeom, new THREE.MeshBasicMaterial({ color: '#00F5D4' }));
+    const glowingRing2 = new THREE.Mesh(ringGeom, new THREE.MeshBasicMaterial({ color: '#3D72C1' }));
     glowingRing2.position.y = -2.48;
     glowingRing2.rotation.x = Math.PI / 2;
     group.add(glowingRing2);
@@ -189,154 +189,137 @@ export default function Auth({ onLoginSuccess, onCancel }) {
     let targetScale = 1.1;
     let targetX = -1.5;
 
-    const updatePositionAndScale = () => {
-      const w = window.innerWidth;
-      if (w > 900) {
-        targetScale = 1.25;
-        targetX = -1.5;
-      } else if (w > 600) {
-        targetScale = 0.95;
-        targetX = -0.6;
-      } else {
-        targetScale = 0.68;
-        targetX = 0;
-      }
-      group.position.x = targetX;
-    };
-    updatePositionAndScale();
-    group.scale.set(currentScale, currentScale, currentScale);
-
-    let animationFrameId;
-    const clock = new THREE.Clock();
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    
-    const animate = () => {
-      animationFrameId = requestAnimationFrame(animate);
-      
-      if (currentScale < targetScale) {
-        currentScale += (targetScale - currentScale) * 0.05;
-        group.scale.set(currentScale, currentScale, currentScale);
-      }
-      
-      if (!prefersReducedMotion) {
-        // Slow continuous rotation + subtle float
-        group.rotation.z = Math.sin(clock.getElapsedTime() * 0.15) * 0.1;
-        group.rotation.y = Math.sin(clock.getElapsedTime() * 0.2) * 0.15;
-        group.rotation.x = (Math.PI / 8) + Math.cos(clock.getElapsedTime() * 0.3) * 0.05;
-        group.position.y = Math.sin(clock.getElapsedTime() * 0.4) * 0.15;
-      } else {
-        group.rotation.set(Math.PI / 8, 0.2, 0);
-      }
-      
-      renderer.render(scene, camera);
-    };
-    
-    animate();
-    
     const handleResize = () => {
-      if (!container) return;
       const w = container.clientWidth || window.innerWidth;
       const h = container.clientHeight || window.innerHeight;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
-      updatePositionAndScale();
-    };
-    
-    window.addEventListener('resize', handleResize);
-    
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('resize', handleResize);
-      renderer.dispose();
-      if (container.contains(renderer.domElement)) {
-        container.removeChild(renderer.domElement);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      if (w < 900) {
+        targetX = 0;
+        targetScale = 0.75;
+      } else {
+        targetX = -1.5;
+        targetScale = 1.1;
       }
     };
-  }, []);
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    let mouseX = 0;
+    let mouseY = 0;
+    const handleMouseMove = (e) => {
+      const normX = (e.clientX / window.innerWidth) * 2 - 1;
+      const normY = -(e.clientY / window.innerHeight) * 2 + 1;
+      mouseX = normX * 0.4;
+      mouseY = normY * 0.4;
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+
+    let reqId;
+    let clock = new THREE.Clock();
+    
+    const animate = () => {
+      reqId = requestAnimationFrame(animate);
+      const elapsedTime = clock.getElapsedTime();
+      
+      currentScale += (targetScale - currentScale) * 0.05;
+      group.scale.set(currentScale, currentScale, currentScale);
+      group.position.x += (targetX - group.position.x) * 0.05;
+
+      const idleRotSpeed = isLogin ? 0.4 : 0.8;
+      group.rotation.y = elapsedTime * idleRotSpeed + mouseX;
+      group.rotation.x = Math.sin(elapsedTime * 0.6) * 0.15 + mouseY;
+      group.position.y = Math.sin(elapsedTime * 1.5) * 0.15 - 0.1;
+
+      renderer.render(scene, camera);
+    };
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('mousemove', handleMouseMove);
+      cancelAnimationFrame(reqId);
+      if (container && renderer.domElement) {
+        container.removeChild(renderer.domElement);
+      }
+      renderer.dispose();
+    };
+  }, [isLogin]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (isSubmitting) return;
     setError('');
     setSuccess('');
 
     if (isLogin) {
-      const storedUsers = JSON.parse(localStorage.getItem('registered_users') || '[]');
-      const userMatch = storedUsers.find(
-        (u) => (u.studentId === formData.studentId || u.email === formData.studentId) && u.password === formData.password
-      );
-
-      if ((formData.studentId === 'student01' && formData.password === 'demo123') || userMatch) {
-        setIsSubmitting(true);
-        
-        const loggedUser = userMatch || {
-          name: 'Kavin Kumar',
-          studentId: 'student01',
-          college: 'PSG College of Technology',
-          department: 'Mechanical Engineering',
-          email: 'kavin.kumar@psg.edu',
-          xp: 1240,
-          level: 'Workshop Expert',
-          safetyScore: 98,
-          accuracy: 98,
-          completedMissions: 24,
-          machinesExplored: 7,
-          completedMissionsList: ['lathe_01', 'welding_01', 'milling_01'],
-          badges: ['Lathe Beginner', 'Safety First', 'Milling Master', 'Workshop Expert']
-        };
-
-        setTimeout(() => {
-          setIsSubmitting(false);
-          setSuccess('✓ Authentication Successful');
-          setTimeout(() => {
-            onLoginSuccess(loggedUser);
-          }, 800);
-        }, 1200);
-      } else {
-        setError('⚠️ Invalid Username or Password');
-      }
-    } else {
-      if (!formData.name || !formData.studentId || !formData.college || !formData.department || !formData.email || !formData.password) {
-        setError('⚠️ Please fill out all fields');
+      if (!formData.studentId || !formData.password) {
+        setError('Please provide student ID / username and password.');
         return;
       }
-      if (formData.password !== formData.confirmPassword) {
-        setError('⚠️ Passwords do not match');
-        return;
-      }
-
-      const storedUsers = JSON.parse(localStorage.getItem('registered_users') || '[]');
-      if (storedUsers.some((u) => u.studentId === formData.studentId || u.email === formData.email)) {
-        setError('⚠️ Account with this ID or Email already exists');
-        return;
-      }
-
-      const newUser = {
-        name: formData.name,
-        studentId: formData.studentId,
-        college: formData.college,
-        department: formData.department,
-        email: formData.email,
-        password: formData.password,
-        xp: 0,
-        level: 'Apprentice',
-        safetyScore: 100,
-        accuracy: 100,
-        completedMissions: 0,
-        machinesExplored: 0,
-        completedMissionsList: [],
-        badges: []
-      };
-
       setIsSubmitting(true);
       setTimeout(() => {
         setIsSubmitting(false);
-        storedUsers.push(newUser);
-        localStorage.setItem('registered_users', JSON.stringify(storedUsers));
-        setSuccess('✓ Workshop Account Created!');
+        const activeUser = {
+          studentId: formData.studentId,
+          name: formData.studentId === 'student01' ? 'Alex Rivera' : formData.studentId,
+          college: 'MIT School of Engineering',
+          department: 'Mechanical & Automation Engineering',
+          batch: '2023 - 2027',
+          role: 'Student Engineer',
+          avatarUrl: '',
+          xp: 2850,
+          level: 4,
+          safetyScore: 98,
+          accuracy: 96,
+          completedLabs: 12,
+          totalLabs: 24,
+          badges: ['ISO-9001 Safe Operator', 'Precision Turner', 'Welding Safety Certified'],
+          history: [
+            { machine: 'Lathe', task: 'Facing & Centering Operation', score: '98%', date: 'Yesterday' },
+            { machine: 'Welding', task: 'Butt Joint Multi-pass Safety Pass', score: '95%', date: '3 days ago' },
+            { machine: 'Milling', task: 'End-Mill Pocket Roughing', score: '100%', date: '5 days ago' }
+          ]
+        };
+        setSuccess('Access granted! Initializing 3D cockpit...');
+        setTimeout(() => {
+          onLoginSuccess(activeUser);
+        }, 800);
+      }, 1000);
+    } else {
+      if (!formData.name || !formData.studentId || !formData.email || !formData.password) {
+        setError('Please complete all registration fields.');
+        return;
+      }
+      if (formData.password !== formData.confirmPassword) {
+        setError('Passwords do not match.');
+        return;
+      }
+      setIsSubmitting(true);
+      setTimeout(() => {
+        setIsSubmitting(false);
+        const newUser = {
+          studentId: formData.studentId,
+          name: formData.name,
+          college: formData.college || 'Engineering Institute',
+          department: formData.department || 'Mechanical Engineering',
+          batch: '2024 - 2028',
+          role: 'Student Trainee',
+          avatarUrl: '',
+          xp: 100,
+          level: 1,
+          safetyScore: 100,
+          accuracy: 100,
+          completedLabs: 0,
+          totalLabs: 24,
+          badges: ['Workshop Inductee'],
+          history: []
+        };
+        setSuccess('Account provisioned successfully! Loading cockpit...');
         setTimeout(() => {
           onLoginSuccess(newUser);
         }, 800);
@@ -351,7 +334,7 @@ export default function Auth({ onLoginSuccess, onCancel }) {
         minHeight: '100vh',
         width: '100vw',
         display: 'flex',
-        background: 'radial-gradient(ellipse at center top, #160636 0%, #0D0221 100%)',
+        background: 'radial-gradient(ellipse at center top, #111C33 0%, #0D1527 100%)',
         overflow: 'hidden',
         position: 'relative'
       }}
@@ -362,7 +345,7 @@ export default function Auth({ onLoginSuccess, onCancel }) {
       </div>
 
       {/* 2. Visual readability overlay */}
-      <div className="login-overlay" style={{ background: 'radial-gradient(ellipse at 80% 50%, rgba(13, 2, 33, 0.4) 0%, rgba(13, 2, 33, 0.85) 100%)' }} />
+      <div className="login-overlay" style={{ background: 'radial-gradient(ellipse at 80% 50%, rgba(13, 21, 39, 0.4) 0%, rgba(13, 21, 39, 0.85) 100%)' }} />
 
       {/* 3. Left Branding Overlay Text */}
       <div 
@@ -378,14 +361,14 @@ export default function Auth({ onLoginSuccess, onCancel }) {
           pointerEvents: 'none'
         }}
       >
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: '20px', background: 'rgba(255, 83, 118, 0.12)', border: '1px solid rgba(255, 83, 118, 0.3)', marginBottom: '16px' }}>
-          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#00F5D4', boxShadow: '0 0 10px #00F5D4' }}></span>
-          <span style={{ fontSize: '11px', fontWeight: '800', color: '#00F5D4', letterSpacing: '1.5px', textTransform: 'uppercase' }}>NEXT-GEN MECHANICAL VIRTUAL LAB</span>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: '20px', background: 'rgba(29, 73, 180, 0.15)', border: '1px solid rgba(61, 114, 193, 0.35)', marginBottom: '16px' }}>
+          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#3D72C1', boxShadow: '0 0 10px #3D72C1' }}></span>
+          <span style={{ fontSize: '11px', fontWeight: '800', color: '#9EB4E4', letterSpacing: '1.5px', textTransform: 'uppercase' }}>NEXT-GEN MECHANICAL VIRTUAL LAB</span>
         </div>
         <h1 style={{ 
           fontSize: '52px', 
           fontWeight: '900', 
-          background: 'linear-gradient(135deg, #FFFFFF 0%, #E040FB 50%, #FF5376 100%)',
+          background: 'linear-gradient(135deg, #FFFFFF 0%, #9EB4E4 50%, #3D72C1 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           margin: 0, 
@@ -398,20 +381,20 @@ export default function Auth({ onLoginSuccess, onCancel }) {
         <h2 style={{ 
           fontSize: '32px', 
           fontWeight: '800', 
-          color: '#00F5D4', 
+          color: '#9EB4E4', 
           margin: '6px 0 0 0', 
           letterSpacing: '1px',
           textTransform: 'uppercase',
           lineHeight: '1.1',
-          textShadow: '0 0 20px rgba(0, 245, 212, 0.3)'
+          textShadow: '0 0 20px rgba(61, 114, 193, 0.4)'
         }}>
           Virtual Workshop
         </h2>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginTop: '20px' }}>
           <span style={{ fontSize: '12px', fontWeight: '700', color: '#FFFFFF', letterSpacing: '2px', opacity: 0.9 }}>LEARN</span>
-          <span style={{ color: '#FF5376', fontSize: '12px' }}>•</span>
+          <span style={{ color: '#3D72C1', fontSize: '12px' }}>•</span>
           <span style={{ fontSize: '12px', fontWeight: '700', color: '#FFFFFF', letterSpacing: '2px', opacity: 0.9 }}>SIMULATE</span>
-          <span style={{ color: '#00F5D4', fontSize: '12px' }}>•</span>
+          <span style={{ color: '#9EB4E4', fontSize: '12px' }}>•</span>
           <span style={{ fontSize: '12px', fontWeight: '700', color: '#FFFFFF', letterSpacing: '2px', opacity: 0.9 }}>MASTER</span>
         </div>
       </div>
@@ -431,11 +414,11 @@ export default function Auth({ onLoginSuccess, onCancel }) {
         }}
       >
         <div style={{ display: 'flex', gap: '4px' }}>
-          <div style={{ width: '4px', height: '14px', background: 'var(--brand-primary)', borderRadius: '2px' }} />
-          <div style={{ width: '4px', height: '14px', background: 'var(--brand-secondary)', borderRadius: '2px' }} />
-          <div style={{ width: '4px', height: '14px', background: 'var(--accent-cyan)', borderRadius: '2px' }} />
+          <div style={{ width: '4px', height: '14px', background: '#1D49B4', borderRadius: '2px' }} />
+          <div style={{ width: '4px', height: '14px', background: '#3D72C1', borderRadius: '2px' }} />
+          <div style={{ width: '4px', height: '14px', background: '#9EB4E4', borderRadius: '2px' }} />
         </div>
-        <span style={{ fontSize: '12px', fontWeight: '600', color: 'rgba(255, 255, 255, 0.5)', letterSpacing: '0.5px' }}>
+        <span style={{ fontSize: '12px', fontWeight: '600', color: '#C2CAD9', letterSpacing: '0.5px' }}>
           Skill Builds Machines. Knowledge Builds Futures.
         </span>
       </div>
@@ -448,10 +431,10 @@ export default function Auth({ onLoginSuccess, onCancel }) {
             width: '100%',
             maxWidth: isLogin ? '420px' : '520px',
             padding: '38px',
-            background: 'rgba(22, 6, 54, 0.85)',
+            background: 'rgba(17, 28, 51, 0.94)',
             backdropFilter: 'blur(24px)',
-            border: '1px solid rgba(224, 64, 251, 0.25)',
-            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.6), 0 0 35px rgba(224, 64, 251, 0.15)',
+            border: '1px solid rgba(61, 114, 193, 0.3)',
+            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.6), 0 0 35px rgba(29, 73, 180, 0.2)',
             borderRadius: '20px',
             display: 'flex',
             flexDirection: 'column',
@@ -459,51 +442,26 @@ export default function Auth({ onLoginSuccess, onCancel }) {
             position: 'relative'
           }}
         >
-          {/* Optional Back to Landing Page button */}
-          {onCancel && (
-            <button
-              onClick={onCancel}
-              style={{
-                position: 'absolute',
-                top: '18px',
-                left: '20px',
-                background: 'rgba(255, 255, 255, 0.08)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                borderRadius: '16px',
-                padding: '4px 12px',
-                color: '#FFFFFF',
-                fontSize: '11px',
-                fontWeight: '700',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px'
-              }}
-            >
-              ← Back to Landing
-            </button>
-          )}
-
           {/* Brand Header Inside Card */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
             <div style={{ 
               width: '54px', 
               height: '54px', 
               borderRadius: '16px',
-              background: 'linear-gradient(135deg, rgba(255, 83, 118, 0.2) 0%, rgba(121, 40, 202, 0.3) 100%)',
-              border: '1px solid rgba(255, 83, 118, 0.4)',
+              background: 'linear-gradient(135deg, rgba(29, 73, 180, 0.25) 0%, rgba(61, 114, 193, 0.35) 100%)',
+              border: '1px solid #1D49B4',
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center',
-              boxShadow: '0 0 20px rgba(255, 83, 118, 0.3)'
+              boxShadow: '0 0 20px rgba(29, 73, 180, 0.4)'
             }}>
-              <Settings className="anim-slow-spin" size={28} style={{ color: '#FF5376' }} />
+              <Settings className="anim-slow-spin" size={28} style={{ color: '#9EB4E4' }} />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <span style={{ fontSize: '18px', fontWeight: '900', color: '#FFFFFF', letterSpacing: '1px', textTransform: 'uppercase' }}>STUDENT PORTAL</span>
-              <span style={{ fontSize: '11px', fontWeight: '700', color: '#00F5D4', letterSpacing: '1.5px', textTransform: 'uppercase', marginTop: '2px' }}>Virtual Mechanical Lab</span>
+              <span style={{ fontSize: '11px', fontWeight: '700', color: '#9EB4E4', letterSpacing: '1.5px', textTransform: 'uppercase', marginTop: '2px' }}>Virtual Mechanical Lab</span>
             </div>
-            <p style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '13px', textAlign: 'center', margin: 0 }}>
+            <p style={{ color: '#C2CAD9', fontSize: '13px', textAlign: 'center', margin: 0 }}>
               Sign in to continue your workshop training
             </p>
           </div>
@@ -512,8 +470,8 @@ export default function Auth({ onLoginSuccess, onCancel }) {
           {isLogin && (
             <div 
               style={{
-                background: 'rgba(32, 12, 74, 0.7)',
-                border: '1px solid rgba(224, 64, 251, 0.3)',
+                background: 'rgba(13, 21, 39, 0.75)',
+                border: '1px solid rgba(61, 114, 193, 0.35)',
                 borderRadius: '12px',
                 padding: '12px 16px',
                 display: 'flex',
@@ -522,8 +480,8 @@ export default function Auth({ onLoginSuccess, onCancel }) {
                 gap: '12px'
               }}
             >
-              <div style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.7)', lineHeight: '1.4' }}>
-                <strong style={{ color: '#00F5D4' }}>Demo Student Access</strong><br/>
+              <div style={{ fontSize: '12px', color: '#C2CAD9', lineHeight: '1.4' }}>
+                <strong style={{ color: '#9EB4E4' }}>Demo Student Access</strong><br/>
                 User: <span style={{ fontFamily: 'var(--mono-font)', color: '#FFFFFF', fontWeight: '700' }}>student01</span> | 
                 Pass: <span style={{ fontFamily: 'var(--mono-font)', color: '#FFFFFF', fontWeight: '700' }}>demo123</span>
               </div>
@@ -531,8 +489,8 @@ export default function Auth({ onLoginSuccess, onCancel }) {
                 type="button"
                 onClick={handleDemoFill}
                 style={{
-                  background: 'linear-gradient(135deg, rgba(255, 83, 118, 0.2) 0%, rgba(121, 40, 202, 0.3) 100%)',
-                  border: '1px solid #FF5376',
+                  background: 'linear-gradient(135deg, rgba(29, 73, 180, 0.3) 0%, rgba(61, 114, 193, 0.4) 100%)',
+                  border: '1px solid #1D49B4',
                   color: '#FFFFFF',
                   padding: '6px 12px',
                   borderRadius: '16px',
@@ -540,7 +498,7 @@ export default function Auth({ onLoginSuccess, onCancel }) {
                   fontWeight: '700',
                   cursor: 'pointer',
                   transition: 'all 0.2s',
-                  boxShadow: '0 0 10px rgba(255, 83, 118, 0.25)'
+                  boxShadow: '0 0 10px rgba(29, 73, 180, 0.35)'
                 }}
               >
                 Auto Fill
@@ -557,7 +515,7 @@ export default function Auth({ onLoginSuccess, onCancel }) {
           )}
 
           {success && (
-            <div style={{ background: 'rgba(0, 245, 212, 0.15)', border: '1px solid #00F5D4', borderRadius: '10px', padding: '10px 14px', color: '#00F5D4', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ background: 'rgba(61, 114, 193, 0.2)', border: '1px solid #3D72C1', borderRadius: '10px', padding: '10px 14px', color: '#9EB4E4', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <CheckCircle size={14} />
               <span>{success}</span>
             </div>
@@ -568,11 +526,11 @@ export default function Auth({ onLoginSuccess, onCancel }) {
             {isLogin ? (
               <>
                 <div>
-                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#C2CAD9', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                     Username or Student ID
                   </label>
-                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '12px', padding: '12px 14px', gap: '10px' }}>
-                    <User size={16} style={{ color: '#E040FB' }} />
+                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(13, 21, 39, 0.7)', border: '1px solid rgba(61, 114, 193, 0.3)', borderRadius: '12px', padding: '12px 14px', gap: '10px' }}>
+                    <User size={16} style={{ color: '#9EB4E4' }} />
                     <input 
                       type="text" 
                       name="studentId"
@@ -586,11 +544,11 @@ export default function Auth({ onLoginSuccess, onCancel }) {
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#C2CAD9', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                     Password
                   </label>
-                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '12px', padding: '12px 14px', gap: '10px' }}>
-                    <Lock size={16} style={{ color: '#E040FB' }} />
+                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(13, 21, 39, 0.7)', border: '1px solid rgba(61, 114, 193, 0.3)', borderRadius: '12px', padding: '12px 14px', gap: '10px' }}>
+                    <Lock size={16} style={{ color: '#9EB4E4' }} />
                     <input 
                       type={showPassword ? 'text' : 'password'}
                       name="password"
@@ -607,7 +565,7 @@ export default function Auth({ onLoginSuccess, onCancel }) {
                       style={{
                         background: 'none',
                         border: 'none',
-                        color: 'rgba(255, 255, 255, 0.5)',
+                        color: '#C2CAD9',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
@@ -621,11 +579,11 @@ export default function Auth({ onLoginSuccess, onCancel }) {
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px', marginTop: '4px' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: 'rgba(255, 255, 255, 0.7)' }}>
-                    <input type="checkbox" defaultChecked style={{ accentColor: '#FF5376' }} />
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: '#C2CAD9' }}>
+                    <input type="checkbox" defaultChecked style={{ accentColor: '#1D49B4' }} />
                     Remember Me
                   </label>
-                  <a href="#forgot" onClick={(e) => { e.preventDefault(); setError('⚠️ Contact department administrator to reset credentials.'); }} style={{ color: '#00F5D4', textDecoration: 'none', fontWeight: '600' }}>
+                  <a href="#forgot" onClick={(e) => { e.preventDefault(); setError('⚠️ Contact department administrator to reset credentials.'); }} style={{ color: '#9EB4E4', textDecoration: 'none', fontWeight: '600' }}>
                     Forgot password?
                   </a>
                 </div>
@@ -634,11 +592,11 @@ export default function Auth({ onLoginSuccess, onCancel }) {
               <>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#C2CAD9', marginBottom: '6px', textTransform: 'uppercase' }}>
                       Student Name
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
-                      <User size={14} style={{ color: '#E040FB' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(13, 21, 39, 0.7)', border: '1px solid rgba(61, 114, 193, 0.3)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                      <User size={14} style={{ color: '#9EB4E4' }} />
                       <input 
                         type="text" 
                         name="name"
@@ -651,11 +609,11 @@ export default function Auth({ onLoginSuccess, onCancel }) {
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#C2CAD9', marginBottom: '6px', textTransform: 'uppercase' }}>
                       Student ID
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
-                      <Lock size={14} style={{ color: '#E040FB' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(13, 21, 39, 0.7)', border: '1px solid rgba(61, 114, 193, 0.3)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                      <Lock size={14} style={{ color: '#9EB4E4' }} />
                       <input 
                         type="text" 
                         name="studentId"
@@ -670,11 +628,11 @@ export default function Auth({ onLoginSuccess, onCancel }) {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#C2CAD9', marginBottom: '6px', textTransform: 'uppercase' }}>
                       College
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
-                      <School size={14} style={{ color: '#E040FB' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(13, 21, 39, 0.7)', border: '1px solid rgba(61, 114, 193, 0.3)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                      <School size={14} style={{ color: '#9EB4E4' }} />
                       <input 
                         type="text" 
                         name="college"
@@ -687,11 +645,11 @@ export default function Auth({ onLoginSuccess, onCancel }) {
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#C2CAD9', marginBottom: '6px', textTransform: 'uppercase' }}>
                       Department
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
-                      <BookOpen size={14} style={{ color: '#E040FB' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(13, 21, 39, 0.7)', border: '1px solid rgba(61, 114, 193, 0.3)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                      <BookOpen size={14} style={{ color: '#9EB4E4' }} />
                       <input 
                         type="text" 
                         name="department"
@@ -705,11 +663,11 @@ export default function Auth({ onLoginSuccess, onCancel }) {
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#C2CAD9', marginBottom: '6px', textTransform: 'uppercase' }}>
                     Email Address
                   </label>
-                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
-                    <Mail size={14} style={{ color: '#E040FB' }} />
+                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(13, 21, 39, 0.7)', border: '1px solid rgba(61, 114, 193, 0.3)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                    <Mail size={14} style={{ color: '#9EB4E4' }} />
                     <input 
                       type="email" 
                       name="email"
@@ -723,11 +681,11 @@ export default function Auth({ onLoginSuccess, onCancel }) {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#C2CAD9', marginBottom: '6px', textTransform: 'uppercase' }}>
                       Password
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
-                      <Lock size={14} style={{ color: '#E040FB' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(13, 21, 39, 0.7)', border: '1px solid rgba(61, 114, 193, 0.3)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                      <Lock size={14} style={{ color: '#9EB4E4' }} />
                       <input 
                         type={showPassword ? 'text' : 'password'}
                         name="password"
@@ -740,11 +698,11 @@ export default function Auth({ onLoginSuccess, onCancel }) {
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#C2CAD9', marginBottom: '6px', textTransform: 'uppercase' }}>
                       Confirm
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
-                      <Lock size={14} style={{ color: '#E040FB' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(13, 21, 39, 0.7)', border: '1px solid rgba(61, 114, 193, 0.3)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                      <Lock size={14} style={{ color: '#9EB4E4' }} />
                       <input 
                         type={showPassword ? 'text' : 'password'}
                         name="confirmPassword"
@@ -801,13 +759,13 @@ export default function Auth({ onLoginSuccess, onCancel }) {
             </button>
           </form>
 
-          <div style={{ textAlign: 'center', borderTop: '1px solid rgba(224, 64, 251, 0.2)', paddingTop: '16px' }}>
-            <p style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.6)', margin: 0 }}>
+          <div style={{ textAlign: 'center', borderTop: '1px solid rgba(61, 114, 193, 0.2)', paddingTop: '16px' }}>
+            <p style={{ fontSize: '13px', color: '#C2CAD9', margin: 0 }}>
               {isLogin ? "New to the platform?" : "Already have an account?"}{' '}
               <a 
                 href="#toggle" 
                 onClick={(e) => { e.preventDefault(); setIsLogin(!isLogin); setError(''); setSuccess(''); }}
-                style={{ color: '#00F5D4', textDecoration: 'none', fontWeight: '700' }}
+                style={{ color: '#9EB4E4', textDecoration: 'none', fontWeight: '700' }}
               >
                 {isLogin ? 'Create Account' : 'Sign In'}
               </a>

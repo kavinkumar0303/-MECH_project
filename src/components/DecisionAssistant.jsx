@@ -105,19 +105,19 @@ export default function DecisionAssistant() {
                   key={opt.id}
                   onClick={() => { setShape(opt.id); setStep(2); }}
                   style={{
-                    background: 'rgba(35, 12, 75, 0.6)',
-                    border: '1px solid rgba(168, 85, 247, 0.25)',
+                    background: 'rgba(22, 35, 62, 0.7)',
+                    border: '1px solid rgba(61, 114, 193, 0.3)',
                     borderRadius: '12px',
                     padding: '16px 20px',
                     textAlign: 'left',
                     cursor: 'pointer',
                     transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#FF5376'; e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 83, 118, 0.2) 0%, rgba(121, 40, 202, 0.35) 100%)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(168, 85, 247, 0.25)'; e.currentTarget.style.background = 'rgba(35, 12, 75, 0.6)'; e.currentTarget.style.transform = 'none'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#9EB4E4'; e.currentTarget.style.background = 'linear-gradient(135deg, rgba(29, 73, 180, 0.25) 0%, rgba(61, 114, 193, 0.35) 100%)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(61, 114, 193, 0.3)'; e.currentTarget.style.background = 'rgba(22, 35, 62, 0.7)'; e.currentTarget.style.transform = 'none'; }}
                 >
                   <div style={{ fontSize: '15px', fontWeight: '700', color: '#FFFFFF' }}>{opt.title}</div>
-                  <div style={{ fontSize: '13px', color: '#D8B4FE', marginTop: '4px' }}>{opt.desc}</div>
+                  <div style={{ fontSize: '13px', color: '#C2CAD9', marginTop: '4px' }}>{opt.desc}</div>
                 </button>
               ))}
             </div>
@@ -146,19 +146,19 @@ export default function DecisionAssistant() {
                   key={opt.id}
                   onClick={() => { setMaterial(opt.id); setStep(3); }}
                   style={{
-                    background: 'rgba(35, 12, 75, 0.6)',
-                    border: '1px solid rgba(168, 85, 247, 0.25)',
+                    background: 'rgba(22, 35, 62, 0.7)',
+                    border: '1px solid rgba(61, 114, 193, 0.3)',
                     borderRadius: '12px',
                     padding: '16px 20px',
                     textAlign: 'left',
                     cursor: 'pointer',
                     transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#00F5D4'; e.currentTarget.style.background = 'linear-gradient(135deg, rgba(0, 245, 212, 0.15) 0%, rgba(121, 40, 202, 0.35) 100%)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(168, 85, 247, 0.25)'; e.currentTarget.style.background = 'rgba(35, 12, 75, 0.6)'; e.currentTarget.style.transform = 'none'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#38BDF8'; e.currentTarget.style.background = 'linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(61, 114, 193, 0.35) 100%)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(61, 114, 193, 0.3)'; e.currentTarget.style.background = 'rgba(22, 35, 62, 0.7)'; e.currentTarget.style.transform = 'none'; }}
                 >
                   <div style={{ fontSize: '15px', fontWeight: '700', color: '#FFFFFF' }}>{opt.title}</div>
-                  <div style={{ fontSize: '13px', color: '#D8B4FE', marginTop: '4px' }}>{opt.desc}</div>
+                  <div style={{ fontSize: '13px', color: '#C2CAD9', marginTop: '4px' }}>{opt.desc}</div>
                 </button>
               ))}
             </div>
@@ -188,19 +188,19 @@ export default function DecisionAssistant() {
                   key={opt.id}
                   onClick={() => { setOperation(opt.id); setStep(4); }}
                   style={{
-                    background: 'rgba(35, 12, 75, 0.6)',
-                    border: '1px solid rgba(168, 85, 247, 0.25)',
+                    background: 'rgba(22, 35, 62, 0.7)',
+                    border: '1px solid rgba(61, 114, 193, 0.3)',
                     borderRadius: '12px',
                     padding: '16px 20px',
                     textAlign: 'left',
                     cursor: 'pointer',
                     transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#FF5376'; e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 83, 118, 0.2) 0%, rgba(121, 40, 202, 0.35) 100%)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(168, 85, 247, 0.25)'; e.currentTarget.style.background = 'rgba(35, 12, 75, 0.6)'; e.currentTarget.style.transform = 'none'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#9EB4E4'; e.currentTarget.style.background = 'linear-gradient(135deg, rgba(29, 73, 180, 0.25) 0%, rgba(61, 114, 193, 0.35) 100%)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(61, 114, 193, 0.3)'; e.currentTarget.style.background = 'rgba(22, 35, 62, 0.7)'; e.currentTarget.style.transform = 'none'; }}
                 >
                   <div style={{ fontSize: '15px', fontWeight: '700', color: '#FFFFFF' }}>{opt.title}</div>
-                  <div style={{ fontSize: '13px', color: '#D8B4FE', marginTop: '4px' }}>{opt.desc}</div>
+                  <div style={{ fontSize: '13px', color: '#C2CAD9', marginTop: '4px' }}>{opt.desc}</div>
                 </button>
               ))}
             </div>
@@ -215,14 +215,14 @@ export default function DecisionAssistant() {
               </span>
             </div>
             
-            <div style={{ borderLeft: `4px solid #FF5376`, background: 'rgba(35, 12, 75, 0.7)', padding: '24px', borderRadius: '14px', borderTop: '1px solid rgba(168, 85, 247, 0.3)', borderRight: '1px solid rgba(168, 85, 247, 0.3)', borderBottom: '1px solid rgba(168, 85, 247, 0.3)', boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}>
-              <span style={{ fontSize: '11px', textTransform: 'uppercase', color: '#FF5376', fontWeight: '800', letterSpacing: '0.8px' }}>
+            <div style={{ borderLeft: `4px solid #1D49B4`, background: 'rgba(22, 35, 62, 0.8)', padding: '24px', borderRadius: '14px', borderTop: '1px solid rgba(61, 114, 193, 0.3)', borderRight: '1px solid rgba(61, 114, 193, 0.3)', borderBottom: '1px solid rgba(61, 114, 193, 0.3)', boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}>
+              <span style={{ fontSize: '11px', textTransform: 'uppercase', color: '#9EB4E4', fontWeight: '800', letterSpacing: '0.8px' }}>
                 Recommended Workshop Unit
               </span>
               <h3 style={{ fontSize: '24px', fontWeight: '900', color: '#FFFFFF', margin: '6px 0 12px' }}>
                 {rec.machine.name}
               </h3>
-              <p style={{ fontSize: '14px', color: '#F0EDE5', lineHeight: '1.6' }}>
+              <p style={{ fontSize: '14px', color: '#C2CAD9', lineHeight: '1.6' }}>
                 {rec.explanation}
               </p>
             </div>
@@ -234,26 +234,26 @@ export default function DecisionAssistant() {
                 alignItems: 'center', 
                 justifyContent: 'center', 
                 gap: '16px', 
-                background: 'rgba(22, 6, 54, 0.8)', 
+                background: 'rgba(17, 28, 51, 0.9)', 
                 padding: '18px', 
                 borderRadius: '12px',
-                border: '1px solid rgba(168, 85, 247, 0.25)',
+                border: '1px solid rgba(61, 114, 193, 0.25)',
                 flexWrap: 'wrap'
               }}
             >
-              <div style={{ fontSize: '12px', color: '#D8B4FE' }}>
-                Shape: <strong style={{ color: '#FF5376' }}>{shape}</strong>
+              <div style={{ fontSize: '12px', color: '#C2CAD9' }}>
+                Shape: <strong style={{ color: '#9EB4E4' }}>{shape}</strong>
               </div>
-              <div style={{ color: '#00F5D4' }}>→</div>
-              <div style={{ fontSize: '12px', color: '#D8B4FE' }}>
-                Material: <strong style={{ color: '#00F5D4' }}>{material}</strong>
+              <div style={{ color: '#38BDF8' }}>→</div>
+              <div style={{ fontSize: '12px', color: '#C2CAD9' }}>
+                Material: <strong style={{ color: '#38BDF8' }}>{material}</strong>
               </div>
-              <div style={{ color: '#00F5D4' }}>→</div>
-              <div style={{ fontSize: '12px', color: '#D8B4FE' }}>
-                Operation: <strong style={{ color: '#E040FB' }}>{operation}</strong>
+              <div style={{ color: '#38BDF8' }}>→</div>
+              <div style={{ fontSize: '12px', color: '#C2CAD9' }}>
+                Operation: <strong style={{ color: '#3D72C1' }}>{operation}</strong>
               </div>
-              <div style={{ color: '#00F5D4' }}>→</div>
-              <div style={{ fontSize: '12px', color: '#00F5D4' }}>
+              <div style={{ color: '#38BDF8' }}>→</div>
+              <div style={{ fontSize: '12px', color: '#38BDF8' }}>
                 Tool: <strong style={{ color: '#FFFFFF' }}>{rec.tool}</strong>
               </div>
             </div>

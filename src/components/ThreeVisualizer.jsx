@@ -229,13 +229,13 @@ export default function ThreeVisualizer({
 
     const isDark = !isLogin;
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#0D0221');
+    scene.background = new THREE.Color('#0D1527');
     sceneRef.current = scene;
 
     // Floor
     const floorGeo = new THREE.PlaneGeometry(100, 100);
     const floorMat = new THREE.MeshStandardMaterial({ 
-      color: '#150630', 
+      color: '#111C33', 
       roughness: 0.8, 
       metalness: 0.15 
     });
@@ -245,7 +245,7 @@ export default function ThreeVisualizer({
     scene.add(floorMesh);
 
     // Cyber Grid on floor
-    const gridHelper = new THREE.GridHelper(50, 50, 0x7928CA, 0x240A50);
+    const gridHelper = new THREE.GridHelper(50, 50, 0x3D72C1, 0x16233E);
     gridHelper.position.y = -1.99;
     scene.add(gridHelper);
 
@@ -253,7 +253,7 @@ export default function ThreeVisualizer({
     if (isDark) {
       const wallGeo = new THREE.PlaneGeometry(40, 20);
       const wallMat = new THREE.MeshStandardMaterial({
-        color: '#1A083B',
+        color: '#111C33',
         roughness: 0.8,
         metalness: 0.1
       });
@@ -263,7 +263,7 @@ export default function ThreeVisualizer({
 
       const pillarGeo = new THREE.BoxGeometry(0.8, 12, 0.8);
       const pillarMat = new THREE.MeshStandardMaterial({
-        color: '#250B52',
+        color: '#16233E',
         roughness: 0.6,
         metalness: 0.2
       });
@@ -278,7 +278,7 @@ export default function ThreeVisualizer({
       // Conduit pipes
       const pipeGeo = new THREE.CylinderGeometry(0.12, 0.12, 24, 16);
       const pipeMat = new THREE.MeshStandardMaterial({
-        color: '#FF5376',
+        color: '#3D72C1',
         metalness: 0.9,
         roughness: 0.2
       });
@@ -291,7 +291,7 @@ export default function ThreeVisualizer({
       // Platform slab
       const platformGeo = new THREE.BoxGeometry(6.6, 0.15, 3.2);
       const platformMat = new THREE.MeshStandardMaterial({
-        color: '#280E58',
+        color: '#16233E',
         roughness: 0.4,
         metalness: 0.3
       });
@@ -299,23 +299,23 @@ export default function ThreeVisualizer({
       platform.position.set(0, -1.92, 0);
       scene.add(platform);
 
-      // Neon pink/cyan underglow strip
+      // Blue underglow strip
       const underglowGeo = new THREE.BoxGeometry(5.4, 0.04, 0.04);
       const underglowMat = new THREE.MeshStandardMaterial({
-        color: '#FF5376',
-        emissive: '#FF5376',
-        emissiveIntensity: 6.0,
+        color: '#1D49B4',
+        emissive: '#1D49B4',
+        emissiveIntensity: 4.0,
         roughness: 0.1
       });
       const underglow = new THREE.Mesh(underglowGeo, underglowMat);
       underglow.position.set(0, -1.83, 0.9);
       scene.add(underglow);
 
-      const floorBounceGlow = new THREE.PointLight('#FF5376', 4.0, 10);
+      const floorBounceGlow = new THREE.PointLight('#1D49B4', 3.0, 10);
       floorBounceGlow.position.set(0, -1.88, 0);
       scene.add(floorBounceGlow);
 
-      const cyanAccentLight = new THREE.PointLight('#00F5D4', 3.0, 8);
+      const cyanAccentLight = new THREE.PointLight('#9EB4E4', 2.5, 8);
       cyanAccentLight.position.set(0, -1.88, -0.9);
       scene.add(cyanAccentLight);
     }
