@@ -15,7 +15,7 @@ import {
   Mail
 } from 'lucide-react';
 
-export default function Auth({ onLoginSuccess }) {
+export default function Auth({ onLoginSuccess, onCancel }) {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -459,6 +459,31 @@ export default function Auth({ onLoginSuccess }) {
             position: 'relative'
           }}
         >
+          {/* Optional Back to Landing Page button */}
+          {onCancel && (
+            <button
+              onClick={onCancel}
+              style={{
+                position: 'absolute',
+                top: '18px',
+                left: '20px',
+                background: 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                borderRadius: '16px',
+                padding: '4px 12px',
+                color: '#FFFFFF',
+                fontSize: '11px',
+                fontWeight: '700',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+            >
+              ← Back to Landing
+            </button>
+          )}
+
           {/* Brand Header Inside Card */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
             <div style={{ 

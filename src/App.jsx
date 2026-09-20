@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import Auth from './components/Auth';
+import LandingPage from './components/LandingPage';
 import Dashboard from './components/Dashboard';
 import WorkshopMap from './components/WorkshopMap';
 import MachineCockpit from './components/MachineCockpit';
@@ -13,7 +14,8 @@ import WorkshopAI from './components/WorkshopAI';
 
 function App() {
   const [user, setUser] = useState(null);
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('landing');
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [selectedMachineId, setSelectedMachineId] = useState('lathe');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -136,16 +138,57 @@ function App() {
 
   // Not authenticated
   if (!user) {
+    if (showAuthModal) {
+      return (
+        <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Auth 
+            onLoginSuccess={handleLoginSuccess} 
+            onCancel={() => setShowAuthModal(false)} 
+          />
+        </div>
+      );
+    }
+
     return (
-      <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Auth onLoginSuccess={handleLoginSuccess} />
-      </div>
+      <LandingPage 
+        onGetStarted={() => {
+          handleLoginSuccess({
+            name: 'Guest Engineer',
+            studentId: 'student_guest',
+            college: 'Virtual Engineering Institute',
+            department: 'Mechanical Engineering'
+          });
+          setActiveTab('dashboard');
+        }}
+        onLoginClick={() => setShowAuthModal(true)}
+        onSelectMachine={(mId) => {
+          handleLoginSuccess({
+            name: 'Guest Engineer',
+            studentId: 'student_guest',
+            college: 'Virtual Engineering Institute',
+            department: 'Mechanical Engineering'
+          });
+          setSelectedMachineId(mId);
+          setActiveTab('machine_explorer');
+        }}
+      />
     );
   }
 
   // Render the currently selected tab
   const renderTabContent = () => {
     switch (activeTab) {
+      case 'landing':
+        return (
+          <LandingPage 
+            onGetStarted={() => setActiveTab('dashboard')}
+            onLoginClick={() => setActiveTab('profile')}
+            onSelectMachine={(mId) => {
+              setSelectedMachineId(mId);
+              setActiveTab('machine_explorer');
+            }}
+          />
+        );
       case 'dashboard':
         return (
           <Dashboard 

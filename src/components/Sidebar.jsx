@@ -10,7 +10,8 @@ import {
   ChevronRight,
   Zap,
   Sparkles,
-  Layers
+  Layers,
+  Compass
 } from 'lucide-react';
 
 export default function Sidebar({ 
@@ -24,6 +25,7 @@ export default function Sidebar({
   const [collapsed, setCollapsed] = React.useState(false);
 
   const menuItems = [
+    { id: 'landing', label: 'UI Landing Page', icon: Compass },
     { id: 'dashboard', label: 'Home Dashboard', icon: LayoutDashboard },
     { id: 'workshop_map', label: '3D Workplane', icon: Map },
     
