@@ -60,10 +60,10 @@ export default function Sidebar({
     <div 
       style={{
         width: collapsed ? '72px' : '260px',
-        background: '#111C33',
+        background: '#FFFDFB',
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)',
-        borderRight: '1px solid rgba(61, 114, 193, 0.25)',
+        borderRight: '1px solid rgba(255, 120, 36, 0.18)',
         display: 'flex',
         flexDirection: 'column',
         height: '100vh',
@@ -72,14 +72,14 @@ export default function Sidebar({
         top: 0,
         zIndex: 100,
         flexShrink: 0,
-        boxShadow: '4px 0 30px rgba(13, 21, 39, 0.5)'
+        boxShadow: '4px 0 30px rgba(234, 88, 12, 0.06)'
       }}
     >
       {/* Brand Header & Gear + Lightning Logo */}
       <div 
         style={{
           padding: '22px 18px',
-          borderBottom: '1px solid rgba(61, 114, 193, 0.2)',
+          borderBottom: '1px solid rgba(255, 120, 36, 0.15)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: collapsed ? 'center' : 'stretch',
@@ -97,11 +97,11 @@ export default function Sidebar({
                   width: '36px', 
                   height: '36px', 
                   borderRadius: '10px',
-                  background: 'linear-gradient(135deg, #1D49B4 0%, #3D72C1 100%)',
+                  background: 'linear-gradient(135deg, #FF7824 0%, #FF4500 100%)',
                   display: 'flex', 
                   alignItems: 'center', 
                   justifyContent: 'center',
-                  boxShadow: '0 0 18px rgba(29, 73, 180, 0.45)'
+                  boxShadow: '0 0 18px rgba(255, 120, 36, 0.35)'
                 }}
               >
                 <Settings 
@@ -113,16 +113,16 @@ export default function Sidebar({
                   size={10} 
                   style={{ 
                     position: 'absolute', 
-                    color: '#9EB4E4', 
-                    fill: '#9EB4E4' 
+                    color: '#FFE7D6', 
+                    fill: '#FFE7D6' 
                   }} 
                 />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '15px', fontWeight: '800', color: '#FFFFFF', letterSpacing: '0.5px', lineHeight: '1.1' }}>
-                  MechWorkshop<span style={{ color: '#3D72C1' }}>.</span>
+                <span style={{ fontSize: '15px', fontWeight: '800', color: '#1C1917', letterSpacing: '0.5px', lineHeight: '1.1' }}>
+                  MechWorkshop<span style={{ color: '#FF7824' }}>.</span>
                 </span>
-                <span style={{ fontSize: '9px', fontWeight: '700', color: '#9EB4E4', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                <span style={{ fontSize: '9px', fontWeight: '700', color: '#E65100', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
                   Mechanical 3D
                 </span>
               </div>
@@ -136,11 +136,11 @@ export default function Sidebar({
                 width: '36px', 
                 height: '36px', 
                 borderRadius: '10px',
-                background: 'linear-gradient(135deg, #1D49B4 0%, #3D72C1 100%)',
+                background: 'linear-gradient(135deg, #FF7824 0%, #FF4500 100%)',
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'center',
-                boxShadow: '0 0 18px rgba(29, 73, 180, 0.45)'
+                boxShadow: '0 0 18px rgba(255, 120, 36, 0.35)'
               }}
             >
               <Settings 
@@ -154,9 +154,9 @@ export default function Sidebar({
           <button 
             onClick={() => setCollapsed(!collapsed)}
             style={{
-              background: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(61, 114, 193, 0.25)',
-              color: '#9EB4E4',
+              background: 'rgba(255, 120, 36, 0.08)',
+              border: '1px solid rgba(255, 120, 36, 0.2)',
+              color: '#E65100',
               cursor: 'pointer',
               padding: '6px',
               borderRadius: '6px',
@@ -174,7 +174,7 @@ export default function Sidebar({
 
       {/* Navigation Menus */}
       <div style={{ flex: 1, padding: '16px 10px', display: 'flex', flexDirection: 'column', gap: '6px', overflowY: 'auto' }}>
-        <div style={{ padding: '0 10px 4px 10px', fontSize: '9px', fontWeight: '800', color: '#9EB4E4', textTransform: 'uppercase', letterSpacing: '1px', opacity: 0.8 }}>
+        <div style={{ padding: '0 10px 4px 10px', fontSize: '9px', fontWeight: '800', color: '#8C7A70', textTransform: 'uppercase', letterSpacing: '1px' }}>
           {!collapsed && 'Main Modules'}
         </div>
         {menuItems.map((item) => {
@@ -191,26 +191,26 @@ export default function Sidebar({
                 padding: '11px 14px',
                 borderRadius: '10px',
                 border: 'none',
-                background: isActive ? 'linear-gradient(135deg, #1D49B4 0%, #3D72C1 100%)' : 'transparent',
-                color: isActive ? '#FFFFFF' : '#C2CAD9',
+                background: isActive ? 'linear-gradient(135deg, #FF7824 0%, #FF4500 100%)' : 'transparent',
+                color: isActive ? '#FFFFFF' : '#574A40',
                 cursor: 'pointer',
                 textAlign: 'left',
                 width: '100%',
                 transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                 fontWeight: isActive ? '700' : '600',
-                boxShadow: isActive ? '0 4px 20px rgba(29, 73, 180, 0.4)' : 'none'
+                boxShadow: isActive ? '0 4px 20px rgba(255, 120, 36, 0.35)' : 'none'
               }}
               onMouseEnter={(e) => {
                 if (!isActive) {
-                  e.currentTarget.style.background = 'rgba(61, 114, 193, 0.2)';
-                  e.currentTarget.style.color = '#FFFFFF';
+                  e.currentTarget.style.background = 'rgba(255, 120, 36, 0.08)';
+                  e.currentTarget.style.color = '#E65100';
                   e.currentTarget.style.transform = 'translateX(2px)';
                 }
               }}
               onMouseLeave={(e) => {
                 if (!isActive) {
                   e.currentTarget.style.background = 'transparent';
-                  e.currentTarget.style.color = '#C2CAD9';
+                  e.currentTarget.style.color = '#574A40';
                   e.currentTarget.style.transform = 'translateX(0)';
                 }
               }}
@@ -219,7 +219,7 @@ export default function Sidebar({
                 size={17} 
                 style={{ 
                   flexShrink: 0, 
-                  color: isActive ? '#FFFFFF' : '#9EB4E4',
+                  color: isActive ? '#FFFFFF' : '#8C7A70',
                   transition: 'color 0.2s ease'
                 }} 
               />
@@ -230,7 +230,7 @@ export default function Sidebar({
       </div>
 
       {/* Logout Row */}
-      <div style={{ padding: '16px 12px', borderTop: '1px solid rgba(61, 114, 193, 0.2)' }}>
+      <div style={{ padding: '16px 12px', borderTop: '1px solid rgba(255, 120, 36, 0.15)' }}>
         <button
           onClick={onLogout}
           style={{
@@ -241,21 +241,21 @@ export default function Sidebar({
             width: '100%',
             fontWeight: '700',
             borderRadius: '10px',
-            background: 'rgba(29, 73, 180, 0.12)',
-            border: '1px solid rgba(61, 114, 193, 0.3)',
-            color: '#9EB4E4',
+            background: 'rgba(255, 120, 36, 0.08)',
+            border: '1px solid rgba(255, 120, 36, 0.2)',
+            color: '#E65100',
             cursor: 'pointer',
             transition: 'all 0.2s'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(29, 73, 180, 0.25)';
-            e.currentTarget.style.boxShadow = '0 0 15px rgba(29, 73, 180, 0.3)';
-            e.currentTarget.style.color = '#FFFFFF';
+            e.currentTarget.style.background = 'rgba(255, 120, 36, 0.16)';
+            e.currentTarget.style.boxShadow = '0 0 15px rgba(255, 120, 36, 0.2)';
+            e.currentTarget.style.color = '#FF4500';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(29, 73, 180, 0.12)';
+            e.currentTarget.style.background = 'rgba(255, 120, 36, 0.08)';
             e.currentTarget.style.boxShadow = 'none';
-            e.currentTarget.style.color = '#9EB4E4';
+            e.currentTarget.style.color = '#E65100';
           }}
         >
           <LogOut size={16} style={{ flexShrink: 0 }} />

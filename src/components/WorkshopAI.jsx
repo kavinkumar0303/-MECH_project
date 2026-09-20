@@ -77,10 +77,10 @@ export default function WorkshopAI() {
           width: '56px',
           height: '56px',
           borderRadius: '50%',
-          background: 'linear-gradient(135deg, #1D49B4 0%, #3D72C1 100%)',
+          background: 'linear-gradient(135deg, #FF7824 0%, #FF4500 100%)',
           color: '#FFFFFF',
-          border: '1px solid rgba(158, 180, 228, 0.4)',
-          boxShadow: '0 8px 30px rgba(29, 73, 180, 0.45), 0 0 20px rgba(61, 114, 193, 0.3)',
+          border: '1px solid rgba(255, 120, 36, 0.4)',
+          boxShadow: '0 8px 30px rgba(255, 120, 36, 0.45), 0 0 20px rgba(255, 160, 102, 0.3)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -104,11 +104,11 @@ export default function WorkshopAI() {
             width: '380px',
             height: '520px',
             zIndex: 10000,
-            background: 'rgba(17, 28, 51, 0.95)',
+            background: 'rgba(255, 253, 251, 0.98)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(61, 114, 193, 0.35)',
+            border: '1px solid #FFDEC9',
             borderRadius: '20px',
-            boxShadow: '0 25px 60px rgba(13, 21, 39, 0.8), 0 0 30px rgba(29, 73, 180, 0.25)',
+            boxShadow: '0 25px 60px rgba(255, 120, 36, 0.18), 0 0 30px rgba(255, 120, 36, 0.1)',
             display: 'flex',
             flexDirection: 'column',
             padding: 0,
@@ -119,28 +119,28 @@ export default function WorkshopAI() {
           <div 
             style={{
               padding: '16px 20px',
-              borderBottom: '1px solid rgba(61, 114, 193, 0.25)',
-              background: 'linear-gradient(135deg, rgba(29, 73, 180, 0.25) 0%, rgba(61, 114, 193, 0.2) 100%)',
+              borderBottom: '1px solid #FFDEC9',
+              background: 'linear-gradient(135deg, rgba(255, 120, 36, 0.12) 0%, rgba(255, 160, 102, 0.16) 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(29, 73, 180, 0.25)', border: '1px solid #3D72C1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Cpu size={20} style={{ color: '#9EB4E4' }} />
+              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(255, 120, 36, 0.15)', border: '1px solid #FF7824', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Cpu size={20} style={{ color: '#FF7824' }} />
               </div>
               <div>
-                <h4 style={{ fontSize: '13px', fontWeight: '900', color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.5px', margin: 0 }}>WORKSHOP AI CO-PILOT</h4>
+                <h4 style={{ fontSize: '13px', fontWeight: '900', color: '#1C1917', textTransform: 'uppercase', letterSpacing: '0.5px', margin: 0 }}>WORKSHOP AI CO-PILOT</h4>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
-                  <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#38BDF8', boxShadow: '0 0 8px #38BDF8' }}></span>
-                  <span style={{ fontSize: '11px', color: '#C2CAD9', fontWeight: '600' }}>Knowledge Engine Active</span>
+                  <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#FF7824', boxShadow: '0 0 8px #FF7824' }}></span>
+                  <span style={{ fontSize: '11px', color: '#574A40', fontWeight: '600' }}>Knowledge Engine Active</span>
                 </div>
               </div>
             </div>
             <button 
               onClick={() => setIsOpen(false)}
-              style={{ background: 'none', border: 'none', color: '#C2CAD9', cursor: 'pointer', padding: '4px' }}
+              style={{ background: 'none', border: 'none', color: '#574A40', cursor: 'pointer', padding: '4px' }}
             >
               <X size={18} />
             </button>
@@ -154,14 +154,14 @@ export default function WorkshopAI() {
                 style={{
                   alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
                   maxWidth: '85%',
-                  background: msg.sender === 'user' ? 'linear-gradient(135deg, rgba(29, 73, 180, 0.4) 0%, rgba(61, 114, 193, 0.45) 100%)' : 'rgba(22, 35, 62, 0.85)',
-                  border: msg.sender === 'user' ? '1px solid rgba(61, 114, 193, 0.5)' : '1px solid rgba(61, 114, 193, 0.25)',
+                  background: msg.sender === 'user' ? 'linear-gradient(135deg, #FF7824 0%, #FF4500 100%)' : 'rgba(255, 241, 230, 0.85)',
+                  border: msg.sender === 'user' ? 'none' : '1px solid #FFDEC9',
                   borderRadius: msg.sender === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
                   padding: '12px 16px',
                   fontSize: '13px',
                   lineHeight: '1.5',
-                  color: '#FFFFFF',
-                  boxShadow: msg.sender === 'user' ? '0 4px 15px rgba(29, 73, 180, 0.2)' : 'none'
+                  color: msg.sender === 'user' ? '#FFFFFF' : '#1C1917',
+                  boxShadow: msg.sender === 'user' ? '0 4px 15px rgba(255, 120, 36, 0.25)' : 'none'
                 }}
               >
                 {msg.text}
@@ -173,7 +173,7 @@ export default function WorkshopAI() {
           {/* Quick Click Prompts */}
           {messages.length === 1 && (
             <div style={{ padding: '0 16px 12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <span style={{ fontSize: '10px', color: '#9EB4E4', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase' }}>
+              <span style={{ fontSize: '10px', color: '#E65100', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase' }}>
                 SUGGESTED ENQUIRIES
               </span>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
@@ -182,24 +182,24 @@ export default function WorkshopAI() {
                     key={idx}
                     onClick={() => handleSend(p.query)}
                     style={{
-                      background: 'rgba(22, 35, 62, 0.7)',
-                      border: '1px solid rgba(61, 114, 193, 0.3)',
+                      background: 'rgba(255, 241, 230, 0.7)',
+                      border: '1px solid #FFDEC9',
                       borderRadius: '14px',
                       padding: '6px 12px',
                       fontSize: '11px',
                       fontWeight: '600',
-                      color: '#C2CAD9',
+                      color: '#574A40',
                       cursor: 'pointer',
                       transition: 'all 0.2s'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = '#9EB4E4';
-                      e.currentTarget.style.color = '#FFFFFF';
-                      e.currentTarget.style.boxShadow = '0 0 10px rgba(61, 114, 193, 0.3)';
+                      e.currentTarget.style.borderColor = '#FF7824';
+                      e.currentTarget.style.color = '#E65100';
+                      e.currentTarget.style.boxShadow = '0 0 10px rgba(255, 120, 36, 0.2)';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = 'rgba(61, 114, 193, 0.3)';
-                      e.currentTarget.style.color = '#C2CAD9';
+                      e.currentTarget.style.borderColor = '#FFDEC9';
+                      e.currentTarget.style.color = '#574A40';
                       e.currentTarget.style.boxShadow = 'none';
                     }}
                   >
@@ -211,7 +211,7 @@ export default function WorkshopAI() {
           )}
 
           {/* Chat Input */}
-          <div style={{ padding: '14px', borderTop: '1px solid rgba(61, 114, 193, 0.2)', background: 'rgba(13, 21, 39, 0.8)' }}>
+          <div style={{ padding: '14px', borderTop: '1px solid #FFDEC9', background: 'rgba(255, 253, 251, 0.95)' }}>
             <div style={{ display: 'flex', gap: '8px' }}>
               <input 
                 type="text" 
@@ -221,11 +221,11 @@ export default function WorkshopAI() {
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 style={{
                   flex: 1,
-                  background: 'rgba(22, 35, 62, 0.8)',
-                  border: '1px solid rgba(61, 114, 193, 0.3)',
+                  background: 'rgba(255, 241, 230, 0.7)',
+                  border: '1px solid #FFDEC9',
                   borderRadius: '20px',
                   padding: '10px 16px',
-                  color: '#FFFFFF',
+                  color: '#1C1917',
                   fontSize: '13px',
                   outline: 'none'
                 }}
@@ -233,7 +233,7 @@ export default function WorkshopAI() {
               <button 
                 onClick={() => handleSend()}
                 style={{
-                  background: 'linear-gradient(135deg, #1D49B4 0%, #3D72C1 100%)',
+                  background: 'linear-gradient(135deg, #FF7824 0%, #FF4500 100%)',
                   color: '#FFFFFF',
                   border: 'none',
                   borderRadius: '50%',
@@ -244,7 +244,7 @@ export default function WorkshopAI() {
                   justifyContent: 'center',
                   cursor: 'pointer',
                   transition: 'all 0.2s',
-                  boxShadow: '0 0 12px rgba(29, 73, 180, 0.4)'
+                  boxShadow: '0 0 12px rgba(255, 120, 36, 0.4)'
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
                 onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}

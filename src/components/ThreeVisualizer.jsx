@@ -229,15 +229,15 @@ export default function ThreeVisualizer({
 
     const isDark = !isLogin;
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#0D1527');
+    scene.background = new THREE.Color('#FFF5ED');
     sceneRef.current = scene;
 
     // Floor
     const floorGeo = new THREE.PlaneGeometry(100, 100);
     const floorMat = new THREE.MeshStandardMaterial({ 
-      color: '#111C33', 
-      roughness: 0.8, 
-      metalness: 0.15 
+      color: '#FFF0E4', 
+      roughness: 0.85, 
+      metalness: 0.1 
     });
     const floorMesh = new THREE.Mesh(floorGeo, floorMat);
     floorMesh.rotation.x = -Math.PI / 2;
@@ -245,7 +245,7 @@ export default function ThreeVisualizer({
     scene.add(floorMesh);
 
     // Cyber Grid on floor
-    const gridHelper = new THREE.GridHelper(50, 50, 0x3D72C1, 0x16233E);
+    const gridHelper = new THREE.GridHelper(50, 50, 0xFF7824, 0xFFD8C0);
     gridHelper.position.y = -1.99;
     scene.add(gridHelper);
 
@@ -253,7 +253,7 @@ export default function ThreeVisualizer({
     if (isDark) {
       const wallGeo = new THREE.PlaneGeometry(40, 20);
       const wallMat = new THREE.MeshStandardMaterial({
-        color: '#111C33',
+        color: '#FFF5ED',
         roughness: 0.8,
         metalness: 0.1
       });
@@ -263,7 +263,7 @@ export default function ThreeVisualizer({
 
       const pillarGeo = new THREE.BoxGeometry(0.8, 12, 0.8);
       const pillarMat = new THREE.MeshStandardMaterial({
-        color: '#16233E',
+        color: '#FFE6D5',
         roughness: 0.6,
         metalness: 0.2
       });
@@ -278,7 +278,7 @@ export default function ThreeVisualizer({
       // Conduit pipes
       const pipeGeo = new THREE.CylinderGeometry(0.12, 0.12, 24, 16);
       const pipeMat = new THREE.MeshStandardMaterial({
-        color: '#3D72C1',
+        color: '#FFA066',
         metalness: 0.9,
         roughness: 0.2
       });
@@ -291,7 +291,7 @@ export default function ThreeVisualizer({
       // Platform slab
       const platformGeo = new THREE.BoxGeometry(6.6, 0.15, 3.2);
       const platformMat = new THREE.MeshStandardMaterial({
-        color: '#16233E',
+        color: '#FFF0E4',
         roughness: 0.4,
         metalness: 0.3
       });
@@ -299,23 +299,23 @@ export default function ThreeVisualizer({
       platform.position.set(0, -1.92, 0);
       scene.add(platform);
 
-      // Blue underglow strip
+      // Warm orange underglow strip
       const underglowGeo = new THREE.BoxGeometry(5.4, 0.04, 0.04);
       const underglowMat = new THREE.MeshStandardMaterial({
-        color: '#1D49B4',
-        emissive: '#1D49B4',
-        emissiveIntensity: 4.0,
+        color: '#FF7824',
+        emissive: '#FF7824',
+        emissiveIntensity: 3.5,
         roughness: 0.1
       });
       const underglow = new THREE.Mesh(underglowGeo, underglowMat);
       underglow.position.set(0, -1.83, 0.9);
       scene.add(underglow);
 
-      const floorBounceGlow = new THREE.PointLight('#1D49B4', 3.0, 10);
+      const floorBounceGlow = new THREE.PointLight('#FF7824', 2.5, 10);
       floorBounceGlow.position.set(0, -1.88, 0);
       scene.add(floorBounceGlow);
 
-      const cyanAccentLight = new THREE.PointLight('#9EB4E4', 2.5, 8);
+      const cyanAccentLight = new THREE.PointLight('#FFB280', 2.0, 8);
       cyanAccentLight.position.set(0, -1.88, -0.9);
       scene.add(cyanAccentLight);
     }
@@ -326,9 +326,9 @@ export default function ThreeVisualizer({
     shadowCanvas.height = 128;
     const ctx = shadowCanvas.getContext('2d');
     const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-    grad.addColorStop(0, 'rgba(13, 2, 33, 0.8)');
-    grad.addColorStop(0.5, 'rgba(13, 2, 33, 0.4)');
-    grad.addColorStop(1, 'rgba(13, 2, 33, 0)');
+    grad.addColorStop(0, 'rgba(42, 33, 27, 0.3)');
+    grad.addColorStop(0.5, 'rgba(42, 33, 27, 0.15)');
+    grad.addColorStop(1, 'rgba(42, 33, 27, 0)');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, 128, 128);
 
@@ -366,33 +366,33 @@ export default function ThreeVisualizer({
     controlsRef.current = controls;
 
     // Lighting
-    const ambientLight = new THREE.AmbientLight('#D8B4FE', highContrast ? 2.2 : 1.6);
+    const ambientLight = new THREE.AmbientLight('#FFEEDB', highContrast ? 2.2 : 1.8);
     scene.add(ambientLight);
 
     const mainLight = new THREE.DirectionalLight('#FFFFFF', highContrast ? 3.2 : 2.5);
     mainLight.position.set(8, 15, 8);
     scene.add(mainLight);
 
-    const rimLight = new THREE.DirectionalLight('#00F5D4', highContrast ? 3.0 : 2.2);
+    const rimLight = new THREE.DirectionalLight('#FFA066', highContrast ? 3.0 : 2.2);
     rimLight.position.set(-8, 5, -8);
     scene.add(rimLight);
 
-    const magentaSpotLight = new THREE.PointLight('#FF5376', highContrast ? 2.2 : 1.8, 18);
+    const magentaSpotLight = new THREE.PointLight('#FF4500', highContrast ? 2.2 : 1.8, 18);
     magentaSpotLight.position.set(-3, 4, 3);
     scene.add(magentaSpotLight);
 
     // Materials dictionary
     const mats = {
-      machineBody: new THREE.MeshStandardMaterial({ color: '#2B0F60', metalness: 0.9, roughness: 0.25 }),
-      secondaryMetal: new THREE.MeshStandardMaterial({ color: '#E2E8F0', metalness: 0.98, roughness: 0.1 }),
-      darkMechanicalParts: new THREE.MeshStandardMaterial({ color: '#160830', metalness: 0.85, roughness: 0.3 }),
+      machineBody: new THREE.MeshStandardMaterial({ color: '#E65100', metalness: 0.85, roughness: 0.28 }),
+      secondaryMetal: new THREE.MeshStandardMaterial({ color: '#FFFFFF', metalness: 0.98, roughness: 0.1 }),
+      darkMechanicalParts: new THREE.MeshStandardMaterial({ color: '#2A211B', metalness: 0.85, roughness: 0.35 }),
       shafts: new THREE.MeshStandardMaterial({ color: '#FFFFFF', metalness: 0.98, roughness: 0.08 }), 
-      workpiece: new THREE.MeshStandardMaterial({ color: '#E0E7FF', metalness: 0.95, roughness: 0.18 }), 
-      cuttingTool: new THREE.MeshStandardMaterial({ color: '#F8FAFC', metalness: 0.98, roughness: 0.12 }),
-      safetyParts: new THREE.MeshStandardMaterial({ color: '#FF5376', metalness: 0.4, roughness: 0.3 }),
-      sandMould: new THREE.MeshStandardMaterial({ color: '#4A3B63', roughness: 0.95, metalness: 0.05 }), 
-      moltenMetal: new THREE.MeshStandardMaterial({ color: '#FF5376', emissive: '#FF5376', emissiveIntensity: 2.8, roughness: 0.1 }),
-      moltenMetalCool: new THREE.MeshStandardMaterial({ color: '#250B48', metalness: 0.8, roughness: 0.6 })
+      workpiece: new THREE.MeshStandardMaterial({ color: '#FFF8F3', metalness: 0.95, roughness: 0.15 }), 
+      cuttingTool: new THREE.MeshStandardMaterial({ color: '#FFFFFF', metalness: 0.98, roughness: 0.12 }),
+      safetyParts: new THREE.MeshStandardMaterial({ color: '#FF4500', metalness: 0.4, roughness: 0.3 }),
+      sandMould: new THREE.MeshStandardMaterial({ color: '#D7BFA8', roughness: 0.95, metalness: 0.05 }), 
+      moltenMetal: new THREE.MeshStandardMaterial({ color: '#FF4500', emissive: '#FF7824', emissiveIntensity: 2.8, roughness: 0.1 }),
+      moltenMetalCool: new THREE.MeshStandardMaterial({ color: '#8C5035', metalness: 0.8, roughness: 0.6 })
     };
 
     const machineGroup = new THREE.Group();
@@ -615,17 +615,17 @@ export default function ThreeVisualizer({
       g.userData.basePosition.copy(g.position);
     });
 
-    const selectedHelper = new THREE.BoxHelper(new THREE.Mesh(), '#0A5CFF');
+    const selectedHelper = new THREE.BoxHelper(new THREE.Mesh(), '#FF7824');
     selectedHelper.visible = false;
     scene.add(selectedHelper);
     selectedHelperRef.current = selectedHelper;
 
-    const focusedHelper = new THREE.BoxHelper(new THREE.Mesh(), '#3D72C1');
+    const focusedHelper = new THREE.BoxHelper(new THREE.Mesh(), '#FFA066');
     focusedHelper.visible = false;
     scene.add(focusedHelper);
     focusedHelperRef.current = focusedHelper;
 
-    const hoverHelper = new THREE.BoxHelper(new THREE.Mesh(), '#60A5FA');
+    const hoverHelper = new THREE.BoxHelper(new THREE.Mesh(), '#FFB280');
     hoverHelper.visible = false;
     scene.add(hoverHelper);
     hoverHelperRef.current = hoverHelper;
@@ -644,7 +644,7 @@ export default function ThreeVisualizer({
     sparkGeo.setAttribute('position', new THREE.BufferAttribute(sparkPositions, 3));
     const sparks = new THREE.Points(
       sparkGeo,
-      new THREE.PointsMaterial({ color: '#60A5FA', size: 0.14, transparent: true, opacity: 0.9 })
+      new THREE.PointsMaterial({ color: '#FF7824', size: 0.14, transparent: true, opacity: 0.9 })
     );
     sparks.visible = false;
     scene.add(sparks);
@@ -656,18 +656,18 @@ export default function ThreeVisualizer({
     let hoveredPartId = null;
     const tooltipDiv = document.createElement('div');
     tooltipDiv.style.position = 'absolute';
-    tooltipDiv.style.background = 'rgba(15, 23, 42, 0.95)';
-    tooltipDiv.style.border = '1px solid #0A5CFF';
+    tooltipDiv.style.background = 'rgba(255, 253, 251, 0.96)';
+    tooltipDiv.style.border = '1px solid #FF7824';
     tooltipDiv.style.borderRadius = '4px';
     tooltipDiv.style.padding = '5px 10px';
-    tooltipDiv.style.color = '#FFF';
+    tooltipDiv.style.color = '#1C1917';
     tooltipDiv.style.fontSize = '10px';
     tooltipDiv.style.fontWeight = 'bold';
     tooltipDiv.style.pointerEvents = 'none';
     tooltipDiv.style.display = 'none';
     tooltipDiv.style.zIndex = '100';
-    tooltipDiv.style.boxShadow = '0 0 10px rgba(10, 92, 255, 0.4)';
-    tooltipDiv.innerHTML = '<div id="tt-title">PART</div><div style="font-size:8.5px;color:#94A3B8;font-weight:normal;">Click to operate on workplane</div>';
+    tooltipDiv.style.boxShadow = '0 4px 14px rgba(255, 120, 36, 0.25)';
+    tooltipDiv.innerHTML = '<div id="tt-title">PART</div><div style="font-size:8.5px;color:#6E5D53;font-weight:normal;">Click to operate on workplane</div>';
     mountRef.current.appendChild(tooltipDiv);
 
     const handleMouseMove = (e) => {
@@ -1457,33 +1457,33 @@ export default function ThreeVisualizer({
         display: 'flex',
         alignItems: 'center',
         gap: '12px',
-        background: 'rgba(15, 23, 42, 0.88)',
-        border: '1px solid rgba(10, 92, 255, 0.3)',
+        background: 'rgba(255, 253, 251, 0.94)',
+        border: '1px solid rgba(255, 120, 36, 0.3)',
         borderRadius: '30px',
         padding: '6px 16px',
         zIndex: 40,
-        boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
-        backdropFilter: 'blur(8px)',
+        boxShadow: '0 4px 18px rgba(255, 120, 36, 0.15)',
+        backdropFilter: 'blur(10px)',
         pointerEvents: 'auto'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#FFF' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#1C1917' }}>
           <Activity size={13} style={{ color: operationState === 'RUNNING' ? 'var(--color-green)' : 'var(--brand-primary)' }} />
           <span style={{ fontWeight: '800', fontFamily: 'var(--mono-font)' }}>
             {currentOpName ? currentOpName.toUpperCase() : machineId.toUpperCase()}
           </span>
         </div>
 
-        <span style={{ color: 'rgba(255,255,255,0.2)' }}>|</span>
+        <span style={{ color: 'rgba(87, 74, 64, 0.25)' }}>|</span>
 
-        <div style={{ fontSize: '10.5px', color: '#CBD5E1', display: 'flex', gap: '8px' }}>
+        <div style={{ fontSize: '10.5px', color: '#574A40', display: 'flex', gap: '8px', fontWeight: '500' }}>
           <span>{simParams?.speed || 750} {machineId === 'welding' ? 'A' : machineId === 'shaper' ? 'SPM' : 'RPM'}</span>
-          <span style={{ color: 'rgba(255,255,255,0.2)' }}>•</span>
+          <span style={{ color: 'rgba(87, 74, 64, 0.25)' }}>•</span>
           <span>{simParams?.feed || 0.12} mm</span>
-          <span style={{ color: 'rgba(255,255,255,0.2)' }}>•</span>
+          <span style={{ color: 'rgba(87, 74, 64, 0.25)' }}>•</span>
           <span>{simParams?.doc || 0.8} cut</span>
         </div>
 
-        <span style={{ color: 'rgba(255,255,255,0.2)' }}>|</span>
+        <span style={{ color: 'rgba(87, 74, 64, 0.25)' }}>|</span>
 
         {/* Audio Toggle */}
         <button
@@ -1516,29 +1516,29 @@ export default function ThreeVisualizer({
         display: 'flex',
         alignItems: 'center',
         gap: '8px',
-        background: 'rgba(15, 23, 42, 0.92)',
-        border: '1px solid rgba(10, 92, 255, 0.35)',
+        background: 'rgba(255, 253, 251, 0.95)',
+        border: '1px solid rgba(255, 120, 36, 0.35)',
         borderRadius: '8px',
         padding: '8px 14px',
         zIndex: 40,
-        boxShadow: '0 8px 30px rgba(0,0,0,0.6)',
+        boxShadow: '0 8px 30px rgba(255, 120, 36, 0.18)',
         backdropFilter: 'blur(10px)',
         overflowX: 'auto',
         scrollbarWidth: 'none',
         pointerEvents: 'auto'
       }}>
         {/* Play / Pause / Reset Quick Buttons */}
-        <div style={{ display: 'flex', gap: '6px', marginRight: '6px', borderRight: '1px solid rgba(255,255,255,0.15)', paddingRight: '8px' }}>
+        <div style={{ display: 'flex', gap: '6px', marginRight: '6px', borderRight: '1px solid rgba(255, 120, 36, 0.2)', paddingRight: '8px' }}>
           {operationState === 'RUNNING' ? (
             <button
               onClick={onPauseResumeSimulation}
               title="Pause Simulation"
               style={{
                 padding: '6px 10px',
-                background: 'rgba(10, 92, 255, 0.2)',
+                background: 'rgba(255, 120, 36, 0.15)',
                 border: '1px solid var(--brand-primary)',
                 borderRadius: '4px',
-                color: '#FFF',
+                color: 'var(--brand-primary)',
                 fontSize: '10px',
                 fontWeight: '800',
                 cursor: 'pointer',
@@ -1547,7 +1547,7 @@ export default function ThreeVisualizer({
                 gap: '4px'
               }}
             >
-              <Pause size={12} fill="#FFF" />
+              <Pause size={12} fill="var(--brand-primary)" />
               PAUSE
             </button>
           ) : (
@@ -1558,7 +1558,7 @@ export default function ThreeVisualizer({
               title="Start Simulation"
               style={{
                 padding: '6px 12px',
-                background: 'var(--brand-primary)',
+                background: 'linear-gradient(135deg, #FF7824 0%, #FF4500 100%)',
                 border: 'none',
                 borderRadius: '4px',
                 color: '#FFF',
@@ -1567,7 +1567,8 @@ export default function ThreeVisualizer({
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '4px'
+                gap: '4px',
+                boxShadow: '0 2px 8px rgba(255, 120, 36, 0.3)'
               }}
             >
               <Play size={12} fill="#FFF" />
@@ -1582,10 +1583,10 @@ export default function ThreeVisualizer({
             title="Reset Workpiece to Initial State"
             style={{
               padding: '6px 8px',
-              background: 'rgba(255,255,255,0.08)',
-              border: '1px solid rgba(255,255,255,0.15)',
+              background: 'rgba(255, 241, 230, 0.8)',
+              border: '1px solid #FFDEC9',
               borderRadius: '4px',
-              color: '#FFF',
+              color: '#1C1917',
               fontSize: '10px',
               cursor: 'pointer',
               display: 'flex',
@@ -1609,9 +1610,9 @@ export default function ThreeVisualizer({
                 style={{
                   padding: '5px 10px',
                   borderRadius: '4px',
-                  border: '1px solid ' + (isSelected ? 'var(--brand-primary)' : 'rgba(255,255,255,0.12)'),
-                  background: isSelected ? 'rgba(10, 92, 255, 0.25)' : 'rgba(255,255,255,0.04)',
-                  color: isSelected ? '#FFF' : '#CBD5E1',
+                  border: '1px solid ' + (isSelected ? 'var(--brand-primary)' : 'rgba(255, 120, 36, 0.2)'),
+                  background: isSelected ? 'rgba(255, 120, 36, 0.15)' : 'rgba(255, 241, 230, 0.6)',
+                  color: isSelected ? '#E65100' : '#574A40',
                   fontSize: '10.5px',
                   fontWeight: isSelected ? '800' : '600',
                   cursor: 'pointer',
@@ -1631,19 +1632,19 @@ export default function ThreeVisualizer({
           id={`label-${lbl.id}`}
           style={{
             position: 'absolute',
-            background: 'rgba(16, 24, 32, 0.92)',
-            border: '1px solid #0A5CFF',
-            borderRadius: '2px',
-            padding: '2px 5px',
-            fontSize: '8px',
-            color: '#FFF',
+            background: 'rgba(255, 253, 251, 0.95)',
+            border: '1px solid #FF7824',
+            borderRadius: '3px',
+            padding: '2px 6px',
+            fontSize: '8.5px',
+            color: '#1C1917',
             fontFamily: 'var(--mono-font)',
             fontWeight: 'bold',
             pointerEvents: 'none',
             whiteSpace: 'nowrap',
             display: 'none',
             transform: 'translate(-50%, -50%)',
-            boxShadow: '0 0 5px rgba(10, 92, 255, 0.35)',
+            boxShadow: '0 2px 8px rgba(255, 120, 36, 0.25)',
             zIndex: 35
           }}
         >
@@ -1658,7 +1659,7 @@ export default function ThreeVisualizer({
               key={lbl.id}
               id={`line-${lbl.id}`}
               x1="0" y1="0" x2="0" y2="0"
-              stroke="#0A5CFF"
+              stroke="#FF7824"
               strokeWidth="1.2"
               strokeDasharray="2,2"
               style={{ display: 'none' }}
@@ -1673,8 +1674,8 @@ export default function ThreeVisualizer({
           bottom: '12px',
           left: '50%',
           transform: 'translateX(-50%)',
-          background: 'rgba(16, 24, 32, 0.85)',
-          border: '1px solid var(--border)',
+          background: 'rgba(255, 253, 251, 0.92)',
+          border: '1px solid #FFDEC9',
           borderRadius: '4px',
           padding: '4px 14px',
           display: 'flex',
@@ -1682,22 +1683,22 @@ export default function ThreeVisualizer({
           alignItems: 'center',
           pointerEvents: 'none',
           zIndex: 25,
-          backdropFilter: 'blur(4px)',
+          backdropFilter: 'blur(6px)',
           fontSize: '9px',
           fontFamily: 'var(--mono-font)',
           color: 'var(--text-secondary)'
         }}>
-          <span><strong style={{ color: '#0A5CFF' }}>W A S D</strong> MOVE</span>
-          <span style={{ color: 'var(--border)' }}>|</span>
-          <span><strong style={{ color: '#0A5CFF' }}>↑ ↓ ← →</strong> ROTATE</span>
-          <span style={{ color: 'var(--border)' }}>|</span>
-          <span><strong style={{ color: '#0A5CFF' }}>+ -</strong> ZOOM</span>
-          <span style={{ color: 'var(--border)' }}>|</span>
-          <span><strong style={{ color: '#0A5CFF' }}>R</strong> RESET</span>
-          <span style={{ color: 'var(--border)' }}>|</span>
-          <span><strong style={{ color: '#0A5CFF' }}>T</strong> TOP</span>
-          <span style={{ color: 'var(--border)' }}>|</span>
-          <span><strong style={{ color: '#0A5CFF' }}>F</strong> FRONT</span>
+          <span><strong style={{ color: '#FF7824' }}>W A S D</strong> MOVE</span>
+          <span style={{ color: '#FFDEC9' }}>|</span>
+          <span><strong style={{ color: '#FF7824' }}>↑ ↓ ← →</strong> ROTATE</span>
+          <span style={{ color: '#FFDEC9' }}>|</span>
+          <span><strong style={{ color: '#FF7824' }}>+ -</strong> ZOOM</span>
+          <span style={{ color: '#FFDEC9' }}>|</span>
+          <span><strong style={{ color: '#FF7824' }}>R</strong> RESET</span>
+          <span style={{ color: '#FFDEC9' }}>|</span>
+          <span><strong style={{ color: '#FF7824' }}>T</strong> TOP</span>
+          <span style={{ color: '#FFDEC9' }}>|</span>
+          <span><strong style={{ color: '#FF7824' }}>F</strong> FRONT</span>
         </div>
       )}
     </div>

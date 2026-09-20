@@ -2,7 +2,7 @@ export const MACHINES = {
   lathe: {
     id: "lathe",
     name: "Centre Lathe Machine",
-    color: "#1D49B4", // Primary Blue
+    color: "#FF7824", // Warm Orange
     tagline: "The king of machining operations",
     overview: "A machine tool that rotates a workpiece about an axis of rotation to perform various operations such as cutting, sanding, knurling, drilling, or deformation.",
     commonOperations: ["Turning", "Facing", "Threading", "Knurling", "Drilling"],
@@ -95,7 +95,7 @@ export const MACHINES = {
   welding: {
     id: "welding",
     name: "Arc Welding Station",
-    color: "#3D72C1", // Secondary Blue
+    color: "#FF4500", // Bright Red-Orange
     tagline: "Fusing Metals with Intense Heat",
     overview: "A fabrication process that joins materials, usually metals or thermoplastics, by using high heat to melt the parts together.",
     commonOperations: ["Butt Joint", "Lap Joint", "T-Joint", "Corner Joint"],
@@ -177,7 +177,7 @@ export const MACHINES = {
   shaper: {
     id: "shaper",
     name: "Shaping Machine",
-    color: "#4D72C1", // Robot / Machine Highlight
+    color: "#E65100", // Deep Warm Orange
     tagline: "Reciprocating Surface Machining",
     overview: "A shaper is a type of machine tool that uses relative motion between a single-point cutting tool and the workpiece to machine flat surfaces.",
     commonOperations: ["Plain Shaping", "Step Shaping", "Slotting", "Keyway Cutting"],
@@ -255,7 +255,7 @@ export const MACHINES = {
   planer: {
     id: "planer",
     name: "Planing Machine",
-    color: "#3B4B6F", // Deep Navy
+    color: "#FF8A3D", // Warm Amber Orange
     tagline: "Machining Large-Scale Castings",
     overview: "A planer is a machine tool designed to produce flat surfaces on workpieces that are too large or heavy to be machined on a shaper.",
     commonOperations: ["Plain Planing", "Step Planing", "Slotting", "Multi-surface Planing"],
@@ -331,7 +331,7 @@ export const MACHINES = {
   milling: {
     id: "milling",
     name: "Milling Machine",
-    color: "#9EB4E4", // Robot Mid-Tone
+    color: "#FFA066", // Soft Peach
     tagline: "High-Precision Rotary Machining",
     overview: "A milling machine is a machine tool used to machine solid materials. Milling machines are often classified in two basic forms: horizontal and vertical.",
     commonOperations: ["Face Milling", "Slab Milling", "End Milling", "Slotting"],
@@ -413,7 +413,7 @@ export const MACHINES = {
   casting: {
     id: "casting",
     name: "Metal Casting Furnace",
-    color: "#C2CAD9", // Cool Grey-Blue
+    color: "#FF5722", // Vibrant Flame Orange
     tagline: "Pouring Molten Metal",
     overview: "Casting is a manufacturing process in which a liquid material is usually poured into a mould, which contains a hollow cavity of the desired shape, and then allowed to solidify.",
     commonOperations: ["Mould Filling", "Molten Pouring", "Casting Shakeout", "Cleaning"],
@@ -498,7 +498,7 @@ export const MACHINES = {
   moulding: {
     id: "moulding",
     name: "Sand Moulding Bay",
-    color: "#3B4B6F", // Deep Navy
+    color: "#FFB280", // Soft Warm Peach
     tagline: "Preparing Sand Cavity Moulds",
     overview: "Sand moulding is the foundation process for metal casting. Silica sand mixtures are packed around a pattern inside flasks.",
     commonOperations: ["Sand Compaction", "Pattern Draw", "Cope Venting", "Mould Assembly"],

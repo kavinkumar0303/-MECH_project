@@ -97,15 +97,15 @@ export default function MachineComparison() {
       {/* Selection Control Row */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h2 style={{ fontSize: '24px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '1px', color: '#FFFFFF' }}>
+          <h2 style={{ fontSize: '24px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '1px', color: '#1C1917' }}>
             Machine Comparison Matrix
           </h2>
-          <p style={{ color: '#C2CAD9', fontSize: '13px', marginTop: '4px' }}>
+          <p style={{ color: '#574A40', fontSize: '13px', marginTop: '4px' }}>
             Toggle comparisons to inspect dual animated 3D machines side-by-side.
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '8px', background: 'rgba(17, 28, 51, 0.85)', padding: '6px', borderRadius: '30px', border: '1px solid rgba(61, 114, 193, 0.3)' }}>
+        <div style={{ display: 'flex', gap: '8px', background: 'rgba(255, 253, 251, 0.95)', padding: '6px', borderRadius: '30px', border: '1px solid #FFDEC9', boxShadow: '0 2px 8px rgba(255, 120, 36, 0.08)' }}>
           {[
             { id: 'lathe_milling', label: 'Lathe vs Milling' },
             { id: 'casting_moulding', label: 'Casting vs Injection' },
@@ -117,8 +117,8 @@ export default function MachineComparison() {
                 key={pair.id}
                 onClick={() => setComparisonPair(pair.id)}
                 style={{
-                  background: isActive ? 'linear-gradient(135deg, #1D49B4 0%, #3D72C1 100%)' : 'transparent',
-                  color: isActive ? '#FFFFFF' : '#C2CAD9',
+                  background: isActive ? 'linear-gradient(135deg, #FF7824 0%, #FF4500 100%)' : 'transparent',
+                  color: isActive ? '#FFFFFF' : '#574A40',
                   border: 'none',
                   borderRadius: '20px',
                   padding: '8px 16px',
@@ -126,7 +126,7 @@ export default function MachineComparison() {
                   fontWeight: '700',
                   cursor: 'pointer',
                   transition: 'all 0.2s',
-                  boxShadow: isActive ? '0 0 15px rgba(29, 73, 180, 0.45)' : 'none'
+                  boxShadow: isActive ? '0 2px 10px rgba(255, 120, 36, 0.35)' : 'none'
                 }}
               >
                 {pair.label}
@@ -140,14 +140,14 @@ export default function MachineComparison() {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }}>
         
         {/* Machine Alpha */}
-        <div className="glass-panel" style={{ borderTop: `4px solid #1D49B4`, background: 'rgba(22, 35, 62, 0.75)', borderRadius: '16px', padding: '24px', border: '1px solid rgba(61, 114, 193, 0.25)', borderTopWidth: '4px' }}>
+        <div className="glass-panel" style={{ borderTop: `4px solid #FF7824`, background: '#FFFFFF', borderRadius: '16px', padding: '24px', border: '1px solid #FFDEC9', borderTopWidth: '4px', boxShadow: '0 8px 30px rgba(255, 120, 36, 0.08)' }}>
           <span className="space-badge-pink" style={{ fontSize: '10px' }}>
             COMPARATIVE BAY A
           </span>
-          <h3 style={{ fontSize: '20px', fontWeight: '800', color: '#FFFFFF', margin: '10px 0 16px' }}>{data.m1.name}</h3>
+          <h3 style={{ fontSize: '20px', fontWeight: '800', color: '#1C1917', margin: '10px 0 16px' }}>{data.m1.name}</h3>
           
           {/* 3D Viewport container */}
-          <div style={{ height: '240px', background: '#0D1527', borderRadius: '12px', border: '1px solid rgba(61, 114, 193, 0.3)', overflow: 'hidden', marginBottom: '20px', position: 'relative' }}>
+          <div style={{ height: '240px', background: '#FFF5ED', borderRadius: '12px', border: '1px solid #FFDEC9', overflow: 'hidden', marginBottom: '20px', position: 'relative' }}>
             <ThreeVisualizer
               machineId={data.m1.id}
               selectedPartId={activePartId}
@@ -161,35 +161,35 @@ export default function MachineComparison() {
           {/* Details specs */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', fontSize: '13px' }}>
             <div>
-              <div className="telemetry-label" style={{ color: '#9EB4E4' }}>Primary kinematics</div>
-              <div style={{ color: '#FFFFFF', fontWeight: '600', marginTop: '4px' }}>{data.m1.movement}</div>
+              <div className="telemetry-label" style={{ color: '#E65100' }}>Primary kinematics</div>
+              <div style={{ color: '#1C1917', fontWeight: '600', marginTop: '4px' }}>{data.m1.movement}</div>
             </div>
             <div>
-              <div className="telemetry-label" style={{ color: '#9EB4E4' }}>Standard tooling setup</div>
-              <div style={{ color: '#FFFFFF', fontWeight: '600', marginTop: '4px' }}>{data.m1.tool}</div>
+              <div className="telemetry-label" style={{ color: '#E65100' }}>Standard tooling setup</div>
+              <div style={{ color: '#1C1917', fontWeight: '600', marginTop: '4px' }}>{data.m1.tool}</div>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', borderTop: '1px solid rgba(61, 114, 193, 0.25)', paddingTop: '14px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', borderTop: '1px solid #FFDEC9', paddingTop: '14px' }}>
               <div>
-                <div className="telemetry-label" style={{ color: '#9EB4E4' }}>Productivity</div>
-                <div style={{ color: '#9EB4E4', fontWeight: '800', fontSize: '13px', marginTop: '2px' }}>{data.m1.productivity}</div>
+                <div className="telemetry-label" style={{ color: '#E65100' }}>Productivity</div>
+                <div style={{ color: '#FF4500', fontWeight: '800', fontSize: '13px', marginTop: '2px' }}>{data.m1.productivity}</div>
               </div>
               <div>
-                <div className="telemetry-label" style={{ color: '#9EB4E4' }}>Financial footprint</div>
-                <div style={{ color: '#C2CAD9', fontWeight: '700', fontSize: '13px', marginTop: '2px' }}>{data.m1.cost}</div>
+                <div className="telemetry-label" style={{ color: '#E65100' }}>Financial footprint</div>
+                <div style={{ color: '#574A40', fontWeight: '700', fontSize: '13px', marginTop: '2px' }}>{data.m1.cost}</div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Machine Beta */}
-        <div className="glass-panel" style={{ borderTop: `4px solid #3D72C1`, background: 'rgba(22, 35, 62, 0.75)', borderRadius: '16px', padding: '24px', border: '1px solid rgba(61, 114, 193, 0.25)', borderTopWidth: '4px' }}>
+        <div className="glass-panel" style={{ borderTop: `4px solid #FF4500`, background: '#FFFFFF', borderRadius: '16px', padding: '24px', border: '1px solid #FFDEC9', borderTopWidth: '4px', boxShadow: '0 8px 30px rgba(255, 120, 36, 0.08)' }}>
           <span className="space-badge-cyan" style={{ fontSize: '10px' }}>
             COMPARATIVE BAY B
           </span>
-          <h3 style={{ fontSize: '20px', fontWeight: '800', color: '#FFFFFF', margin: '10px 0 16px' }}>{data.m2.name}</h3>
+          <h3 style={{ fontSize: '20px', fontWeight: '800', color: '#1C1917', margin: '10px 0 16px' }}>{data.m2.name}</h3>
           
           {/* 3D Viewport container */}
-          <div style={{ height: '240px', background: '#0D1527', borderRadius: '12px', border: '1px solid rgba(61, 114, 193, 0.3)', overflow: 'hidden', marginBottom: '20px', position: 'relative' }}>
+          <div style={{ height: '240px', background: '#FFF5ED', borderRadius: '12px', border: '1px solid #FFDEC9', overflow: 'hidden', marginBottom: '20px', position: 'relative' }}>
             <ThreeVisualizer
               machineId={data.m2.id}
               selectedPartId={activePartId}
@@ -203,21 +203,21 @@ export default function MachineComparison() {
           {/* Details specs */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', fontSize: '13px' }}>
             <div>
-              <div className="telemetry-label" style={{ color: '#9EB4E4' }}>Primary kinematics</div>
-              <div style={{ color: '#FFFFFF', fontWeight: '600', marginTop: '4px' }}>{data.m2.movement}</div>
+              <div className="telemetry-label" style={{ color: '#E65100' }}>Primary kinematics</div>
+              <div style={{ color: '#1C1917', fontWeight: '600', marginTop: '4px' }}>{data.m2.movement}</div>
             </div>
             <div>
-              <div className="telemetry-label" style={{ color: '#9EB4E4' }}>Standard tooling setup</div>
-              <div style={{ color: '#FFFFFF', fontWeight: '600', marginTop: '4px' }}>{data.m2.tool}</div>
+              <div className="telemetry-label" style={{ color: '#E65100' }}>Standard tooling setup</div>
+              <div style={{ color: '#1C1917', fontWeight: '600', marginTop: '4px' }}>{data.m2.tool}</div>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', borderTop: '1px solid rgba(61, 114, 193, 0.25)', paddingTop: '14px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', borderTop: '1px solid #FFDEC9', paddingTop: '14px' }}>
               <div>
-                <div className="telemetry-label" style={{ color: '#9EB4E4' }}>Productivity</div>
-                <div style={{ color: '#9EB4E4', fontWeight: '800', fontSize: '13px', marginTop: '2px' }}>{data.m2.productivity}</div>
+                <div className="telemetry-label" style={{ color: '#E65100' }}>Productivity</div>
+                <div style={{ color: '#FF4500', fontWeight: '800', fontSize: '13px', marginTop: '2px' }}>{data.m2.productivity}</div>
               </div>
               <div>
-                <div className="telemetry-label" style={{ color: '#9EB4E4' }}>Financial footprint</div>
-                <div style={{ color: '#C2CAD9', fontWeight: '700', fontSize: '13px', marginTop: '2px' }}>{data.m2.cost}</div>
+                <div className="telemetry-label" style={{ color: '#E65100' }}>Financial footprint</div>
+                <div style={{ color: '#574A40', fontWeight: '700', fontSize: '13px', marginTop: '2px' }}>{data.m2.cost}</div>
               </div>
             </div>
           </div>

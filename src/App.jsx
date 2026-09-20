@@ -232,25 +232,25 @@ function App() {
             top: '24px',
             left: '50%',
             transform: 'translateX(-50%)',
-            background: 'rgba(17, 28, 51, 0.94)',
+            background: 'rgba(255, 255, 255, 0.96)',
             backdropFilter: 'blur(16px)',
-            border: '1px solid #1D49B4',
+            border: '1px solid #FF7824',
             borderRadius: '24px',
             padding: '12px 28px',
-            color: '#FFFFFF',
+            color: '#1C1917',
             fontFamily: 'var(--font-heading)',
             fontWeight: 'bold',
             zIndex: 10005,
-            boxShadow: '0 8px 32px rgba(29, 73, 180, 0.35), 0 0 20px rgba(158, 180, 228, 0.2)',
+            boxShadow: '0 8px 32px rgba(234, 88, 12, 0.15), 0 0 20px rgba(255, 120, 36, 0.1)',
             textAlign: 'center',
             pointerEvents: 'none',
             animation: 'slideDown 0.25s ease-out'
           }}
         >
-          <div style={{ fontSize: '13px', fontWeight: '800', color: '#9EB4E4', letterSpacing: '0.5px' }}>
+          <div style={{ fontSize: '13px', fontWeight: '800', color: '#E65100', letterSpacing: '0.5px' }}>
             {toastAlert.title}
           </div>
-          <div style={{ fontSize: '11px', color: '#C2CAD9', marginTop: '2px', textTransform: 'uppercase' }}>
+          <div style={{ fontSize: '11px', color: '#574A40', marginTop: '2px', textTransform: 'uppercase' }}>
             {toastAlert.subText}
           </div>
         </div>
@@ -265,7 +265,7 @@ function App() {
             left: 0,
             width: '100vw',
             height: '100vh',
-            background: 'rgba(13, 21, 39, 0.85)',
+            background: 'rgba(28, 25, 23, 0.6)',
             backdropFilter: 'blur(16px)',
             display: 'flex',
             alignItems: 'center',
@@ -276,27 +276,27 @@ function App() {
         >
           <div 
             style={{
-              background: 'rgba(17, 28, 51, 0.96)',
-              border: '1px solid rgba(61, 114, 193, 0.35)',
+              background: '#FFFFFF',
+              border: '1px solid rgba(255, 120, 36, 0.3)',
               borderRadius: '20px',
               padding: '32px',
               width: '660px',
               maxWidth: '92%',
-              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(29, 73, 180, 0.25)',
-              color: '#FFFFFF'
+              boxShadow: '0 25px 60px rgba(234, 88, 12, 0.15), 0 0 40px rgba(255, 120, 36, 0.08)',
+              color: '#1C1917'
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(61, 114, 193, 0.25)', paddingBottom: '16px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255, 120, 36, 0.2)', paddingBottom: '16px', marginBottom: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(29, 73, 180, 0.2)', border: '1px solid #1D49B4', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <span style={{ fontSize: '16px', color: '#9EB4E4' }}>⌨</span>
+                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(255, 120, 36, 0.12)', border: '1px solid #FF7824', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ fontSize: '16px', color: '#E65100' }}>⌨</span>
                 </div>
-                <h3 style={{ fontSize: '18px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.8px', color: '#FFFFFF', margin: 0 }}>Command Shortcuts</h3>
+                <h3 style={{ fontSize: '18px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.8px', color: '#1C1917', margin: 0 }}>Command Shortcuts</h3>
               </div>
               <button 
                 onClick={() => setShowKeyboardHelp(false)}
-                style={{ background: 'none', border: 'none', color: '#C2CAD9', fontSize: '24px', cursor: 'pointer', fontWeight: '700' }}
+                style={{ background: 'none', border: 'none', color: '#8C7A70', fontSize: '24px', cursor: 'pointer', fontWeight: '700' }}
               >
                 ×
               </button>
@@ -304,105 +304,105 @@ function App() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', maxHeight: '440px', overflowY: 'auto' }}>
               <div>
-                <h4 style={{ fontSize: '11px', color: '#9EB4E4', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid rgba(61, 114, 193, 0.25)', paddingBottom: '6px', marginBottom: '10px', letterSpacing: '1px' }}>Navigation Controls</h4>
+                <h4 style={{ fontSize: '11px', color: '#E65100', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid rgba(255, 120, 36, 0.2)', paddingBottom: '6px', marginBottom: '10px', letterSpacing: '1px' }}>Navigation Controls</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>1 - 7</span>
-                    <span style={{ color: '#C2CAD9' }}>Select Machine</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>1 - 7</span>
+                    <span style={{ color: '#574A40' }}>Select Machine</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>Q</span>
-                    <span style={{ color: '#C2CAD9' }}>Parts Explorer</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>Q</span>
+                    <span style={{ color: '#574A40' }}>Parts Explorer</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>Z</span>
-                    <span style={{ color: '#C2CAD9' }}>How It Works</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>Z</span>
+                    <span style={{ color: '#574A40' }}>How It Works</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>E</span>
-                    <span style={{ color: '#C2CAD9' }}>Safety Locker</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>E</span>
+                    <span style={{ color: '#574A40' }}>Safety Locker</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>X</span>
-                    <span style={{ color: '#C2CAD9' }}>Simulator Bay</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>X</span>
+                    <span style={{ color: '#574A40' }}>Simulator Bay</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>C</span>
-                    <span style={{ color: '#C2CAD9' }}>Troubleshoot</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>C</span>
+                    <span style={{ color: '#574A40' }}>Troubleshoot</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>V</span>
-                    <span style={{ color: '#C2CAD9' }}>Assemble It</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>V</span>
+                    <span style={{ color: '#574A40' }}>Assemble It</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>B</span>
-                    <span style={{ color: '#C2CAD9' }}>Experiment Lab</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>B</span>
+                    <span style={{ color: '#574A40' }}>Experiment Lab</span>
                   </div>
                 </div>
 
-                <h4 style={{ fontSize: '11px', color: '#9EB4E4', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid rgba(61, 114, 193, 0.25)', paddingBottom: '6px', marginTop: '18px', marginBottom: '10px', letterSpacing: '1px' }}>Global Settings</h4>
+                <h4 style={{ fontSize: '11px', color: '#E65100', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid rgba(255, 120, 36, 0.2)', paddingBottom: '6px', marginTop: '18px', marginBottom: '10px', letterSpacing: '1px' }}>Global Settings</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>H</span>
-                    <span style={{ color: '#C2CAD9' }}>High Contrast</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>H</span>
+                    <span style={{ color: '#574A40' }}>High Contrast</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>L</span>
-                    <span style={{ color: '#C2CAD9' }}>Toggle Labels</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>L</span>
+                    <span style={{ color: '#574A40' }}>Toggle Labels</span>
                   </div>
                 </div>
               </div>
 
               <div>
-                <h4 style={{ fontSize: '11px', color: '#9EB4E4', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid rgba(61, 114, 193, 0.25)', paddingBottom: '6px', marginBottom: '10px', letterSpacing: '1px' }}>3D Camera Controls</h4>
+                <h4 style={{ fontSize: '11px', color: '#E65100', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid rgba(255, 120, 36, 0.2)', paddingBottom: '6px', marginBottom: '10px', letterSpacing: '1px' }}>3D Camera Controls</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>W / S / A / D</span>
-                    <span style={{ color: '#C2CAD9' }}>Move Camera</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>W / S / A / D</span>
+                    <span style={{ color: '#574A40' }}>Move Camera</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>↑ / ↓ / ← / →</span>
-                    <span style={{ color: '#C2CAD9' }}>Rotate Orbit</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>↑ / ↓ / ← / →</span>
+                    <span style={{ color: '#574A40' }}>Rotate Orbit</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>+ / -</span>
-                    <span style={{ color: '#C2CAD9' }}>Zoom In/Out</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>+ / -</span>
+                    <span style={{ color: '#574A40' }}>Zoom In/Out</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>R</span>
-                    <span style={{ color: '#C2CAD9' }}>Reset View</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>R</span>
+                    <span style={{ color: '#574A40' }}>Reset View</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>T</span>
-                    <span style={{ color: '#C2CAD9' }}>Top View</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>T</span>
+                    <span style={{ color: '#574A40' }}>Top View</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>F</span>
-                    <span style={{ color: '#C2CAD9' }}>Front View</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>F</span>
+                    <span style={{ color: '#574A40' }}>Front View</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>P</span>
-                    <span style={{ color: '#C2CAD9' }}>Perspective View</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>P</span>
+                    <span style={{ color: '#574A40' }}>Perspective View</span>
                   </div>
                 </div>
 
-                <h4 style={{ fontSize: '11px', color: '#9EB4E4', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid rgba(61, 114, 193, 0.25)', paddingBottom: '6px', marginTop: '18px', marginBottom: '10px', letterSpacing: '1px' }}>Sub-Panel Interaction</h4>
+                <h4 style={{ fontSize: '11px', color: '#E65100', fontFamily: 'var(--mono-font)', textTransform: 'uppercase', borderBottom: '1px solid rgba(255, 120, 36, 0.2)', paddingBottom: '6px', marginTop: '18px', marginBottom: '10px', letterSpacing: '1px' }}>Sub-Panel Interaction</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>TAB / SHIFT+TAB</span>
-                    <span style={{ color: '#C2CAD9' }}>Next/Prev Field</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>TAB / SHIFT+TAB</span>
+                    <span style={{ color: '#574A40' }}>Next/Prev Field</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>SPACE</span>
-                    <span style={{ color: '#C2CAD9' }}>Select/Toggle/Play</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>SPACE</span>
+                    <span style={{ color: '#574A40' }}>Select/Toggle/Play</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>ENTER</span>
-                    <span style={{ color: '#C2CAD9' }}>Confirm/Select Part</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>ENTER</span>
+                    <span style={{ color: '#574A40' }}>Confirm/Select Part</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: 'var(--mono-font)', color: '#3D72C1', fontWeight: '700' }}>ESC</span>
-                    <span style={{ color: '#C2CAD9' }}>Close/Cancel</span>
+                    <span style={{ fontFamily: 'var(--mono-font)', color: '#FF7824', fontWeight: '700' }}>ESC</span>
+                    <span style={{ color: '#574A40' }}>Close/Cancel</span>
                   </div>
                 </div>
               </div>
