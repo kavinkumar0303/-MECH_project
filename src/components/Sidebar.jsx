@@ -10,7 +10,8 @@ import {
   ChevronRight,
   Zap,
   Sparkles,
-  Layers
+  Layers,
+  X
 } from 'lucide-react';
 
 export default function Sidebar({ 
@@ -19,7 +20,9 @@ export default function Sidebar({
   selectedMachineId, 
   setSelectedMachineId, 
   user, 
-  onLogout 
+  onLogout,
+  mobileMenuOpen,
+  setMobileMenuOpen
 }) {
   const [collapsed, setCollapsed] = React.useState(false);
 
@@ -47,6 +50,9 @@ export default function Sidebar({
     } else {
       setActiveTab(item.id);
     }
+    if (setMobileMenuOpen) {
+      setMobileMenuOpen(false);
+    }
   };
 
   const checkActive = (item) => {
@@ -58,28 +64,29 @@ export default function Sidebar({
 
   return (
     <div 
+      className={`app-sidebar ${mobileMenuOpen ? 'mobile-open' : ''}`}
       style={{
         width: collapsed ? '72px' : '260px',
-        background: '#FFFDFB',
+        background: '#FFFFFF',
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)',
-        borderRight: '1px solid rgba(255, 120, 36, 0.18)',
+        borderRight: '1px solid rgba(0, 119, 182, 0.18)',
         display: 'flex',
         flexDirection: 'column',
         height: '100vh',
-        transition: 'width 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        transition: 'width 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
         position: 'sticky',
         top: 0,
         zIndex: 100,
         flexShrink: 0,
-        boxShadow: '4px 0 30px rgba(234, 88, 12, 0.06)'
+        boxShadow: '4px 0 30px rgba(0, 119, 182, 0.06)'
       }}
     >
       {/* Brand Header & Gear + Lightning Logo */}
       <div 
         style={{
-          padding: '22px 18px',
-          borderBottom: '1px solid rgba(255, 120, 36, 0.15)',
+          padding: '20px 16px',
+          borderBottom: '1px solid rgba(0, 119, 182, 0.15)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: collapsed ? 'center' : 'stretch',
@@ -97,11 +104,11 @@ export default function Sidebar({
                   width: '36px', 
                   height: '36px', 
                   borderRadius: '10px',
-                  background: 'linear-gradient(135deg, #FF7824 0%, #FF4500 100%)',
+                  background: 'linear-gradient(135deg, #0077B6 0%, #00509D 100%)',
                   display: 'flex', 
                   alignItems: 'center', 
                   justifyContent: 'center',
-                  boxShadow: '0 0 18px rgba(255, 120, 36, 0.35)'
+                  boxShadow: '0 0 18px rgba(0, 119, 182, 0.35)'
                 }}
               >
                 <Settings 
@@ -113,16 +120,16 @@ export default function Sidebar({
                   size={10} 
                   style={{ 
                     position: 'absolute', 
-                    color: '#FFE7D6', 
-                    fill: '#FFE7D6' 
+                    color: '#E0F2FE', 
+                    fill: '#E0F2FE' 
                   }} 
                 />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <span style={{ fontSize: '15px', fontWeight: '800', color: '#1C1917', letterSpacing: '0.5px', lineHeight: '1.1' }}>
-                  MechWorkshop<span style={{ color: '#FF7824' }}>.</span>
+                  MechWorkshop<span style={{ color: '#0077B6' }}>.</span>
                 </span>
-                <span style={{ fontSize: '9px', fontWeight: '700', color: '#E65100', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                <span style={{ fontSize: '9px', fontWeight: '700', color: '#023E8A', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
                   Mechanical 3D
                 </span>
               </div>
@@ -136,11 +143,11 @@ export default function Sidebar({
                 width: '36px', 
                 height: '36px', 
                 borderRadius: '10px',
-                background: 'linear-gradient(135deg, #FF7824 0%, #FF4500 100%)',
+                background: 'linear-gradient(135deg, #0077B6 0%, #00509D 100%)',
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'center',
-                boxShadow: '0 0 18px rgba(255, 120, 36, 0.35)'
+                boxShadow: '0 0 18px rgba(0, 119, 182, 0.35)'
               }}
             >
               <Settings 
@@ -151,24 +158,49 @@ export default function Sidebar({
             </div>
           )}
 
-          <button 
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              background: 'rgba(255, 120, 36, 0.08)',
-              border: '1px solid rgba(255, 120, 36, 0.2)',
-              color: '#E65100',
-              cursor: 'pointer',
-              padding: '6px',
-              borderRadius: '6px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.2s'
-            }}
-            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            {/* Desktop Collapse Toggle */}
+            <button 
+              onClick={() => setCollapsed(!collapsed)}
+              className="hide-on-mobile"
+              style={{
+                background: 'rgba(0, 119, 182, 0.08)',
+                border: '1px solid rgba(0, 119, 182, 0.2)',
+                color: '#023E8A',
+                cursor: 'pointer',
+                padding: '6px',
+                borderRadius: '6px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.2s'
+              }}
+              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+            </button>
+
+            {/* Mobile Drawer Close Button */}
+            {setMobileMenuOpen && (
+              <button 
+                onClick={() => setMobileMenuOpen(false)}
+                style={{
+                  background: 'rgba(239, 68, 68, 0.08)',
+                  border: '1px solid rgba(239, 68, 68, 0.2)',
+                  color: 'var(--danger)',
+                  cursor: 'pointer',
+                  padding: '6px',
+                  borderRadius: '6px',
+                  display: mobileMenuOpen ? 'flex' : 'none',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                title="Close drawer"
+              >
+                <X size={16} />
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -191,19 +223,19 @@ export default function Sidebar({
                 padding: '11px 14px',
                 borderRadius: '10px',
                 border: 'none',
-                background: isActive ? 'linear-gradient(135deg, #FF7824 0%, #FF4500 100%)' : 'transparent',
+                background: isActive ? 'linear-gradient(135deg, #0077B6 0%, #00509D 100%)' : 'transparent',
                 color: isActive ? '#FFFFFF' : '#574A40',
                 cursor: 'pointer',
                 textAlign: 'left',
                 width: '100%',
                 transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                 fontWeight: isActive ? '700' : '600',
-                boxShadow: isActive ? '0 4px 20px rgba(255, 120, 36, 0.35)' : 'none'
+                boxShadow: isActive ? '0 4px 20px rgba(0, 119, 182, 0.35)' : 'none'
               }}
               onMouseEnter={(e) => {
                 if (!isActive) {
-                  e.currentTarget.style.background = 'rgba(255, 120, 36, 0.08)';
-                  e.currentTarget.style.color = '#E65100';
+                  e.currentTarget.style.background = 'rgba(0, 119, 182, 0.08)';
+                  e.currentTarget.style.color = '#023E8A';
                   e.currentTarget.style.transform = 'translateX(2px)';
                 }
               }}
@@ -230,7 +262,7 @@ export default function Sidebar({
       </div>
 
       {/* Logout Row */}
-      <div style={{ padding: '16px 12px', borderTop: '1px solid rgba(255, 120, 36, 0.15)' }}>
+      <div style={{ padding: '16px 12px', borderTop: '1px solid rgba(0, 119, 182, 0.15)' }}>
         <button
           onClick={onLogout}
           style={{
@@ -241,21 +273,21 @@ export default function Sidebar({
             width: '100%',
             fontWeight: '700',
             borderRadius: '10px',
-            background: 'rgba(255, 120, 36, 0.08)',
-            border: '1px solid rgba(255, 120, 36, 0.2)',
-            color: '#E65100',
+            background: 'rgba(0, 119, 182, 0.08)',
+            border: '1px solid rgba(0, 119, 182, 0.2)',
+            color: '#023E8A',
             cursor: 'pointer',
             transition: 'all 0.2s'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(255, 120, 36, 0.16)';
-            e.currentTarget.style.boxShadow = '0 0 15px rgba(255, 120, 36, 0.2)';
-            e.currentTarget.style.color = '#FF4500';
+            e.currentTarget.style.background = 'rgba(0, 119, 182, 0.16)';
+            e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 119, 182, 0.2)';
+            e.currentTarget.style.color = '#00509D';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(255, 120, 36, 0.08)';
+            e.currentTarget.style.background = 'rgba(0, 119, 182, 0.08)';
             e.currentTarget.style.boxShadow = 'none';
-            e.currentTarget.style.color = '#E65100';
+            e.currentTarget.style.color = '#023E8A';
           }}
         >
           <LogOut size={16} style={{ flexShrink: 0 }} />

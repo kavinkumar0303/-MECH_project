@@ -1,0 +1,62 @@
+[
+    {
+        "topic": "Thermodynamics",
+        "subtopic": "Laws of Thermodynamics",
+        "question": "Explain the physical significance of the Second Law of Thermodynamics and how it relates to entropy.",
+        "answer": "The Second Law of Thermodynamics states that the total entropy of an isolated system always increases over time, or remains constant in ideal reversible processes. Physically, it establishes the direction of natural processes, dictating that heat spontaneously flows from a hotter body to a colder body, never the reverse. It introduces 'entropy' as a measure of molecular disorder or randomness, implying that energy naturally disperses and degrades in quality, making 100% conversion of heat into work impossible."
+    },
+    {
+        "topic": "Thermodynamics",
+        "subtopic": "Power Cycles",
+        "question": "What are the four processes that make up an ideal Rankine cycle? Describe each briefly.",
+        "answer": "The ideal Rankine cycle consists of: 1) Isentropic Compression (1-2) in a pump, where liquid water is pressurized. 2) Constant Pressure Heat Addition (2-3) in a boiler, where water is heated to superheated steam. 3) Isentropic Expansion (3-4) in a turbine, where steam expands to generate mechanical work. 4) Constant Pressure Heat Rejection (4-1) in a condenser, where exhaust steam is condensed back into liquid."
+    },
+    {
+        "topic": "Fluid Mechanics",
+        "subtopic": "Fluid Dynamics",
+        "question": "Derive or state Bernoulli's equation for steady, incompressible, frictionless flow, and define each term.",
+        "answer": "Bernoulli's equation is derived from conservation of energy along a streamline: P + 0.5*rho*v^2 + rho*g*z = Constant. Where: P = Static Pressure (Pa), rho = Fluid Density (kg/m^3), v = Fluid Velocity (m/s), g = Acceleration due to gravity (9.81 m/s^2), and z = Elevation (m). It represents the balance between pressure energy, kinetic energy, and potential energy per unit volume."
+    },
+    {
+        "topic": "Fluid Mechanics",
+        "subtopic": "Flow Regimes",
+        "question": "What is the critical Reynolds number for transition from laminar to turbulent flow in a circular pipe, and what parameters govern it?",
+        "answer": "For fully developed flow in a circular pipe, the critical Reynolds number (Re) is approximately 2300. Flows below 2000 are generally laminar, while flows above 4000 are fully turbulent. It is governed by the dimensionless formula: Re = (rho * v * D) / mu, where rho is fluid density, v is mean velocity, D is pipe diameter, and mu is dynamic viscosity."
+    },
+    {
+        "topic": "Strength of Materials",
+        "subtopic": "Stress & Strain",
+        "question": "Define Hooke's Law in three dimensions and state the relationship between Young's Modulus (E), Shear Modulus (G), and Poisson's Ratio (nu).",
+        "answer": "Hooke's Law in 3D accounts for multi-axial strain using Poisson's ratio: epsilon_x = (1/E) * [sigma_x - nu*(sigma_y + sigma_z)]. The elastic constants are fundamentally related by the formula: G = E / [2 * (1 + nu)]. Another vital relation including Bulk Modulus (K) is: K = E / [3 * (1 - 2*nu)]."
+    },
+    {
+        "topic": "Strength of Materials",
+        "subtopic": "Failure Theories",
+        "question": "Compare the Maximum Shear Stress Theory (Tresca) and the Distortion Energy Theory (von Mises) for ductile material failure.",
+        "answer": "The Tresca theory states failure occurs when max shear stress equals half the yield strength (tau_max = S_yt/2); graphically, it forms a hexagon. The von Mises theory states failure occurs when distortion energy per unit volume reaches the yield limit, forming an ellipse. Von Mises is more accurate for ductile materials, offering about 15% more allowable load capacity than the conservative Tresca theory."
+    },
+    {
+        "topic": "Machine Design",
+        "subtopic": "Fatigue & Joints",
+        "question": "What is the purpose of modifying factors in the Goodman criteria for fatigue design?",
+        "answer": "Modifying factors (Marin factors) adjust the ideal endurance limit (S_e') obtained from laboratory rotating-beam tests to represent real-world operating conditions (S_e = k_a * k_b * k_c * k_d * k_e * k_f * S_e'). These factors account for surface finish (k_a), size (k_b), load type (k_c), temperature (k_d), reliability (k_e), and miscellaneous effects like stress concentrations (k_f)."
+    },
+    {
+        "topic": "Machine Design",
+        "subtopic": "Gears",
+        "question": "Explain interference in involute gear teeth profiles and how it can be prevented.",
+        "answer": "Interference occurs when the flank of a driving tooth contacts the tip of a driven tooth instead of mating purely along the involute profile, causing undercutting at the tooth root. It happens when the teeth are too deep or the pinions have too few teeth. Prevention methods include: 1) Increasing the profile pressure angle. 2) Utilizing a minimum number of pinion teeth (e.g., 18 teeth for a 20-degree full-depth system). 3) Undercutting or modifying tooth tips."
+    },
+    {
+        "topic": "Heat Transfer",
+        "subtopic": "Conduction & Convection",
+        "question": "Define the physical meaning of the Nusselt Number (Nu) and the Biot Number (Bi).",
+        "answer": "The Nusselt Number (Nu = h*L/k_fluid) represents the ratio of convective heat transfer to conductive heat transfer across a fluid boundary layer. The Biot Number (Bi = h*L/k_solid) represents the ratio of internal thermal resistance of a solid body to the external convective thermal resistance at its surface. A Bi < 0.1 justifies using the Lumped Capacitance Method."
+    },
+    {
+        "topic": "Manufacturing Engineering",
+        "subtopic": "Machining",
+        "question": "Explain Taylor's Tool Life Equation and identify its variable terms.",
+        "answer": "Taylor's Tool Life Equation is expressed as: V * T^n = C. Where V = Cutting Speed (m/min), T = Tool Life (minutes), n = An exponent depending on tool material (e.g., ~0.1-0.15 for HSS, ~0.2-0.25 for carbide), and C = A constant depending on work material, feed, depth of cut, and tool geometry."
+    }
+]

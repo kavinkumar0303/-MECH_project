@@ -68,7 +68,7 @@ export default function DecisionAssistant() {
   const rec = getRecommendation();
 
   return (
-    <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '900px', margin: '0 auto', width: '100%' }}>
+    <div className="decision-page-container">
       
       {/* Title block */}
       <div>
@@ -80,7 +80,7 @@ export default function DecisionAssistant() {
         </p>
       </div>
 
-      <div className="glass-panel" style={{ background: '#FFFFFF', border: '1px solid #FFDEC9', borderRadius: '16px', padding: '32px', minHeight: '340px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 8px 30px rgba(255, 120, 36, 0.08)' }}>
+      <div className="decision-panel glass-panel" style={{ background: '#FFFFFF', border: '1px solid #BAE6FD', borderRadius: '16px', minHeight: '340px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 8px 30px rgba(0, 119, 182, 0.08)' }}>
         
         {step === 1 && (
           <div>
@@ -106,15 +106,15 @@ export default function DecisionAssistant() {
                   onClick={() => { setShape(opt.id); setStep(2); }}
                   style={{
                     background: 'rgba(255, 241, 230, 0.7)',
-                    border: '1px solid #FFDEC9',
+                    border: '1px solid #BAE6FD',
                     borderRadius: '12px',
                     padding: '16px 20px',
                     textAlign: 'left',
                     cursor: 'pointer',
                     transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#FF7824'; e.currentTarget.style.background = 'rgba(255, 120, 36, 0.12)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#FFDEC9'; e.currentTarget.style.background = 'rgba(255, 241, 230, 0.7)'; e.currentTarget.style.transform = 'none'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#0077B6'; e.currentTarget.style.background = 'rgba(0, 119, 182, 0.12)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#BAE6FD'; e.currentTarget.style.background = 'rgba(255, 241, 230, 0.7)'; e.currentTarget.style.transform = 'none'; }}
                 >
                   <div style={{ fontSize: '15px', fontWeight: '700', color: '#1C1917' }}>{opt.title}</div>
                   <div style={{ fontSize: '13px', color: '#574A40', marginTop: '4px' }}>{opt.desc}</div>
@@ -147,15 +147,15 @@ export default function DecisionAssistant() {
                   onClick={() => { setMaterial(opt.id); setStep(3); }}
                   style={{
                     background: 'rgba(255, 241, 230, 0.7)',
-                    border: '1px solid #FFDEC9',
+                    border: '1px solid #BAE6FD',
                     borderRadius: '12px',
                     padding: '16px 20px',
                     textAlign: 'left',
                     cursor: 'pointer',
                     transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#FF7824'; e.currentTarget.style.background = 'rgba(255, 120, 36, 0.12)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#FFDEC9'; e.currentTarget.style.background = 'rgba(255, 241, 230, 0.7)'; e.currentTarget.style.transform = 'none'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#0077B6'; e.currentTarget.style.background = 'rgba(0, 119, 182, 0.12)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#BAE6FD'; e.currentTarget.style.background = 'rgba(255, 241, 230, 0.7)'; e.currentTarget.style.transform = 'none'; }}
                 >
                   <div style={{ fontSize: '15px', fontWeight: '700', color: '#1C1917' }}>{opt.title}</div>
                   <div style={{ fontSize: '13px', color: '#574A40', marginTop: '4px' }}>{opt.desc}</div>
@@ -189,15 +189,15 @@ export default function DecisionAssistant() {
                   onClick={() => { setOperation(opt.id); setStep(4); }}
                   style={{
                     background: 'rgba(255, 241, 230, 0.7)',
-                    border: '1px solid #FFDEC9',
+                    border: '1px solid #BAE6FD',
                     borderRadius: '12px',
                     padding: '16px 20px',
                     textAlign: 'left',
                     cursor: 'pointer',
                     transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#FF7824'; e.currentTarget.style.background = 'rgba(255, 120, 36, 0.12)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#FFDEC9'; e.currentTarget.style.background = 'rgba(255, 241, 230, 0.7)'; e.currentTarget.style.transform = 'none'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#0077B6'; e.currentTarget.style.background = 'rgba(0, 119, 182, 0.12)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#BAE6FD'; e.currentTarget.style.background = 'rgba(255, 241, 230, 0.7)'; e.currentTarget.style.transform = 'none'; }}
                 >
                   <div style={{ fontSize: '15px', fontWeight: '700', color: '#1C1917' }}>{opt.title}</div>
                   <div style={{ fontSize: '13px', color: '#574A40', marginTop: '4px' }}>{opt.desc}</div>
@@ -215,8 +215,8 @@ export default function DecisionAssistant() {
               </span>
             </div>
             
-            <div style={{ borderLeft: `4px solid #FF7824`, background: 'linear-gradient(135deg, rgba(255, 120, 36, 0.08) 0%, rgba(255, 160, 102, 0.12) 100%)', padding: '24px', borderRadius: '14px', border: '1px solid #FFDEC9', borderLeftWidth: '4px', boxShadow: '0 4px 20px rgba(255, 120, 36, 0.08)' }}>
-              <span style={{ fontSize: '11px', textTransform: 'uppercase', color: '#E65100', fontWeight: '800', letterSpacing: '0.8px' }}>
+            <div style={{ borderLeft: `4px solid #0077B6`, background: 'linear-gradient(135deg, rgba(0, 119, 182, 0.08) 0%, rgba(255, 160, 102, 0.12) 100%)', padding: '24px', borderRadius: '14px', border: '1px solid #BAE6FD', borderLeftWidth: '4px', boxShadow: '0 4px 20px rgba(0, 119, 182, 0.08)' }}>
+              <span style={{ fontSize: '11px', textTransform: 'uppercase', color: '#023E8A', fontWeight: '800', letterSpacing: '0.8px' }}>
                 Recommended Workshop Unit
               </span>
               <h3 style={{ fontSize: '24px', fontWeight: '900', color: '#1C1917', margin: '6px 0 12px' }}>
@@ -237,22 +237,22 @@ export default function DecisionAssistant() {
                 background: 'rgba(255, 241, 230, 0.8)', 
                 padding: '18px', 
                 borderRadius: '12px',
-                border: '1px solid #FFDEC9',
+                border: '1px solid #BAE6FD',
                 flexWrap: 'wrap'
               }}
             >
               <div style={{ fontSize: '12px', color: '#574A40' }}>
-                Shape: <strong style={{ color: '#FF7824' }}>{shape}</strong>
+                Shape: <strong style={{ color: '#0077B6' }}>{shape}</strong>
               </div>
-              <div style={{ color: '#FF7824' }}>→</div>
+              <div style={{ color: '#0077B6' }}>→</div>
               <div style={{ fontSize: '12px', color: '#574A40' }}>
-                Material: <strong style={{ color: '#FF4500' }}>{material}</strong>
+                Material: <strong style={{ color: '#00509D' }}>{material}</strong>
               </div>
-              <div style={{ color: '#FF7824' }}>→</div>
+              <div style={{ color: '#0077B6' }}>→</div>
               <div style={{ fontSize: '12px', color: '#574A40' }}>
-                Operation: <strong style={{ color: '#E65100' }}>{operation}</strong>
+                Operation: <strong style={{ color: '#023E8A' }}>{operation}</strong>
               </div>
-              <div style={{ color: '#FF7824' }}>→</div>
+              <div style={{ color: '#0077B6' }}>→</div>
               <div style={{ fontSize: '12px', color: '#574A40' }}>
                 Tool: <strong style={{ color: '#1C1917' }}>{rec.tool}</strong>
               </div>

@@ -1,0 +1,681 @@
+[
+  {
+    "id": "pdf_q1",
+    "section": "Centre Lathe & Lathe Operations",
+    "question": "What is a centre lathe?",
+    "answer": "A centre lathe is a machine tool in which a workpiece rotates while a cutting tool removes material to produce cylindrical and other surfaces.",
+    "keywords": ["centre lathe", "center lathe", "lathe", "machine tool", "rotates workpiece"]
+  },
+  {
+    "id": "pdf_q2",
+    "section": "Centre Lathe & Lathe Operations",
+    "question": "What is facing in a lathe?",
+    "answer": "Facing is a lathe operation used to produce a flat surface on the end of a workpiece.",
+    "keywords": ["facing", "face cut", "flat surface", "end of workpiece", "end surface"]
+  },
+  {
+    "id": "pdf_q3",
+    "section": "Centre Lathe & Lathe Operations",
+    "question": "What is turning?",
+    "answer": "Turning is the operation of reducing the diameter of a rotating workpiece by feeding a cutting tool along its axis.",
+    "keywords": ["turning", "straight turning", "reducing diameter", "diameter", "along its axis"]
+  },
+  {
+    "id": "pdf_q4",
+    "section": "Centre Lathe & Lathe Operations",
+    "question": "What is taper turning?",
+    "answer": "Taper turning produces a conical surface whose diameter changes uniformly along the length of the workpiece.",
+    "keywords": ["taper turning", "taper", "conical surface", "conical", "diameter changes uniformly"]
+  },
+  {
+    "id": "pdf_q5",
+    "section": "Centre Lathe & Lathe Operations",
+    "question": "What is boring?",
+    "answer": "Boring enlarges or improves the accuracy of an existing hole using a single-point cutting tool.",
+    "keywords": ["boring", "enlarges hole", "existing hole", "internal hole", "accuracy of hole"]
+  },
+  {
+    "id": "pdf_q6",
+    "section": "Centre Lathe & Lathe Operations",
+    "question": "What is drilling on a lathe?",
+    "answer": "Drilling produces a new cylindrical hole using a drill held in the tailstock or another suitable holder.",
+    "keywords": ["drilling", "drill", "drill bit", "cylindrical hole", "tailstock drill"]
+  },
+  {
+    "id": "pdf_q7",
+    "section": "Centre Lathe & Lathe Operations",
+    "question": "What is knurling?",
+    "answer": "Knurling is a forming operation that produces a regular patterned surface by pressing hardened rollers against a rotating workpiece.",
+    "keywords": ["knurling", "knurl", "patterned surface", "diamond pattern", "hardened rollers", "grip"]
+  },
+  {
+    "id": "pdf_q8",
+    "section": "Centre Lathe & Lathe Operations",
+    "question": "What is threading?",
+    "answer": "Threading produces a helical thread on the external or internal surface of a workpiece.",
+    "keywords": ["threading", "thread", "screw thread", "helical thread", "external or internal"]
+  },
+  {
+    "id": "pdf_q9",
+    "section": "Centre Lathe & Lathe Operations",
+    "question": "What is chamfering?",
+    "answer": "Chamfering removes a sharp edge and produces a small angled surface at the edge of a workpiece.",
+    "keywords": ["chamfering", "chamfer", "sharp edge", "angled surface", "edge of workpiece"]
+  },
+  {
+    "id": "pdf_q10",
+    "section": "Centre Lathe & Lathe Operations",
+    "question": "What is parting-off?",
+    "answer": "Parting-off is a lathe operation used to cut a finished part from the parent workpiece.",
+    "keywords": ["parting off", "parting-off", "parting", "cut off", "parent workpiece", "finished part"]
+  },
+  {
+    "id": "pdf_q11",
+    "section": "Centre Lathe & Lathe Operations",
+    "question": "What is contour turning?",
+    "answer": "Contour turning produces a curved or irregular profile by controlling the tool path along the workpiece.",
+    "keywords": ["contour turning", "contour", "curved profile", "irregular profile", "tool path"]
+  },
+  {
+    "id": "pdf_q12",
+    "section": "Centre Lathe & Lathe Operations",
+    "question": "What is the function of a chuck?",
+    "answer": "A chuck holds and rotates the workpiece securely in the lathe spindle.",
+    "keywords": ["chuck", "function of chuck", "holds workpiece", "3 jaw", "4 jaw", "lathe spindle"]
+  },
+  {
+    "id": "pdf_q13",
+    "section": "Centre Lathe & Lathe Operations",
+    "question": "What is the function of the tailstock?",
+    "answer": "The tailstock supports long workpieces with a centre and can hold tools such as drills.",
+    "keywords": ["tailstock", "function of tailstock", "supports long workpieces", "holds drill", "dead center"]
+  },
+  {
+    "id": "pdf_q14",
+    "section": "Centre Lathe & Lathe Operations",
+    "question": "What is cutting speed?",
+    "answer": "Cutting speed is the relative speed between the cutting edge and the surface of the workpiece at the cutting zone.",
+    "keywords": ["cutting speed", "speed", "cutting edge speed", "surface speed", "relative speed"]
+  },
+  {
+    "id": "pdf_q15",
+    "section": "Centre Lathe & Lathe Operations",
+    "question": "What is feed?",
+    "answer": "Feed is the distance the cutting tool advances relative to the workpiece for a specified amount of cutting.",
+    "keywords": ["feed", "feed rate", "cutting tool advances", "tool movement", "advances relative"]
+  },
+  {
+    "id": "pdf_q16",
+    "section": "Centre Lathe & Lathe Operations",
+    "question": "What is depth of cut?",
+    "answer": "Depth of cut is the thickness of material removed in one pass, measured approximately perpendicular to the machined surface.",
+    "keywords": ["depth of cut", "doc", "thickness of material", "one pass", "removed in one pass"]
+  },
+  {
+    "id": "pdf_q17",
+    "section": "Centre Lathe & Lathe Operations",
+    "question": "Why is coolant used in machining?",
+    "answer": "Coolant helps remove heat, reduce friction, improve tool life, and flush chips away from the cutting zone.",
+    "keywords": ["coolant", "cutting fluid", "why coolant", "remove heat", "reduce friction", "flush chips", "tool life"]
+  },
+  {
+    "id": "pdf_q18",
+    "section": "Centre Lathe & Lathe Operations",
+    "question": "What is a cutting tool?",
+    "answer": "A cutting tool is a hardened tool with a cutting edge used to remove material from a workpiece.",
+    "keywords": ["cutting tool", "tool bit", "hardened tool", "cutting edge", "remove material"]
+  },
+  {
+    "id": "pdf_q19",
+    "section": "Centre Lathe & Lathe Operations",
+    "question": "What is a centre in a lathe?",
+    "answer": "A centre supports a workpiece at its axis, especially during machining of long components.",
+    "keywords": ["centre", "center", "lathe centre", "lathe center", "supports workpiece", "live centre", "dead centre"]
+  },
+  {
+    "id": "pdf_q20",
+    "section": "Centre Lathe & Lathe Operations",
+    "question": "What is the purpose of the carriage?",
+    "answer": "The carriage supports and moves the cutting tool along the lathe bed.",
+    "keywords": ["carriage", "purpose of carriage", "moves cutting tool", "along lathe bed", "saddle"]
+  },
+  {
+    "id": "pdf_q21",
+    "section": "Arc Welding",
+    "question": "What is arc welding?",
+    "answer": "Arc welding is a fusion welding process in which heat from an electric arc melts the joint area and usually a filler electrode.",
+    "keywords": ["arc welding", "what is arc welding", "fusion welding", "electric arc", "welding"]
+  },
+  {
+    "id": "pdf_q22",
+    "section": "Arc Welding",
+    "question": "What is an electric arc?",
+    "answer": "An electric arc is a sustained electrical discharge between the electrode and workpiece that produces intense heat.",
+    "keywords": ["electric arc", "electrical discharge", "sustained discharge", "arc heat"]
+  },
+  {
+    "id": "pdf_q23",
+    "section": "Arc Welding",
+    "question": "What is an electrode?",
+    "answer": "An electrode conducts welding current and may also supply filler metal to the joint.",
+    "keywords": ["electrode", "welding electrode", "conducts welding current", "filler metal", "welding rod"]
+  },
+  {
+    "id": "pdf_q24",
+    "section": "Arc Welding",
+    "question": "What is SMAW?",
+    "answer": "SMAW, or Shielded Metal Arc Welding, uses a flux-coated consumable electrode to create the weld.",
+    "keywords": ["smaw", "shielded metal arc welding", "manual metal arc", "mma", "flux coated"]
+  },
+  {
+    "id": "pdf_q25",
+    "section": "Arc Welding",
+    "question": "Why is flux used in welding electrodes?",
+    "answer": "Flux helps protect the molten weld pool from atmospheric contamination and forms slag over the weld.",
+    "keywords": ["flux", "why flux", "flux used", "atmospheric contamination", "protect weld pool"]
+  },
+  {
+    "id": "pdf_q26",
+    "section": "Arc Welding",
+    "question": "What is a weld bead?",
+    "answer": "A weld bead is the deposited strip of solidified weld metal produced by a welding pass.",
+    "keywords": ["weld bead", "bead", "solidified weld metal", "welding pass"]
+  },
+  {
+    "id": "pdf_q27",
+    "section": "Arc Welding",
+    "question": "What is a butt joint?",
+    "answer": "A butt joint joins two pieces placed approximately in the same plane with their edges meeting.",
+    "keywords": ["butt joint", "butt weld", "same plane", "edges meeting"]
+  },
+  {
+    "id": "pdf_q28",
+    "section": "Arc Welding",
+    "question": "What is a lap joint?",
+    "answer": "A lap joint joins two overlapping pieces by welding along the overlap.",
+    "keywords": ["lap joint", "overlapping pieces", "welding along overlap"]
+  },
+  {
+    "id": "pdf_q29",
+    "section": "Arc Welding",
+    "question": "What is a fillet weld?",
+    "answer": "A fillet weld joins two surfaces approximately at an angle, commonly in a T, lap, or corner joint.",
+    "keywords": ["fillet weld", "fillet", "at an angle", "t joint", "corner joint"]
+  },
+  {
+    "id": "pdf_q30",
+    "section": "Arc Welding",
+    "question": "What is welding current?",
+    "answer": "Welding current is the electrical current flowing through the welding circuit and strongly affects heat input and penetration.",
+    "keywords": ["welding current", "current", "amperage", "heat input", "penetration"]
+  },
+  {
+    "id": "pdf_q31",
+    "section": "Arc Welding",
+    "question": "Why is a welding helmet required?",
+    "answer": "A welding helmet protects the eyes and face from arc radiation, sparks, and hot particles.",
+    "keywords": ["welding helmet", "helmet", "face shield", "arc radiation", "uv radiation", "sparks"]
+  },
+  {
+    "id": "pdf_q32",
+    "section": "Arc Welding",
+    "question": "What is weld penetration?",
+    "answer": "Weld penetration is the depth to which the weld extends into the base material or joint.",
+    "keywords": ["weld penetration", "penetration", "depth into base material"]
+  },
+  {
+    "id": "pdf_q33",
+    "section": "Arc Welding",
+    "question": "What is porosity in welding?",
+    "answer": "Porosity is the presence of gas cavities or pores trapped in the solidified weld metal.",
+    "keywords": ["porosity", "porosity in welding", "gas cavities", "pores trapped", "trapped gas"]
+  },
+  {
+    "id": "pdf_q34",
+    "section": "Arc Welding",
+    "question": "What is slag?",
+    "answer": "Slag is a non-metallic layer formed from flux during welding and normally removed after the weld cools.",
+    "keywords": ["slag", "non metallic layer", "formed from flux", "slag layer"]
+  },
+  {
+    "id": "pdf_q35",
+    "section": "Arc Welding",
+    "question": "Why must the workpiece be properly grounded?",
+    "answer": "Proper grounding provides a safe electrical return path and helps maintain stable welding operation.",
+    "keywords": ["grounded", "grounding", "electrical return path", "workpiece ground", "earth clamp"]
+  },
+  {
+    "id": "pdf_q36",
+    "section": "Shaping Machine",
+    "question": "What is a shaping machine?",
+    "answer": "A shaping machine removes material using a reciprocating single-point cutting tool to produce mainly flat surfaces.",
+    "keywords": ["shaping machine", "shaper", "what is a shaping machine", "reciprocating tool", "flat surfaces"]
+  },
+  {
+    "id": "pdf_q37",
+    "section": "Shaping Machine",
+    "question": "What is the ram?",
+    "answer": "The ram is the reciprocating member that carries the tool head and moves the cutting tool over the workpiece.",
+    "keywords": ["ram", "what is the ram", "reciprocating member", "carries tool head", "shaper ram"]
+  },
+  {
+    "id": "pdf_q38",
+    "section": "Shaping Machine",
+    "question": "What is the tool head?",
+    "answer": "The tool head holds the cutting tool and can be adjusted for machining operations.",
+    "keywords": ["tool head", "holds cutting tool", "shaper tool head", "toolhead"]
+  },
+  {
+    "id": "pdf_q39",
+    "section": "Shaping Machine",
+    "question": "What is the return stroke?",
+    "answer": "The return stroke is the stroke during which the ram moves back and the tool normally does not perform the main cutting action.",
+    "keywords": ["return stroke", "ram moves back", "idle stroke", "backward stroke"]
+  },
+  {
+    "id": "pdf_q40",
+    "section": "Shaping Machine",
+    "question": "What is quick return motion?",
+    "answer": "Quick return motion makes the return stroke faster than the cutting stroke to reduce idle time.",
+    "keywords": ["quick return motion", "quick return", "faster return stroke", "reduce idle time"]
+  },
+  {
+    "id": "pdf_q41",
+    "section": "Shaping Machine",
+    "question": "What surfaces can a shaper produce?",
+    "answer": "A shaper can produce horizontal, vertical, and inclined flat surfaces, slots, and similar profiles.",
+    "keywords": ["surfaces can a shaper produce", "shaper surfaces", "horizontal", "vertical", "slots", "inclined"]
+  },
+  {
+    "id": "pdf_q42",
+    "section": "Shaping Machine",
+    "question": "What is a clapper box?",
+    "answer": "The clapper box allows the tool to lift slightly during the return stroke, reducing rubbing between tool and workpiece.",
+    "keywords": ["clapper box", "clapper", "tool lift", "return stroke rub", "protect tool"]
+  },
+  {
+    "id": "pdf_q43",
+    "section": "Shaping Machine",
+    "question": "What is feed in a shaper?",
+    "answer": "Feed is the controlled movement of the workpiece or table relative to the cutting tool between successive strokes.",
+    "keywords": ["feed in a shaper", "shaper feed", "movement of table", "between successive strokes"]
+  },
+  {
+    "id": "pdf_q44",
+    "section": "Shaping Machine",
+    "question": "Why is the shaper suitable for small jobs?",
+    "answer": "Its simple setup and reciprocating cutting action make it useful for producing flat surfaces and slots on small or medium workpieces.",
+    "keywords": ["shaper suitable for small jobs", "small jobs", "simple setup", "small or medium workpieces"]
+  },
+  {
+    "id": "pdf_q45",
+    "section": "Shaping Machine",
+    "question": "What is the difference between a shaper and a planer?",
+    "answer": "A shaper generally moves the cutting tool while the workpiece is stationary or moves for feed; a planer generally reciprocates the workpiece while the tool performs the cutting.",
+    "keywords": ["difference between a shaper and a planer", "shaper and planer", "shaper vs planer", "planer vs shaper"]
+  },
+  {
+    "id": "pdf_q46",
+    "section": "Planing Machine",
+    "question": "What is a planer?",
+    "answer": "A planer is a machine tool mainly used to machine large and heavy workpieces by reciprocating the work table.",
+    "keywords": ["planer", "what is a planer", "planing machine", "large and heavy", "reciprocating work table"]
+  },
+  {
+    "id": "pdf_q47",
+    "section": "Planing Machine",
+    "question": "What moves during cutting in a planer?",
+    "answer": "The workpiece and table reciprocate during the main cutting motion.",
+    "keywords": ["what moves during cutting in a planer", "planer movement", "workpiece and table reciprocate"]
+  },
+  {
+    "id": "pdf_q48",
+    "section": "Planing Machine",
+    "question": "What is the main use of a planer?",
+    "answer": "A planer is used to produce large flat, horizontal, vertical, or inclined surfaces and related profiles.",
+    "keywords": ["main use of a planer", "planer use", "large flat surfaces"]
+  },
+  {
+    "id": "pdf_q49",
+    "section": "Planing Machine",
+    "question": "Why is a planer used for large workpieces?",
+    "answer": "Its rigid construction and large table allow heavy and large components to be machined.",
+    "keywords": ["why is a planer used for large workpieces", "rigid construction", "large table", "heavy and large"]
+  },
+  {
+    "id": "pdf_q50",
+    "section": "Planing Machine",
+    "question": "What is feed in a planer?",
+    "answer": "Feed is the transverse or incremental movement of the cutting tool between successive cutting strokes.",
+    "keywords": ["feed in a planer", "planer feed", "transverse movement", "cutting tool movement", "between strokes"]
+  },
+  {
+    "id": "pdf_q51",
+    "section": "Planing Machine",
+    "question": "What is a planer table?",
+    "answer": "The planer table supports and carries the workpiece during reciprocating motion.",
+    "keywords": ["planer table", "table", "supports workpiece", "carries workpiece"]
+  },
+  {
+    "id": "pdf_q52",
+    "section": "Planing Machine",
+    "question": "What is a double housing planer?",
+    "answer": "A double housing planer has two vertical housings supporting the cross rail and tool heads, providing rigidity for large work.",
+    "keywords": ["double housing planer", "two vertical housings", "cross rail", "rigidity"]
+  },
+  {
+    "id": "pdf_q53",
+    "section": "Planing Machine",
+    "question": "What is the difference between shaper and planer?",
+    "answer": "A shaper reciprocates the cutting tool, whereas a planer reciprocates the workpiece and table.",
+    "keywords": ["difference between shaper and planer", "shaper reciprocates", "planer reciprocates"]
+  },
+  {
+    "id": "pdf_q54",
+    "section": "Milling",
+    "question": "What is milling?",
+    "answer": "Milling is a machining process in which a rotating multi-point cutting tool removes material from a workpiece.",
+    "keywords": ["milling", "what is milling", "rotating multi-point tool", "multi-point cutting tool"]
+  },
+  {
+    "id": "pdf_q55",
+    "section": "Milling",
+    "question": "What is a milling cutter?",
+    "answer": "A milling cutter is a rotary multi-tooth cutting tool used to remove material during milling.",
+    "keywords": ["milling cutter", "cutter", "rotary multi-tooth", "milling tool"]
+  },
+  {
+    "id": "pdf_q56",
+    "section": "Milling",
+    "question": "What is face milling?",
+    "answer": "Face milling produces a flat surface using cutting edges mainly on the face of the cutter.",
+    "keywords": ["face milling", "flat surface", "face of cutter", "face mill"]
+  },
+  {
+    "id": "pdf_q57",
+    "section": "Milling",
+    "question": "What is slab milling?",
+    "answer": "Slab milling produces a flat surface using a cylindrical cutter with teeth on its periphery.",
+    "keywords": ["slab milling", "slab mill", "cylindrical cutter", "periphery teeth"]
+  },
+  {
+    "id": "pdf_q58",
+    "section": "Milling",
+    "question": "What is end milling?",
+    "answer": "End milling uses an end mill to machine slots, pockets, steps, and profiles.",
+    "keywords": ["end milling", "end mill", "slots", "pockets", "steps", "profiles"]
+  },
+  {
+    "id": "pdf_q59",
+    "section": "Milling",
+    "question": "What is up milling?",
+    "answer": "In up milling, the cutter rotation at the cutting point is opposite to the direction of workpiece feed.",
+    "keywords": ["up milling", "conventional milling", "opposite to direction of feed"]
+  },
+  {
+    "id": "pdf_q60",
+    "section": "Milling",
+    "question": "What is down milling?",
+    "answer": "In down milling, the cutter rotation at the cutting point is in the same direction as the workpiece feed.",
+    "keywords": ["down milling", "climb milling", "same direction as feed"]
+  },
+  {
+    "id": "pdf_q61",
+    "section": "Milling",
+    "question": "What is a vertical milling machine?",
+    "answer": "A vertical milling machine has a spindle oriented approximately vertically and is commonly used for face, end, slot, and profile milling.",
+    "keywords": ["vertical milling machine", "vertical spindle", "vertical milling"]
+  },
+  {
+    "id": "pdf_q62",
+    "section": "Milling",
+    "question": "What is a horizontal milling machine?",
+    "answer": "A horizontal milling machine has a spindle oriented approximately horizontally and is useful for slab milling and other operations.",
+    "keywords": ["horizontal milling machine", "horizontal spindle", "slab milling machine"]
+  },
+  {
+    "id": "pdf_q63",
+    "section": "Milling",
+    "question": "What is a workholding device in milling?",
+    "answer": "A workholding device securely locates and clamps the workpiece, such as a machine vice or fixture.",
+    "keywords": ["workholding device", "machine vice", "fixture", "clamps workpiece"]
+  },
+  {
+    "id": "pdf_q64",
+    "section": "Milling",
+    "question": "What is a slotting operation?",
+    "answer": "Slotting is milling a narrow groove or slot in a workpiece.",
+    "keywords": ["slotting operation", "slotting", "narrow groove", "slot"]
+  },
+  {
+    "id": "pdf_q65",
+    "section": "Milling",
+    "question": "Why is cutting fluid used in milling?",
+    "answer": "Cutting fluid can reduce heat and friction, improve tool life, and help remove chips when appropriate.",
+    "keywords": ["cutting fluid used in milling", "cutting fluid", "reduce heat", "improve tool life"]
+  },
+  {
+    "id": "pdf_q66",
+    "section": "Metal Casting",
+    "question": "What is casting?",
+    "answer": "Casting is a manufacturing process in which molten metal is poured into a mould cavity and allowed to solidify.",
+    "keywords": ["casting", "what is casting", "metal casting", "molten metal poured", "solidify"]
+  },
+  {
+    "id": "pdf_q67",
+    "section": "Metal Casting",
+    "question": "What is a mould?",
+    "answer": "A mould is a cavity or form that gives the molten metal its required shape during solidification.",
+    "keywords": ["mould", "mold", "cavity or form", "gives shape"]
+  },
+  {
+    "id": "pdf_q68",
+    "section": "Metal Casting",
+    "question": "What is a pattern?",
+    "answer": "A pattern is a replica or representation used to form the mould cavity into which molten metal is poured.",
+    "keywords": ["pattern", "what is a pattern", "replica", "form mould cavity"]
+  },
+  {
+    "id": "pdf_q69",
+    "section": "Metal Casting",
+    "question": "What is a sprue?",
+    "answer": "A sprue is a vertical passage through which molten metal enters the mould system.",
+    "keywords": ["sprue", "what is a sprue", "vertical passage", "enters mould system"]
+  },
+  {
+    "id": "pdf_q70",
+    "section": "Metal Casting",
+    "question": "What is a runner?",
+    "answer": "A runner is a passage that carries molten metal from the sprue toward one or more mould cavities.",
+    "keywords": ["runner", "what is a runner", "carries molten metal", "sprue to cavity"]
+  },
+  {
+    "id": "pdf_q71",
+    "section": "Metal Casting",
+    "question": "What is a gate?",
+    "answer": "A gate is the passage through which molten metal enters the mould cavity.",
+    "keywords": ["gate", "ingate", "what is a gate", "enters mould cavity"]
+  },
+  {
+    "id": "pdf_q72",
+    "section": "Metal Casting",
+    "question": "What is a riser?",
+    "answer": "A riser is a reservoir of molten metal that feeds the casting during solidification to compensate for shrinkage.",
+    "keywords": ["riser", "what is a riser", "reservoir", "compensate for shrinkage", "shrinkage reservoir"]
+  },
+  {
+    "id": "pdf_q73",
+    "section": "Metal Casting",
+    "question": "What is a casting defect?",
+    "answer": "A casting defect is an unwanted imperfection in a cast product, such as porosity, shrinkage, or cold shut.",
+    "keywords": ["casting defect", "defect", "imperfection", "cold shut"]
+  },
+  {
+    "id": "pdf_q74",
+    "section": "Metal Casting",
+    "question": "What is shrinkage defect?",
+    "answer": "Shrinkage occurs when metal contracts during solidification and insufficient molten metal is available to compensate for the contraction.",
+    "keywords": ["shrinkage defect", "shrinkage", "metal contracts", "solidification contraction"]
+  },
+  {
+    "id": "pdf_q75",
+    "section": "Metal Casting",
+    "question": "What is a core?",
+    "answer": "A core is a shaped insert used to produce internal holes, cavities, or passages in a casting.",
+    "keywords": ["core", "what is a core", "shaped insert", "internal holes", "cavities"]
+  },
+  {
+    "id": "pdf_q76",
+    "section": "Metal Casting",
+    "question": "Why is draft provided on a pattern?",
+    "answer": "Draft provides a slight taper so the pattern can be removed from the mould without damaging the mould cavity.",
+    "keywords": ["draft", "draft on pattern", "slight taper", "removed without damaging"]
+  },
+  {
+    "id": "pdf_q77",
+    "section": "Metal Casting",
+    "question": "What is solidification?",
+    "answer": "Solidification is the change of molten metal into a solid state as it loses heat.",
+    "keywords": ["solidification", "change into solid state", "loses heat"]
+  },
+  {
+    "id": "pdf_q78",
+    "section": "Sand Moulding",
+    "question": "What is sand moulding?",
+    "answer": "Sand moulding is a casting method in which a mould cavity is formed in specially prepared moulding sand.",
+    "keywords": ["sand moulding", "sand molding", "what is sand moulding", "moulding sand"]
+  },
+  {
+    "id": "pdf_q79",
+    "section": "Sand Moulding",
+    "question": "What is moulding sand?",
+    "answer": "Moulding sand is a prepared granular material used to make a mould cavity for casting.",
+    "keywords": ["moulding sand", "molding sand", "granular material"]
+  },
+  {
+    "id": "pdf_q80",
+    "section": "Sand Moulding",
+    "question": "What is green sand?",
+    "answer": "Green sand is moist moulding sand containing sand, clay, water, and other additives as required.",
+    "keywords": ["green sand", "what is green sand", "moist moulding sand", "clay and water"]
+  },
+  {
+    "id": "pdf_q81",
+    "section": "Sand Moulding",
+    "question": "What is a flask?",
+    "answer": "A flask is a frame or container used to hold and support the moulding sand.",
+    "keywords": ["flask", "moulding flask", "frame or container", "hold sand"]
+  },
+  {
+    "id": "pdf_q82",
+    "section": "Sand Moulding",
+    "question": "What is a cope?",
+    "answer": "The cope is the upper half of a two-part moulding flask.",
+    "keywords": ["cope", "what is a cope", "upper half", "top flask"]
+  },
+  {
+    "id": "pdf_q83",
+    "section": "Sand Moulding",
+    "question": "What is a drag?",
+    "answer": "The drag is the lower half of a two-part moulding flask.",
+    "keywords": ["drag", "what is a drag", "lower half", "bottom flask"]
+  },
+  {
+    "id": "pdf_q84",
+    "section": "Sand Moulding",
+    "question": "What is a parting line?",
+    "answer": "The parting line is the boundary where the two halves of the mould meet.",
+    "keywords": ["parting line", "boundary where two halves meet", "mould boundary"]
+  },
+  {
+    "id": "pdf_q85",
+    "section": "Sand Moulding",
+    "question": "What is permeability of moulding sand?",
+    "answer": "Permeability is the ability of moulding sand to allow gases and air to escape through the mould.",
+    "keywords": ["permeability", "permeability of moulding sand", "allow gases to escape", "gas escape"]
+  },
+  {
+    "id": "pdf_q86",
+    "section": "Sand Moulding",
+    "question": "What is refractoriness?",
+    "answer": "Refractoriness is the ability of moulding sand to withstand high temperature without melting or degrading excessively.",
+    "keywords": ["refractoriness", "withstand high temperature", "heat resistance"]
+  },
+  {
+    "id": "pdf_q87",
+    "section": "Sand Moulding",
+    "question": "Why is a vent provided in a sand mould?",
+    "answer": "A vent allows gases and air to escape from the mould cavity during pouring and solidification.",
+    "keywords": ["vent", "why is a vent provided", "vent holes", "escape from mould cavity"]
+  },
+  {
+    "id": "pdf_q88",
+    "section": "Workshop Safety",
+    "question": "Why is workshop safety important?",
+    "answer": "Workshop safety prevents injuries, equipment damage, and unsafe working conditions.",
+    "keywords": ["workshop safety", "why is workshop safety important", "prevents injuries"]
+  },
+  {
+    "id": "pdf_q89",
+    "section": "Workshop Safety",
+    "question": "What PPE is commonly used in a mechanical workshop?",
+    "answer": "Common PPE includes safety glasses, suitable footwear, gloves where appropriate, hearing protection, and task-specific protective equipment.",
+    "keywords": ["ppe", "what ppe is commonly used", "personal protective equipment", "safety gear"]
+  },
+  {
+    "id": "pdf_q90",
+    "section": "Workshop Safety",
+    "question": "Why should loose clothing be avoided near rotating machines?",
+    "answer": "Loose clothing can become caught in moving parts and create a serious entanglement hazard.",
+    "keywords": ["loose clothing", "rotating machines", "entanglement hazard", "caught in moving parts"]
+  },
+  {
+    "id": "pdf_q91",
+    "section": "Workshop Safety",
+    "question": "Why should machine guards not be removed during operation?",
+    "answer": "Guards protect users from moving parts, chips, sparks, and other hazards.",
+    "keywords": ["machine guards", "guards", "protect from moving parts", "chips and sparks"]
+  },
+  {
+    "id": "pdf_q92",
+    "section": "Workshop Safety",
+    "question": "What should be done before maintenance on a machine?",
+    "answer": "The machine should be stopped, isolated from its energy sources, and secured according to the applicable safety procedure before maintenance.",
+    "keywords": ["before maintenance", "maintenance", "isolated from energy sources", "lockout tagout"]
+  },
+  {
+    "id": "pdf_q93",
+    "section": "Workshop Safety",
+    "question": "Why should chips not be removed by hand?",
+    "answer": "Sharp chips can cut skin; suitable tools such as a brush or chip hook should be used when the machine is stopped as required.",
+    "keywords": ["chips not removed by hand", "chips by hand", "sharp chips", "brush or chip hook"]
+  },
+  {
+    "id": "pdf_q94",
+    "section": "Workshop Safety",
+    "question": "Why is housekeeping important?",
+    "answer": "Good housekeeping reduces slips, trips, fire hazards, and interference around machines.",
+    "keywords": ["housekeeping", "why is housekeeping important", "reduces slips trips", "clean workshop"]
+  },
+  {
+    "id": "pdf_q95",
+    "section": "Workshop Safety",
+    "question": "Why should a damaged electrical cable not be used?",
+    "answer": "A damaged cable can expose users to electric shock, short circuits, or fire hazards.",
+    "keywords": ["damaged electrical cable", "damaged cable", "electric shock", "short circuit"]
+  },
+  {
+    "id": "pdf_q96",
+    "section": "Workshop Safety",
+    "question": "What should you do after an accident or near miss?",
+    "answer": "Stop the unsafe activity, make the area safe, inform the responsible supervisor or instructor, and follow the institution's reporting procedure.",
+    "keywords": ["after an accident", "near miss", "inform supervisor", "reporting procedure"]
+  },
+  {
+    "id": "pdf_q97",
+    "section": "Workshop Safety",
+    "question": "What is an emergency stop?",
+    "answer": "An emergency stop is a control intended to quickly stop hazardous machine motion when an emergency occurs.",
+    "keywords": ["emergency stop", "e-stop", "stop hazardous machine motion", "emergency button"]
+  }
+]

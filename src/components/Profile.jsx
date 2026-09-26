@@ -46,7 +46,7 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
   };
 
   return (
-    <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '32px', maxWidth: '850px', margin: '0 auto', width: '100%' }}>
+    <div className="profile-page-container">
 
       {/* Title */}
       <div>
@@ -58,23 +58,23 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '32px', alignItems: 'start' }}>
+      <div className="profile-split-grid">
 
         {/* Left Card: Avatar and quick details */}
-        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '16px', background: '#FFFFFF', border: '1px solid #FFDEC9', borderRadius: '16px', padding: '28px', boxShadow: '0 8px 30px rgba(255, 120, 36, 0.08)' }}>
+        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '16px', background: '#FFFFFF', border: '1px solid #BAE6FD', borderRadius: '16px', padding: '28px', boxShadow: '0 8px 30px rgba(0, 119, 182, 0.08)' }}>
           <div
             style={{
               width: '84px',
               height: '84px',
               borderRadius: '42px',
-              background: 'linear-gradient(135deg, #FF7824 0%, #FF4500 100%)',
+              background: 'linear-gradient(135deg, #0077B6 0%, #00509D 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: '34px',
               fontWeight: '900',
               color: '#FFFFFF',
-              boxShadow: '0 4px 20px rgba(255, 120, 36, 0.35)'
+              boxShadow: '0 4px 20px rgba(0, 119, 182, 0.35)'
             }}
           >
             {user?.name?.charAt(0).toUpperCase() || 'S'}
@@ -87,20 +87,20 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
             </span>
           </div>
 
-          <div style={{ width: '100%', borderTop: '1px solid #FFDEC9', paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{ width: '100%', borderTop: '1px solid #BAE6FD', paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
               <span style={{ color: '#574A40' }}>Rank Level</span>
-              <strong style={{ color: '#FF7824' }}>{user?.level}</strong>
+              <strong style={{ color: '#0077B6' }}>{user?.level}</strong>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
               <span style={{ color: '#574A40' }}>Total XP</span>
-              <strong style={{ color: '#FF4500', fontFamily: 'var(--mono-font)' }}>{user?.xp} XP</strong>
+              <strong style={{ color: '#00509D', fontFamily: 'var(--mono-font)' }}>{user?.xp} XP</strong>
             </div>
           </div>
         </div>
 
         {/* Right Form panel */}
-        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '24px', background: '#FFFFFF', border: '1px solid #FFDEC9', borderRadius: '16px', padding: '28px', boxShadow: '0 8px 30px rgba(255, 120, 36, 0.08)' }}>
+        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '24px', background: '#FFFFFF', border: '1px solid #BAE6FD', borderRadius: '16px', padding: '28px', boxShadow: '0 8px 30px rgba(0, 119, 182, 0.08)' }}>
           <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#1C1917' }}>Affiliation Settings</h3>
 
           {message && (
@@ -108,9 +108,9 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
               style={{
                 padding: '12px 16px',
                 borderRadius: '8px',
-                background: 'rgba(255, 120, 36, 0.12)',
-                border: '1px solid #FF7824',
-                color: '#E65100',
+                background: 'rgba(0, 119, 182, 0.12)',
+                border: '1px solid #0077B6',
+                color: '#023E8A',
                 fontSize: '13px',
                 fontWeight: '600'
               }}
@@ -121,11 +121,11 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
 
           <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '11px', color: '#E65100', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '700' }}>
+              <label style={{ display: 'block', fontSize: '11px', color: '#023E8A', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '700' }}>
                 Full Name
               </label>
-              <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255, 241, 230, 0.7)', border: '1px solid #FFDEC9', borderRadius: '10px', padding: '12px 14px', gap: '10px' }}>
-                <User size={18} style={{ color: '#FF7824' }} />
+              <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255, 241, 230, 0.7)', border: '1px solid #BAE6FD', borderRadius: '10px', padding: '12px 14px', gap: '10px' }}>
+                <User size={18} style={{ color: '#0077B6' }} />
                 <input
                   type="text"
                   name="name"
@@ -137,11 +137,11 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '11px', color: '#E65100', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '700' }}>
+              <label style={{ display: 'block', fontSize: '11px', color: '#023E8A', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '700' }}>
                 Email Address
               </label>
-              <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255, 241, 230, 0.7)', border: '1px solid #FFDEC9', borderRadius: '10px', padding: '12px 14px', gap: '10px' }}>
-                <Mail size={18} style={{ color: '#FF7824' }} />
+              <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255, 241, 230, 0.7)', border: '1px solid #BAE6FD', borderRadius: '10px', padding: '12px 14px', gap: '10px' }}>
+                <Mail size={18} style={{ color: '#0077B6' }} />
                 <input
                   type="email"
                   name="email"
@@ -154,11 +154,11 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '11px', color: '#E65100', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '700' }}>
+                <label style={{ display: 'block', fontSize: '11px', color: '#023E8A', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '700' }}>
                   College / University
                 </label>
-                <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255, 241, 230, 0.7)', border: '1px solid #FFDEC9', borderRadius: '10px', padding: '12px 14px', gap: '10px' }}>
-                  <School size={18} style={{ color: '#FF7824' }} />
+                <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255, 241, 230, 0.7)', border: '1px solid #BAE6FD', borderRadius: '10px', padding: '12px 14px', gap: '10px' }}>
+                  <School size={18} style={{ color: '#0077B6' }} />
                   <input
                     type="text"
                     name="college"
@@ -170,11 +170,11 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '11px', color: '#E65100', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '700' }}>
+                <label style={{ display: 'block', fontSize: '11px', color: '#023E8A', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '700' }}>
                   Department
                 </label>
-                <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255, 241, 230, 0.7)', border: '1px solid #FFDEC9', borderRadius: '10px', padding: '12px 14px', gap: '10px' }}>
-                  <BookOpen size={18} style={{ color: '#FF7824' }} />
+                <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255, 241, 230, 0.7)', border: '1px solid #BAE6FD', borderRadius: '10px', padding: '12px 14px', gap: '10px' }}>
+                  <BookOpen size={18} style={{ color: '#0077B6' }} />
                   <input
                     type="text"
                     name="department"
@@ -196,7 +196,7 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
           </form>
 
           {/* Reset progress */}
-          <div style={{ borderTop: '1px solid #FFDEC9', paddingTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ borderTop: '1px solid #BAE6FD', paddingTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <h4 style={{ fontSize: '14px', fontWeight: '800', color: 'var(--danger)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <AlertTriangle size={16} /> Clear Database Cache

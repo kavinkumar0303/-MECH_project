@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Trophy, ShieldAlert, Award, Bell, Settings, Sparkles, MessageSquare, HelpCircle } from 'lucide-react';
+import { Search, Trophy, ShieldAlert, Award, Bell, Settings, Sparkles, MessageSquare, HelpCircle, Menu } from 'lucide-react';
 import { MACHINES } from '../data/machines';
 
 export default function Navbar({ 
@@ -11,7 +11,8 @@ export default function Navbar({
   showLabels,
   setShowLabels,
   highContrast,
-  setHighContrast
+  setHighContrast,
+  setMobileMenuOpen
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [showResults, setShowResults] = useState(false);
@@ -76,54 +77,51 @@ export default function Navbar({
       
       {/* 1. Top Mini Utility Strip */}
       <div className="space-top-utility">
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-          <span>support@mechdrive.edu</span>
-          <span style={{ opacity: 0.4 }}>•</span>
-          <span>+91 90000 00000</span>
-          <span style={{ opacity: 0.4 }}>•</span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#E65100' }}>
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#FF7824', boxShadow: '0 0 8px #FF7824' }}></span>
-            Live 3D Simulation Engine
+        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+          <span className="hide-on-mobile">support@mechdrive.edu</span>
+          <span className="hide-on-mobile" style={{ opacity: 0.4 }}>•</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#023E8A' }}>
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#0077B6', boxShadow: '0 0 8px #0077B6' }}></span>
+            Live 3D Engine
           </span>
         </div>
 
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
           <span style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }} onClick={() => setShowKeyboardHelp(true)}>
-            <HelpCircle size={12} /> Keyboard Guide (K)
+            <HelpCircle size={12} /> <span className="hide-on-mobile">Guide (K)</span>
           </span>
           <span style={{ opacity: 0.4 }}>•</span>
           <span style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }} onClick={() => setActiveTab('progress')}>
-            <Trophy size={12} /> Leaderboard
+            <Trophy size={12} /> <span className="hide-on-mobile">Rank</span>
           </span>
           <span style={{ opacity: 0.4 }}>•</span>
           <span style={{ cursor: 'pointer' }} onClick={() => setActiveTab('profile')}>
-            Student ID: #{user?.studentId || 'MECH-704'}
+            #{user?.studentId || 'MECH-704'}
           </span>
         </div>
       </div>
 
       {/* 2. Main Navbar */}
-      <div 
-        style={{
-          height: '68px',
-          borderBottom: '1px solid rgba(255, 120, 36, 0.18)',
-          background: '#FFFFFF',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '0 28px',
-          boxShadow: '0 8px 30px rgba(234, 88, 12, 0.06)'
-        }}
-      >
+      <div className="navbar-container">
+        {/* Mobile Hamburger Drawer Button */}
+        {setMobileMenuOpen && (
+          <button
+            className="mobile-hamburger-btn"
+            onClick={() => setMobileMenuOpen(prev => !prev)}
+            aria-label="Toggle navigation menu"
+            title="Open navigation menu"
+          >
+            <Menu size={20} />
+          </button>
+        )}
+
         {/* Search Capsule */}
-        <div style={{ position: 'relative', width: '380px' }}>
+        <div className="navbar-search-wrapper" style={{ position: 'relative' }}>
           <div className="space-search-capsule" style={{ background: '#FFFFFF' }}>
-            <Search size={16} style={{ color: '#FF7824', flexShrink: 0 }} />
+            <Search size={16} style={{ color: '#0077B6', flexShrink: 0 }} />
             <input 
               type="text" 
-              placeholder="Search machines, tools, operations..." 
+              placeholder="Search machines, operations..." 
               value={searchQuery}
               onChange={handleSearch}
               onFocus={() => setShowResults(true)}
@@ -151,9 +149,9 @@ export default function Navbar({
                 background: '#FFFFFF',
                 backdropFilter: 'blur(24px)',
                 WebkitBackdropFilter: 'blur(24px)',
-                border: '1px solid rgba(255, 120, 36, 0.25)',
+                border: '1px solid rgba(0, 119, 182, 0.25)',
                 borderRadius: '14px',
-                boxShadow: '0 15px 40px rgba(234, 88, 12, 0.12)',
+                boxShadow: '0 15px 40px rgba(0, 119, 182, 0.12)',
                 overflow: 'hidden',
                 zIndex: 1000
               }}
@@ -164,14 +162,14 @@ export default function Navbar({
                   onClick={() => handleResultClick(res)}
                   style={{
                     padding: '12px 18px',
-                    borderBottom: index === searchResults.length - 1 ? 'none' : '1px solid rgba(255, 120, 36, 0.12)',
+                    borderBottom: index === searchResults.length - 1 ? 'none' : '1px solid rgba(0, 119, 182, 0.12)',
                     cursor: 'pointer',
                     transition: 'all 0.2s'
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 120, 36, 0.08)'}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 119, 182, 0.08)'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
-                  <div style={{ fontSize: '10px', fontWeight: '800', color: '#E65100', textTransform: 'uppercase', marginBottom: '2px', letterSpacing: '0.6px' }}>
+                  <div style={{ fontSize: '10px', fontWeight: '800', color: '#023E8A', textTransform: 'uppercase', marginBottom: '2px', letterSpacing: '0.6px' }}>
                     {res.type}
                   </div>
                   <div style={{ fontSize: '13px', fontWeight: '700', color: '#1C1917' }}>{res.label}</div>
@@ -185,30 +183,30 @@ export default function Navbar({
         </div>
 
         {/* Telemetry Metrics Strip with Badges */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <div className="navbar-badges-group" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           
-          <div className="space-badge-purple" style={{ padding: '8px 16px' }}>
-            <Trophy size={16} style={{ color: '#FF7824' }} />
+          <div className="space-badge-purple" style={{ padding: '8px 14px' }}>
+            <Trophy size={16} style={{ color: '#0077B6', flexShrink: 0 }} />
             <div>
-              <div style={{ fontSize: '9px', color: '#8C7A70', letterSpacing: '0.5px' }}>WORKSHOP XP</div>
+              <div style={{ fontSize: '9px', color: '#8C7A70', letterSpacing: '0.5px' }}>XP</div>
               <div style={{ fontSize: '13px', fontWeight: '800', color: '#1C1917', fontFamily: 'var(--mono-font)' }}>
-                {user?.xp?.toLocaleString() || '0'} XP
+                {user?.xp?.toLocaleString() || '0'}
               </div>
             </div>
           </div>
 
-          <div className="space-badge-cyan" style={{ padding: '8px 16px' }}>
-            <ShieldAlert size={16} style={{ color: '#FF4500' }} />
+          <div className="space-badge-cyan" style={{ padding: '8px 14px' }}>
+            <ShieldAlert size={16} style={{ color: '#00509D', flexShrink: 0 }} />
             <div>
-              <div style={{ fontSize: '9px', color: '#E65100', letterSpacing: '0.5px' }}>SAFETY SCORE</div>
+              <div style={{ fontSize: '9px', color: '#023E8A', letterSpacing: '0.5px' }}>SAFETY</div>
               <div style={{ fontSize: '13px', fontWeight: '800', color: '#1C1917', fontFamily: 'var(--mono-font)' }}>
                 {user?.safetyScore || '100'}%
               </div>
             </div>
           </div>
 
-          <div className="space-badge-pink" style={{ padding: '8px 16px' }}>
-            <Award size={16} style={{ color: '#FF7824' }} />
+          <div className="space-badge-pink hide-on-small-mobile" style={{ padding: '8px 14px' }}>
+            <Award size={16} style={{ color: '#0077B6', flexShrink: 0 }} />
             <div>
               <div style={{ fontSize: '9px', color: '#8C7A70', letterSpacing: '0.5px' }}>ACCURACY</div>
               <div style={{ fontSize: '13px', fontWeight: '800', color: '#1C1917', fontFamily: 'var(--mono-font)' }}>
@@ -221,7 +219,7 @@ export default function Navbar({
           <div 
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-            style={{ position: 'relative', display: 'flex', alignItems: 'center', marginLeft: '6px' }}
+            style={{ position: 'relative', display: 'flex', alignItems: 'center' }}
           >
             <button
               onClick={() => setShowSettingsMenu(!showSettingsMenu)}
@@ -229,22 +227,23 @@ export default function Navbar({
               aria-haspopup="true"
               aria-expanded={showSettingsMenu}
               style={{
-                background: showSettingsMenu ? 'rgba(255, 120, 36, 0.15)' : 'rgba(255, 120, 36, 0.08)',
-                border: '1px solid ' + (showSettingsMenu ? '#FF7824' : 'rgba(255, 120, 36, 0.25)'),
+                background: showSettingsMenu ? 'rgba(0, 119, 182, 0.15)' : 'rgba(0, 119, 182, 0.08)',
+                border: '1px solid ' + (showSettingsMenu ? '#0077B6' : 'rgba(0, 119, 182, 0.25)'),
                 color: '#1C1917',
                 borderRadius: '50%',
-                width: '38px',
-                height: '38px',
+                width: '36px',
+                height: '36px',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 transition: 'all 0.2s',
                 outline: 'none',
-                boxShadow: showSettingsMenu ? '0 0 15px rgba(255, 120, 36, 0.25)' : 'none'
+                boxShadow: showSettingsMenu ? '0 0 15px rgba(0, 119, 182, 0.25)' : 'none',
+                flexShrink: 0
               }}
             >
-              <Settings size={16} style={{ color: '#E65100' }} />
+              <Settings size={16} style={{ color: '#023E8A' }} />
             </button>
 
             {showSettingsMenu && (
@@ -256,10 +255,10 @@ export default function Navbar({
                   background: '#FFFFFF',
                   backdropFilter: 'blur(24px)',
                   WebkitBackdropFilter: 'blur(24px)',
-                  border: '1px solid rgba(255, 120, 36, 0.25)',
+                  border: '1px solid rgba(0, 119, 182, 0.25)',
                   borderRadius: '12px',
                   padding: '14px',
-                  boxShadow: '0 10px 30px rgba(234, 88, 12, 0.12)',
+                  boxShadow: '0 10px 30px rgba(0, 119, 182, 0.12)',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '10px',
@@ -267,7 +266,7 @@ export default function Navbar({
                   zIndex: 10005
                 }}
               >
-                <div style={{ fontSize: '10px', fontWeight: '800', color: '#E65100', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '2px' }}>
+                <div style={{ fontSize: '10px', fontWeight: '800', color: '#023E8A', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '2px' }}>
                   Viewport Settings
                 </div>
                 
@@ -301,14 +300,12 @@ export default function Navbar({
             )}
           </div>
 
-          <div style={{ width: '1px', height: '24px', background: 'rgba(255, 120, 36, 0.2)' }}></div>
-
           <div 
-            style={{ position: 'relative', cursor: 'pointer', padding: '8px', borderRadius: '50%', background: 'rgba(255, 120, 36, 0.08)' }}
+            style={{ position: 'relative', cursor: 'pointer', padding: '8px', borderRadius: '50%', background: 'rgba(0, 119, 182, 0.08)', flexShrink: 0 }}
             onClick={() => setActiveTab('progress')}
           >
-            <Bell size={18} style={{ color: '#E65100' }} />
-            <div style={{ position: 'absolute', top: '4px', right: '4px', width: '8px', height: '8px', background: '#FF4500', borderRadius: '50%', boxShadow: '0 0 8px #FF4500' }}></div>
+            <Bell size={18} style={{ color: '#023E8A' }} />
+            <div style={{ position: 'absolute', top: '4px', right: '4px', width: '8px', height: '8px', background: '#00509D', borderRadius: '50%', boxShadow: '0 0 8px #00509D' }}></div>
           </div>
         </div>
       </div>

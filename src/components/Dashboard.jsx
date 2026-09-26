@@ -27,7 +27,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
       value: '7 Units', 
       desc: 'Full 3D Kinematics', 
       icon: Settings,
-      color: '#FF7824',
+      color: '#0077B6',
       badge: 'Interactive'
     },
     { 
@@ -35,7 +35,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
       value: `${(user?.completedMissions || 0) + 12}+`, 
       desc: 'Verified Workpieces', 
       icon: BarChart2,
-      color: '#FF4500',
+      color: '#00509D',
       badge: 'Active'
     },
     { 
@@ -43,7 +43,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
       value: `${user?.safetyScore || 100}%`, 
       desc: 'OSHA & ISO Standards', 
       icon: ShieldAlert,
-      color: '#E65100',
+      color: '#023E8A',
       badge: 'Optimal'
     },
     { 
@@ -65,7 +65,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
       desc: 'Precision turning, facing, chamfering, knurling & taper turning.',
       img: '/lathe.jpg', 
       isMachine: true,
-      color: '#FF7824'
+      color: '#0077B6'
     },
     { 
       id: 'welding', 
@@ -74,7 +74,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
       desc: 'Butt joints, lap joints, groove welds & electrode deposition.',
       img: '/welding.jpg', 
       isMachine: true,
-      color: '#FF4500'
+      color: '#00509D'
     },
     { 
       id: 'milling', 
@@ -92,7 +92,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
       desc: 'Horizontal linear shaping, stepped shoulders, slots & keyways.',
       img: '/shaper.jpg', 
       isMachine: true,
-      color: '#E65100'
+      color: '#023E8A'
     },
     { 
       id: 'planer', 
@@ -101,7 +101,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
       desc: 'Heavy casting planing, cross-rail tool feeds & surface finishing.',
       img: '/planer.jpg', 
       isMachine: true,
-      color: '#FF7824'
+      color: '#0077B6'
     },
     { 
       id: 'casting', 
@@ -110,7 +110,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
       desc: 'Crucible pouring, cope/drag gating, risers & mold solidification.',
       img: '/casting.jpg', 
       isMachine: true,
-      color: '#FF4500'
+      color: '#00509D'
     },
     { 
       id: 'moulding', 
@@ -128,7 +128,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
       desc: 'Explore the complete factory floor layout with interactive camera controls.',
       img: '/workplane.jpg', 
       isMachine: false,
-      color: '#E65100'
+      color: '#023E8A'
     }
   ];
 
@@ -147,15 +147,15 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
   );
 
   return (
-    <div style={{ padding: '28px 36px', display: 'flex', flexDirection: 'column', gap: '36px', width: '100%', maxWidth: '1600px', margin: '0 auto' }}>
+    <div className="dashboard-page-container">
       
       {/* 1. Hero Section */}
-      <div className="space-hero-container" style={{ background: 'linear-gradient(135deg, #FFFDFB 0%, #FFF3EA 50%, #FFE8D6 100%)', border: '1px solid rgba(255, 120, 36, 0.25)' }}>
-        <div style={{ position: 'relative', zIndex: 2, display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '40px', alignItems: 'center' }}>
+      <div className="space-hero-container" style={{ background: 'linear-gradient(135deg, #FFFFFF 0%, #FFF3EA 50%, #FFE8D6 100%)', border: '1px solid rgba(0, 119, 182, 0.25)' }}>
+        <div className="space-hero-grid" style={{ position: 'relative', zIndex: 2 }}>
           
           {/* Left Column: Hero Copy & CTA */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', alignItems: 'flex-start' }}>
-            <div className="space-badge-pink" style={{ background: 'rgba(255, 120, 36, 0.12)', border: '1px solid #FF7824', color: '#E65100' }}>
+            <div className="space-badge-pink" style={{ background: 'rgba(0, 119, 182, 0.12)', border: '1px solid #0077B6', color: '#023E8A' }}>
               <Sparkles size={13} />
               <span>Next-Gen Virtual Mechanical Workshop</span>
             </div>
@@ -163,7 +163,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
             <h1 style={{ fontSize: '40px', fontWeight: '900', color: '#1C1917', lineHeight: '1.15', letterSpacing: '-0.5px' }}>
               Powerful 3D Mechanical <br />
               <span style={{ 
-                background: 'linear-gradient(135deg, #FF7824 0%, #FF4500 100%)', 
+                background: 'linear-gradient(135deg, #0077B6 0%, #00509D 100%)', 
                 WebkitBackgroundClip: 'text', 
                 WebkitTextFillColor: 'transparent',
                 display: 'inline-block'
@@ -197,15 +197,15 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
               </button>
             </div>
 
-            <div style={{ display: 'flex', gap: '24px', alignItems: 'center', marginTop: '8px' }}>
+            <div className="space-hero-features" style={{ display: 'flex', gap: '20px', alignItems: 'center', marginTop: '8px', flexWrap: 'wrap' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#574A40', fontSize: '12px', fontWeight: '700' }}>
-                <CheckCircle2 size={15} color="#FF7824" /> 7 Interactive Machines
+                <CheckCircle2 size={15} color="#0077B6" /> 7 Interactive Machines
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#574A40', fontSize: '12px', fontWeight: '700' }}>
-                <CheckCircle2 size={15} color="#FF7824" /> OSHA Safety Engine
+                <CheckCircle2 size={15} color="#0077B6" /> OSHA Safety Engine
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#574A40', fontSize: '12px', fontWeight: '700' }}>
-                <CheckCircle2 size={15} color="#FF7824" /> ISO Metrology Calipers
+                <CheckCircle2 size={15} color="#0077B6" /> ISO Metrology Calipers
               </div>
             </div>
           </div>
@@ -215,20 +215,20 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
             <svg 
               className="animate-isometric"
               viewBox="0 0 500 400" 
-              style={{ width: '100%', height: '100%', maxWidth: '440px', filter: 'drop-shadow(0 20px 40px rgba(234, 88, 12, 0.25))' }}
+              style={{ width: '100%', height: '100%', maxWidth: '440px', filter: 'drop-shadow(0 20px 40px rgba(0, 119, 182, 0.25))' }}
             >
               <defs>
                 <linearGradient id="isoRoofBlue" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#FED7AA" />
-                  <stop offset="100%" stopColor="#FF7824" />
+                  <stop offset="100%" stopColor="#0077B6" />
                 </linearGradient>
                 <linearGradient id="isoWallBlue1" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#FF7824" />
-                  <stop offset="100%" stopColor="#FF4500" />
+                  <stop offset="0%" stopColor="#0077B6" />
+                  <stop offset="100%" stopColor="#00509D" />
                 </linearGradient>
                 <linearGradient id="isoWallBlue2" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#FF4500" />
-                  <stop offset="100%" stopColor="#E65100" />
+                  <stop offset="0%" stopColor="#00509D" />
+                  <stop offset="100%" stopColor="#023E8A" />
                 </linearGradient>
                 <filter id="glow">
                   <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
@@ -240,13 +240,13 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
               </defs>
 
               {/* Base Pedestal Isometric Grid */}
-              <path d="M250,330 L430,230 L250,130 L70,230 Z" fill="rgba(255, 248, 243, 0.9)" stroke="rgba(255, 120, 36, 0.35)" strokeWidth="2" />
-              <path d="M250,350 L430,250 L430,230 L250,330 L70,230 L70,250 Z" fill="rgba(255, 235, 222, 0.9)" stroke="rgba(255, 120, 36, 0.25)" strokeWidth="1.5" />
+              <path d="M250,330 L430,230 L250,130 L70,230 Z" fill="rgba(255, 248, 243, 0.9)" stroke="rgba(0, 119, 182, 0.35)" strokeWidth="2" />
+              <path d="M250,350 L430,250 L430,230 L250,330 L70,230 L70,250 Z" fill="rgba(255, 235, 222, 0.9)" stroke="rgba(0, 119, 182, 0.25)" strokeWidth="1.5" />
               
               {/* Pedestal Guide Rails */}
-              <line x1="120" y1="260" x2="380" y2="260" stroke="#FFB280" strokeWidth="3" filter="url(#glow)" strokeDasharray="8 4" />
-              <line x1="70" y1="230" x2="250" y2="330" stroke="#FF7824" strokeWidth="2" filter="url(#glow)" />
-              <line x1="430" y1="230" x2="250" y2="330" stroke="#FF4500" strokeWidth="2" filter="url(#glow)" />
+              <line x1="120" y1="260" x2="380" y2="260" stroke="#7DD3FC" strokeWidth="3" filter="url(#glow)" strokeDasharray="8 4" />
+              <line x1="70" y1="230" x2="250" y2="330" stroke="#0077B6" strokeWidth="2" filter="url(#glow)" />
+              <line x1="430" y1="230" x2="250" y2="330" stroke="#00509D" strokeWidth="2" filter="url(#glow)" />
 
               {/* Central Main Building Block (Tall) */}
               <path d="M250,90 L250,230 L180,270 L180,130 Z" fill="url(#isoWallBlue1)" />
@@ -262,25 +262,25 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
               <path d="M320,150 L380,185 L310,225 L250,190 Z" fill="url(#isoRoofBlue)" />
 
               {/* LED Strips */}
-              <rect x="200" y="145" width="35" height="6" transform="skewY(30)" fill="#FFE7D6" filter="url(#glow)" />
-              <rect x="200" y="170" width="35" height="6" transform="skewY(30)" fill="#FFE7D6" filter="url(#glow)" />
-              <rect x="200" y="195" width="35" height="6" transform="skewY(30)" fill="#FFE7D6" filter="url(#glow)" />
-              <rect x="200" y="220" width="35" height="6" transform="skewY(30)" fill="#FFE7D6" filter="url(#glow)" />
+              <rect x="200" y="145" width="35" height="6" transform="skewY(30)" fill="#E0F2FE" filter="url(#glow)" />
+              <rect x="200" y="170" width="35" height="6" transform="skewY(30)" fill="#E0F2FE" filter="url(#glow)" />
+              <rect x="200" y="195" width="35" height="6" transform="skewY(30)" fill="#E0F2FE" filter="url(#glow)" />
+              <rect x="200" y="220" width="35" height="6" transform="skewY(30)" fill="#E0F2FE" filter="url(#glow)" />
 
-              <rect x="265" y="145" width="35" height="6" transform="skewY(-30)" fill="#FFE7D6" filter="url(#glow)" />
-              <rect x="265" y="170" width="35" height="6" transform="skewY(-30)" fill="#FFE7D6" filter="url(#glow)" />
-              <rect x="265" y="195" width="35" height="6" transform="skewY(-30)" fill="#FFE7D6" filter="url(#glow)" />
-              <rect x="265" y="220" width="35" height="6" transform="skewY(-30)" fill="#FFE7D6" filter="url(#glow)" />
+              <rect x="265" y="145" width="35" height="6" transform="skewY(-30)" fill="#E0F2FE" filter="url(#glow)" />
+              <rect x="265" y="170" width="35" height="6" transform="skewY(-30)" fill="#E0F2FE" filter="url(#glow)" />
+              <rect x="265" y="195" width="35" height="6" transform="skewY(-30)" fill="#E0F2FE" filter="url(#glow)" />
+              <rect x="265" y="220" width="35" height="6" transform="skewY(-30)" fill="#E0F2FE" filter="url(#glow)" />
 
               {/* Center Beam */}
               <line x1="250" y1="90" x2="250" y2="230" stroke="#FFFFFF" strokeWidth="3" filter="url(#glow)" />
               
               {/* Particle Nodes */}
-              <circle cx="90" cy="120" r="3.5" fill="#FFB280" filter="url(#glow)" />
-              <circle cx="390" cy="80" r="4" fill="#FF4500" filter="url(#glow)" />
-              <circle cx="280" cy="30" r="3" fill="#FF7824" filter="url(#glow)" />
-              <circle cx="160" cy="310" r="3.5" fill="#FFB280" filter="url(#glow)" />
-              <circle cx="340" cy="320" r="4" fill="#FF4500" filter="url(#glow)" />
+              <circle cx="90" cy="120" r="3.5" fill="#7DD3FC" filter="url(#glow)" />
+              <circle cx="390" cy="80" r="4" fill="#00509D" filter="url(#glow)" />
+              <circle cx="280" cy="30" r="3" fill="#0077B6" filter="url(#glow)" />
+              <circle cx="160" cy="310" r="3.5" fill="#7DD3FC" filter="url(#glow)" />
+              <circle cx="340" cy="320" r="4" fill="#00509D" filter="url(#glow)" />
             </svg>
           </div>
 
@@ -297,8 +297,8 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
         </p>
 
         <div style={{ width: '100%', maxWidth: '640px' }}>
-          <div className="space-search-capsule" style={{ background: '#FFFFFF', border: '1px solid rgba(255, 120, 36, 0.25)' }}>
-            <Search size={18} style={{ color: '#FF7824', flexShrink: 0 }} />
+          <div className="space-search-capsule" style={{ background: '#FFFFFF', border: '1px solid rgba(0, 119, 182, 0.25)' }}>
+            <Search size={18} style={{ color: '#0077B6', flexShrink: 0 }} />
             <input 
               type="text" 
               placeholder="Search Lathe, Welding, Milling, Shaper, Planer..." 
@@ -319,14 +319,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
       </div>
 
       {/* 3. Telemetry Stats Grid */}
-      <div 
-        style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', 
-          gap: '20px',
-          width: '100%'
-        }}
-      >
+      <div className="dashboard-metrics-grid">
         {metrics.map((m, idx) => {
           const IconComponent = m.icon;
           return (
@@ -335,43 +328,43 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
               className="glass-panel"
               style={{
                 background: '#FFFFFF',
-                border: '1px solid rgba(255, 120, 36, 0.18)',
+                border: '1px solid rgba(0, 119, 182, 0.18)',
                 borderRadius: '16px',
-                padding: '22px 24px',
+                padding: '20px 22px',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '18px',
-                boxShadow: '0 4px 20px rgba(234, 88, 12, 0.06)'
+                gap: '16px',
+                boxShadow: '0 4px 20px rgba(0, 119, 182, 0.06)'
               }}
             >
               {/* Icon Container */}
               <div 
                 style={{
-                  width: '50px',
-                  height: '50px',
-                  borderRadius: '14px',
-                  background: 'rgba(255, 120, 36, 0.08)',
-                  border: '1px solid rgba(255, 120, 36, 0.2)',
+                  width: '46px',
+                  height: '46px',
+                  borderRadius: '12px',
+                  background: 'rgba(0, 119, 182, 0.08)',
+                  border: '1px solid rgba(0, 119, 182, 0.2)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0
                 }}
               >
-                <IconComponent size={24} style={{ color: m.color }} />
+                <IconComponent size={22} style={{ color: m.color }} />
               </div>
               
               {/* Values */}
-              <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ fontSize: '22px', fontWeight: '800', color: '#1C1917', lineHeight: '1.2', fontFamily: 'var(--mono-font)' }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '6px' }}>
+                  <div style={{ fontSize: '20px', fontWeight: '800', color: '#1C1917', lineHeight: '1.2', fontFamily: 'var(--mono-font)' }}>
                     {m.value}
                   </div>
-                  <span style={{ fontSize: '10px', color: '#E65100', fontWeight: '700', textTransform: 'uppercase', background: 'rgba(255, 120, 36, 0.1)', padding: '2px 8px', borderRadius: '10px' }}>
+                  <span style={{ fontSize: '9.5px', color: '#023E8A', fontWeight: '700', textTransform: 'uppercase', background: 'rgba(0, 119, 182, 0.1)', padding: '2px 7px', borderRadius: '10px', flexShrink: 0 }}>
                     {m.badge}
                   </span>
                 </div>
-                <div style={{ fontSize: '12px', fontWeight: '700', color: '#E65100', marginTop: '2px' }}>
+                <div style={{ fontSize: '12px', fontWeight: '700', color: '#023E8A', marginTop: '2px' }}>
                   {m.label}
                 </div>
                 <div style={{ fontSize: '11px', color: '#574A40', marginTop: '1px' }}>
@@ -384,7 +377,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
       </div>
 
       {/* 4. Section Title */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderBottom: '1px solid rgba(255, 120, 36, 0.18)', paddingBottom: '14px' }}>
+      <div className="dashboard-section-header">
         <div>
           <h3 style={{ fontSize: '22px', fontWeight: '800', color: '#1C1917', marginBottom: '4px' }}>
             Machine Simulation Bays ({filteredMachines.length})
@@ -397,34 +390,27 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
         <button 
           className="space-btn-secondary"
           onClick={() => setActiveTab('workshop_map')}
-          style={{ padding: '8px 18px', fontSize: '12px' }}
+          style={{ padding: '8px 18px', fontSize: '12px', flexShrink: 0 }}
         >
           View Full Workplane Map →
         </button>
       </div>
 
       {/* 5. Machine Cards Grid */}
-      <div 
-        style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
-          gap: '24px',
-          width: '100%'
-        }}
-      >
+      <div className="dashboard-machine-grid">
         {filteredMachines.map((card) => (
           <div 
             key={card.id}
             className="glass-panel"
             style={{
               background: '#FFFFFF',
-              border: '1px solid rgba(255, 120, 36, 0.18)',
+              border: '1px solid rgba(0, 119, 182, 0.18)',
               borderRadius: '16px',
               overflow: 'hidden',
               display: 'flex',
               flexDirection: 'column',
               padding: 0,
-              boxShadow: '0 8px 24px rgba(234, 88, 12, 0.06)',
+              boxShadow: '0 8px 24px rgba(0, 119, 182, 0.06)',
               transition: 'all 0.25s ease'
             }}
           >
@@ -437,7 +423,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 position: 'relative',
-                borderBottom: '1px solid rgba(255, 120, 36, 0.15)'
+                borderBottom: '1px solid rgba(0, 119, 182, 0.15)'
               }}
             >
               <div 
@@ -454,8 +440,8 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
                   style={{
                     background: 'rgba(255, 255, 255, 0.95)',
                     backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255, 120, 36, 0.3)',
-                    color: '#E65100',
+                    border: '1px solid rgba(0, 119, 182, 0.3)',
+                    color: '#023E8A',
                     fontSize: '10px',
                     fontWeight: '800',
                     padding: '4px 10px',
@@ -478,7 +464,7 @@ export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) 
                 <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#1C1917', marginBottom: '6px' }}>
                   {card.label}
                 </h4>
-                <div style={{ fontSize: '11px', fontWeight: '700', color: '#E65100', marginBottom: '8px' }}>
+                <div style={{ fontSize: '11px', fontWeight: '700', color: '#023E8A', marginBottom: '8px' }}>
                   {card.tag}
                 </div>
                 <p style={{ fontSize: '12px', color: '#574A40', lineHeight: '1.4', margin: 0 }}>
