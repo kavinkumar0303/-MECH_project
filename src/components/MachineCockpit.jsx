@@ -160,10 +160,8 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
     setOperationProgress(0);
     setOperationState('IDLE');
     setOperationHistory([]);
-    setPracticeMode(true);
     setBeforeAfterMode('after');
     setIsOpRunning(false);
-    setFocusedOpIdx(0);
     setValidationAlert(null);
     setAssessmentResult(null);
 
@@ -199,7 +197,6 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
     setInspectSuccess(false);
     setToolPosition({ x: 0, y: 0, z: 0 });
     setAssembledParts([]);
-    setAssemblyComplete(false);
     setTroubleIdx(0);
     setSelectedOptionId('');
     setTroubleFeedback('');
@@ -351,7 +348,6 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
 
             const ctx = simContextRef.current;
             const elapsedSec = Math.max(8, Math.round((Date.now() - (ctx.simStartTime || Date.now())) / 1000));
-            setSimElapsedTime(elapsedSec);
 
             // Calculate assessment score
             const currentSafety = SafetyEngine.validateSafety({
