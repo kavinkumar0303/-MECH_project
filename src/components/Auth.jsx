@@ -11,6 +11,7 @@ import {
   Eye, 
   EyeOff, 
   ArrowRight, 
+  Zap,
   Mail
 } from 'lucide-react';
 
@@ -55,36 +56,36 @@ export default function Auth({ onLoginSuccess }) {
     const scene = new THREE.Scene();
     
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.set(0, 0, 7.5);
+    camera.position.set(0, 0, 10);
     
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
     
-    const ambientLight = new THREE.AmbientLight('#FFEEDB', 1.8);
+    const ambientLight = new THREE.AmbientLight('#29363A', 1.2);
     scene.add(ambientLight);
     
-    const keyLight = new THREE.DirectionalLight('#FFFFFF', 2.2);
+    const keyLight = new THREE.DirectionalLight('#FFFFFF', 2.0);
     keyLight.position.set(5, 5, 5);
     scene.add(keyLight);
     
-    const fillLight = new THREE.DirectionalLight('#FFA066', 1.6);
+    const fillLight = new THREE.DirectionalLight('#D9A441', 1.15);
     fillLight.position.set(-5, -2, 2);
     scene.add(fillLight);
     
-    const rimLight = new THREE.DirectionalLight('#0077B6', 1.8);
+    const rimLight = new THREE.DirectionalLight('#72C0D6', 1.35);
     rimLight.position.set(0, 5, -5);
     scene.add(rimLight);
     
     const group = new THREE.Group();
     scene.add(group);
     
-    // Materials palette matching Warm Orange / Soft Peach / Cream Theme
-    const matMain = new THREE.MeshStandardMaterial({ color: '#0077B6', roughness: 0.25, metalness: 0.85 });
-    const matAccent = new THREE.MeshStandardMaterial({ color: '#00509D', roughness: 0.2, metalness: 0.9 });
+    // Materials palette matching SpaceDrive magenta, purple, cyan, and chrome
+    const matMain = new THREE.MeshStandardMaterial({ color: '#6E8590', roughness: 0.30, metalness: 0.85 });
+    const matAccent = new THREE.MeshStandardMaterial({ color: '#D9A441', roughness: 0.24, metalness: 0.9 });
     const matReflections = new THREE.MeshStandardMaterial({ color: '#FFFFFF', roughness: 0.15, metalness: 0.95 });
-    const matShadow = new THREE.MeshStandardMaterial({ color: '#FFA066', roughness: 0.4, metalness: 0.6 });
+    const matShadow = new THREE.MeshStandardMaterial({ color: '#160636', roughness: 0.5, metalness: 0.5 });
     
     // Constructing the logo components:
     
@@ -161,8 +162,8 @@ export default function Auth({ onLoginSuccess }) {
     
     const extrudeSettings = { depth: 0.1, bevelEnabled: true, bevelSegments: 2, steps: 1, bevelSize: 0.015, bevelThickness: 0.015 };
     const boltGeom = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-    const bolt = new THREE.Mesh(boltGeom, new THREE.MeshStandardMaterial({ color: '#FFF5ED', roughness: 0.2, metalness: 0.9, emissive: '#0077B6', emissiveIntensity: 0.35 }));
-    bolt.position.set(0, 0, 0.22);
+    const bolt = new THREE.Mesh(boltGeom, new THREE.MeshStandardMaterial({ color: '#79C9DD', roughness: 0.2, metalness: 0.9, emissive: '#79C9DD', emissiveIntensity: 0.22 }));
+    bolt.position.set(0, 0, 0.22); // Slightly forward from gear hub
     gearHub.add(bolt);
     
     group.add(gearHub);
@@ -172,14 +173,14 @@ export default function Auth({ onLoginSuccess }) {
     pedestal.position.y = -2.5;
     group.add(pedestal);
 
-    // Pedestal Glowing Rings
+    // Pedestal Glowing Neon Rings
     const ringGeom = new THREE.TorusGeometry(2.4, 0.06, 12, 64);
-    const glowingRing = new THREE.Mesh(ringGeom, new THREE.MeshBasicMaterial({ color: '#0077B6' }));
+    const glowingRing = new THREE.Mesh(ringGeom, new THREE.MeshBasicMaterial({ color: '#D9A441' }));
     glowingRing.position.y = -2.35;
     glowingRing.rotation.x = Math.PI / 2;
     group.add(glowingRing);
     
-    const glowingRing2 = new THREE.Mesh(ringGeom, new THREE.MeshBasicMaterial({ color: '#00509D' }));
+    const glowingRing2 = new THREE.Mesh(ringGeom, new THREE.MeshBasicMaterial({ color: '#79C9DD' }));
     glowingRing2.position.y = -2.48;
     glowingRing2.rotation.x = Math.PI / 2;
     group.add(glowingRing2);
@@ -188,137 +189,154 @@ export default function Auth({ onLoginSuccess }) {
     let targetScale = 1.1;
     let targetX = -1.5;
 
+    const updatePositionAndScale = () => {
+      const w = window.innerWidth;
+      if (w > 900) {
+        targetScale = 1.25;
+        targetX = -1.5;
+      } else if (w > 600) {
+        targetScale = 0.95;
+        targetX = -0.6;
+      } else {
+        targetScale = 0.68;
+        targetX = 0;
+      }
+      group.position.x = targetX;
+    };
+    updatePositionAndScale();
+    group.scale.set(currentScale, currentScale, currentScale);
+
+    let animationFrameId;
+    const clock = new THREE.Clock();
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    const animate = () => {
+      animationFrameId = requestAnimationFrame(animate);
+      
+      if (currentScale < targetScale) {
+        currentScale += (targetScale - currentScale) * 0.05;
+        group.scale.set(currentScale, currentScale, currentScale);
+      }
+      
+      if (!prefersReducedMotion) {
+        // Slow continuous rotation + subtle float
+        group.rotation.z = Math.sin(clock.getElapsedTime() * 0.15) * 0.1;
+        group.rotation.y = Math.sin(clock.getElapsedTime() * 0.2) * 0.15;
+        group.rotation.x = (Math.PI / 8) + Math.cos(clock.getElapsedTime() * 0.3) * 0.05;
+        group.position.y = Math.sin(clock.getElapsedTime() * 0.4) * 0.15;
+      } else {
+        group.rotation.set(Math.PI / 8, 0.2, 0);
+      }
+      
+      renderer.render(scene, camera);
+    };
+    
+    animate();
+    
     const handleResize = () => {
+      if (!container) return;
       const w = container.clientWidth || window.innerWidth;
       const h = container.clientHeight || window.innerHeight;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-      if (w < 900) {
-        targetX = 0;
-        targetScale = 0.75;
-      } else {
-        targetX = -1.5;
-        targetScale = 1.1;
-      }
+      updatePositionAndScale();
     };
-    window.addEventListener('resize', handleResize);
-    handleResize();
-
-    let mouseX = 0;
-    let mouseY = 0;
-    const handleMouseMove = (e) => {
-      const normX = (e.clientX / window.innerWidth) * 2 - 1;
-      const normY = -(e.clientY / window.innerHeight) * 2 + 1;
-      mouseX = normX * 0.4;
-      mouseY = normY * 0.4;
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-
-    let reqId;
-    let clock = new THREE.Clock();
     
-    const animate = () => {
-      reqId = requestAnimationFrame(animate);
-      const elapsedTime = clock.getElapsedTime();
-      
-      currentScale += (targetScale - currentScale) * 0.05;
-      group.scale.set(currentScale, currentScale, currentScale);
-      group.position.x += (targetX - group.position.x) * 0.05;
-
-      const idleRotSpeed = isLogin ? 0.4 : 0.8;
-      group.rotation.y = elapsedTime * idleRotSpeed + mouseX;
-      group.rotation.x = Math.sin(elapsedTime * 0.6) * 0.15 + mouseY;
-      group.position.y = Math.sin(elapsedTime * 1.5) * 0.15 - 0.1;
-
-      renderer.render(scene, camera);
-    };
-    animate();
-
+    window.addEventListener('resize', handleResize);
+    
     return () => {
+      cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('mousemove', handleMouseMove);
-      cancelAnimationFrame(reqId);
-      if (container && renderer.domElement) {
+      renderer.dispose();
+      if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
-      renderer.dispose();
     };
-  }, [isLogin]);
+  }, []);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
     setError('');
     setSuccess('');
 
     if (isLogin) {
-      if (!formData.studentId || !formData.password) {
-        setError('Please provide student ID / username and password.');
-        return;
-      }
-      setIsSubmitting(true);
-      setTimeout(() => {
-        setIsSubmitting(false);
-        const activeUser = {
-          studentId: formData.studentId,
-          name: formData.studentId === 'student01' ? 'Alex Rivera' : formData.studentId,
-          college: 'MIT School of Engineering',
-          department: 'Mechanical & Automation Engineering',
-          batch: '2023 - 2027',
-          role: 'Student Engineer',
-          avatarUrl: '',
-          xp: 2850,
-          level: 4,
+      const storedUsers = JSON.parse(localStorage.getItem('registered_users') || '[]');
+      const userMatch = storedUsers.find(
+        (u) => (u.studentId === formData.studentId || u.email === formData.studentId) && u.password === formData.password
+      );
+
+      if ((formData.studentId === 'student01' && formData.password === 'demo123') || userMatch) {
+        setIsSubmitting(true);
+        
+        const loggedUser = userMatch || {
+          name: 'Kavin Kumar',
+          studentId: 'student01',
+          college: 'PSG College of Technology',
+          department: 'Mechanical Engineering',
+          email: 'kavin.kumar@psg.edu',
+          xp: 1240,
+          level: 'Workshop Expert',
           safetyScore: 98,
-          accuracy: 96,
-          completedLabs: 12,
-          totalLabs: 24,
-          badges: ['ISO-9001 Safe Operator', 'Precision Turner', 'Welding Safety Certified'],
-          history: [
-            { machine: 'Lathe', task: 'Facing & Centering Operation', score: '98%', date: 'Yesterday' },
-            { machine: 'Welding', task: 'Butt Joint Multi-pass Safety Pass', score: '95%', date: '3 days ago' },
-            { machine: 'Milling', task: 'End-Mill Pocket Roughing', score: '100%', date: '5 days ago' }
-          ]
+          accuracy: 98,
+          completedMissions: 24,
+          machinesExplored: 7,
+          completedMissionsList: ['lathe_01', 'welding_01', 'milling_01'],
+          badges: ['Lathe Beginner', 'Safety First', 'Milling Master', 'Workshop Expert']
         };
-        setSuccess('Access granted! Initializing 3D cockpit...');
+
         setTimeout(() => {
-          onLoginSuccess(activeUser);
-        }, 800);
-      }, 1000);
+          setIsSubmitting(false);
+          setSuccess('✓ Authentication Successful');
+          setTimeout(() => {
+            onLoginSuccess(loggedUser);
+          }, 800);
+        }, 1200);
+      } else {
+        setError('⚠️ Invalid Username or Password');
+      }
     } else {
-      if (!formData.name || !formData.studentId || !formData.email || !formData.password) {
-        setError('Please complete all registration fields.');
+      if (!formData.name || !formData.studentId || !formData.college || !formData.department || !formData.email || !formData.password) {
+        setError('⚠️ Please fill out all fields');
         return;
       }
       if (formData.password !== formData.confirmPassword) {
-        setError('Passwords do not match.');
+        setError('⚠️ Passwords do not match');
         return;
       }
+
+      const storedUsers = JSON.parse(localStorage.getItem('registered_users') || '[]');
+      if (storedUsers.some((u) => u.studentId === formData.studentId || u.email === formData.email)) {
+        setError('⚠️ Account with this ID or Email already exists');
+        return;
+      }
+
+      const newUser = {
+        name: formData.name,
+        studentId: formData.studentId,
+        college: formData.college,
+        department: formData.department,
+        email: formData.email,
+        password: formData.password,
+        xp: 0,
+        level: 'Apprentice',
+        safetyScore: 100,
+        accuracy: 100,
+        completedMissions: 0,
+        machinesExplored: 0,
+        completedMissionsList: [],
+        badges: []
+      };
+
       setIsSubmitting(true);
       setTimeout(() => {
         setIsSubmitting(false);
-        const newUser = {
-          studentId: formData.studentId,
-          name: formData.name,
-          college: formData.college || 'Engineering Institute',
-          department: formData.department || 'Mechanical Engineering',
-          batch: '2024 - 2028',
-          role: 'Student Trainee',
-          avatarUrl: '',
-          xp: 100,
-          level: 1,
-          safetyScore: 100,
-          accuracy: 100,
-          completedLabs: 0,
-          totalLabs: 24,
-          badges: ['Workshop Inductee'],
-          history: []
-        };
-        setSuccess('Account provisioned successfully! Loading cockpit...');
+        storedUsers.push(newUser);
+        localStorage.setItem('registered_users', JSON.stringify(storedUsers));
+        setSuccess('✓ Workshop Account Created!');
         setTimeout(() => {
           onLoginSuccess(newUser);
         }, 800);
@@ -333,7 +351,7 @@ export default function Auth({ onLoginSuccess }) {
         minHeight: '100vh',
         width: '100vw',
         display: 'flex',
-        background: 'radial-gradient(ellipse at center top, #FFF8F3 0%, #F0F9FF 100%)',
+        background: 'radial-gradient(ellipse at center top, #160636 0%, #0D0221 100%)',
         overflow: 'hidden',
         position: 'relative'
       }}
@@ -344,7 +362,7 @@ export default function Auth({ onLoginSuccess }) {
       </div>
 
       {/* 2. Visual readability overlay */}
-      <div className="login-overlay" style={{ background: 'radial-gradient(ellipse at 80% 50%, rgba(255, 248, 243, 0.4) 0%, rgba(255, 248, 243, 0.9) 100%)' }} />
+      <div className="login-overlay" style={{ background: 'radial-gradient(ellipse at 80% 50%, rgba(13, 2, 33, 0.4) 0%, rgba(13, 2, 33, 0.85) 100%)' }} />
 
       {/* 3. Left Branding Overlay Text */}
       <div 
@@ -360,14 +378,14 @@ export default function Auth({ onLoginSuccess }) {
           pointerEvents: 'none'
         }}
       >
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: '20px', background: 'rgba(0, 119, 182, 0.12)', border: '1px solid rgba(0, 119, 182, 0.3)', marginBottom: '16px' }}>
-          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#0077B6', boxShadow: '0 0 10px #0077B6' }}></span>
-          <span style={{ fontSize: '11px', fontWeight: '800', color: '#023E8A', letterSpacing: '1.5px', textTransform: 'uppercase' }}>NEXT-GEN MECHANICAL VIRTUAL LAB</span>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: '20px', background: 'rgba(255, 83, 118, 0.12)', border: '1px solid rgba(255, 83, 118, 0.3)', marginBottom: '16px' }}>
+          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#00F5D4', boxShadow: '0 0 10px #00F5D4' }}></span>
+          <span style={{ fontSize: '11px', fontWeight: '800', color: '#00F5D4', letterSpacing: '1.5px', textTransform: 'uppercase' }}>NEXT-GEN MECHANICAL VIRTUAL LAB</span>
         </div>
         <h1 style={{ 
           fontSize: '52px', 
           fontWeight: '900', 
-          background: 'linear-gradient(135deg, #1C1917 0%, #023E8A 50%, #0077B6 100%)',
+          background: 'linear-gradient(135deg, #FFFFFF 0%, #E040FB 50%, #FF5376 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           margin: 0, 
@@ -380,21 +398,21 @@ export default function Auth({ onLoginSuccess }) {
         <h2 style={{ 
           fontSize: '32px', 
           fontWeight: '800', 
-          color: '#023E8A', 
+          color: '#00F5D4', 
           margin: '6px 0 0 0', 
           letterSpacing: '1px',
           textTransform: 'uppercase',
           lineHeight: '1.1',
-          textShadow: '0 0 20px rgba(0, 119, 182, 0.3)'
+          textShadow: '0 0 20px rgba(0, 245, 212, 0.3)'
         }}>
           Virtual Workshop
         </h2>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginTop: '20px' }}>
-          <span style={{ fontSize: '12px', fontWeight: '700', color: '#1C1917', letterSpacing: '2px', opacity: 0.9 }}>LEARN</span>
-          <span style={{ color: '#0077B6', fontSize: '12px' }}>•</span>
-          <span style={{ fontSize: '12px', fontWeight: '700', color: '#1C1917', letterSpacing: '2px', opacity: 0.9 }}>SIMULATE</span>
-          <span style={{ color: '#00509D', fontSize: '12px' }}>•</span>
-          <span style={{ fontSize: '12px', fontWeight: '700', color: '#1C1917', letterSpacing: '2px', opacity: 0.9 }}>MASTER</span>
+          <span style={{ fontSize: '12px', fontWeight: '700', color: '#FFFFFF', letterSpacing: '2px', opacity: 0.9 }}>LEARN</span>
+          <span style={{ color: '#FF5376', fontSize: '12px' }}>•</span>
+          <span style={{ fontSize: '12px', fontWeight: '700', color: '#FFFFFF', letterSpacing: '2px', opacity: 0.9 }}>SIMULATE</span>
+          <span style={{ color: '#00F5D4', fontSize: '12px' }}>•</span>
+          <span style={{ fontSize: '12px', fontWeight: '700', color: '#FFFFFF', letterSpacing: '2px', opacity: 0.9 }}>MASTER</span>
         </div>
       </div>
 
@@ -413,11 +431,11 @@ export default function Auth({ onLoginSuccess }) {
         }}
       >
         <div style={{ display: 'flex', gap: '4px' }}>
-          <div style={{ width: '4px', height: '14px', background: '#0077B6', borderRadius: '2px' }} />
-          <div style={{ width: '4px', height: '14px', background: '#FFA066', borderRadius: '2px' }} />
-          <div style={{ width: '4px', height: '14px', background: '#00509D', borderRadius: '2px' }} />
+          <div style={{ width: '4px', height: '14px', background: 'var(--brand-primary)', borderRadius: '2px' }} />
+          <div style={{ width: '4px', height: '14px', background: 'var(--brand-secondary)', borderRadius: '2px' }} />
+          <div style={{ width: '4px', height: '14px', background: 'var(--accent-cyan)', borderRadius: '2px' }} />
         </div>
-        <span style={{ fontSize: '12px', fontWeight: '600', color: '#574A40', letterSpacing: '0.5px' }}>
+        <span style={{ fontSize: '12px', fontWeight: '600', color: 'rgba(255, 255, 255, 0.5)', letterSpacing: '0.5px' }}>
           Skill Builds Machines. Knowledge Builds Futures.
         </span>
       </div>
@@ -430,10 +448,10 @@ export default function Auth({ onLoginSuccess }) {
             width: '100%',
             maxWidth: isLogin ? '420px' : '520px',
             padding: '38px',
-            background: 'rgba(255, 255, 255, 0.95)',
+            background: 'rgba(22, 6, 54, 0.85)',
             backdropFilter: 'blur(24px)',
-            border: '1px solid rgba(0, 119, 182, 0.25)',
-            boxShadow: '0 25px 60px rgba(0, 119, 182, 0.12), 0 0 35px rgba(0, 119, 182, 0.08)',
+            border: '1px solid rgba(224, 64, 251, 0.25)',
+            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.6), 0 0 35px rgba(224, 64, 251, 0.15)',
             borderRadius: '20px',
             display: 'flex',
             flexDirection: 'column',
@@ -447,20 +465,20 @@ export default function Auth({ onLoginSuccess }) {
               width: '54px', 
               height: '54px', 
               borderRadius: '16px',
-              background: 'rgba(0, 119, 182, 0.12)',
-              border: '1px solid #0077B6',
+              background: 'linear-gradient(135deg, rgba(255, 83, 118, 0.2) 0%, rgba(121, 40, 202, 0.3) 100%)',
+              border: '1px solid rgba(255, 83, 118, 0.4)',
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center',
-              boxShadow: '0 0 20px rgba(0, 119, 182, 0.25)'
+              boxShadow: '0 0 20px rgba(255, 83, 118, 0.3)'
             }}>
-              <Settings className="anim-slow-spin" size={28} style={{ color: '#023E8A' }} />
+              <Settings className="anim-slow-spin" size={28} style={{ color: '#FF5376' }} />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <span style={{ fontSize: '18px', fontWeight: '900', color: '#1C1917', letterSpacing: '1px', textTransform: 'uppercase' }}>STUDENT PORTAL</span>
-              <span style={{ fontSize: '11px', fontWeight: '700', color: '#023E8A', letterSpacing: '1.5px', textTransform: 'uppercase', marginTop: '2px' }}>Virtual Mechanical Lab</span>
+              <span style={{ fontSize: '18px', fontWeight: '900', color: '#FFFFFF', letterSpacing: '1px', textTransform: 'uppercase' }}>STUDENT PORTAL</span>
+              <span style={{ fontSize: '11px', fontWeight: '700', color: '#00F5D4', letterSpacing: '1.5px', textTransform: 'uppercase', marginTop: '2px' }}>Virtual Mechanical Lab</span>
             </div>
-            <p style={{ color: '#574A40', fontSize: '13px', textAlign: 'center', margin: 0 }}>
+            <p style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '13px', textAlign: 'center', margin: 0 }}>
               Sign in to continue your workshop training
             </p>
           </div>
@@ -469,8 +487,8 @@ export default function Auth({ onLoginSuccess }) {
           {isLogin && (
             <div 
               style={{
-                background: '#FFF8F3',
-                border: '1px solid rgba(0, 119, 182, 0.25)',
+                background: 'rgba(32, 12, 74, 0.7)',
+                border: '1px solid rgba(224, 64, 251, 0.3)',
                 borderRadius: '12px',
                 padding: '12px 16px',
                 display: 'flex',
@@ -479,17 +497,17 @@ export default function Auth({ onLoginSuccess }) {
                 gap: '12px'
               }}
             >
-              <div style={{ fontSize: '12px', color: '#574A40', lineHeight: '1.4' }}>
-                <strong style={{ color: '#023E8A' }}>Demo Student Access</strong><br/>
-                User: <span style={{ fontFamily: 'var(--mono-font)', color: '#1C1917', fontWeight: '700' }}>student01</span> | 
-                Pass: <span style={{ fontFamily: 'var(--mono-font)', color: '#1C1917', fontWeight: '700' }}>demo123</span>
+              <div style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.7)', lineHeight: '1.4' }}>
+                <strong style={{ color: '#00F5D4' }}>Demo Student Access</strong><br/>
+                User: <span style={{ fontFamily: 'var(--mono-font)', color: '#FFFFFF', fontWeight: '700' }}>student01</span> | 
+                Pass: <span style={{ fontFamily: 'var(--mono-font)', color: '#FFFFFF', fontWeight: '700' }}>demo123</span>
               </div>
               <button 
                 type="button"
                 onClick={handleDemoFill}
                 style={{
-                  background: 'linear-gradient(135deg, #0077B6 0%, #00509D 100%)',
-                  border: 'none',
+                  background: 'linear-gradient(135deg, rgba(255, 83, 118, 0.2) 0%, rgba(121, 40, 202, 0.3) 100%)',
+                  border: '1px solid #FF5376',
                   color: '#FFFFFF',
                   padding: '6px 12px',
                   borderRadius: '16px',
@@ -497,7 +515,7 @@ export default function Auth({ onLoginSuccess }) {
                   fontWeight: '700',
                   cursor: 'pointer',
                   transition: 'all 0.2s',
-                  boxShadow: '0 0 10px rgba(0, 119, 182, 0.25)'
+                  boxShadow: '0 0 10px rgba(255, 83, 118, 0.25)'
                 }}
               >
                 Auto Fill
@@ -507,14 +525,14 @@ export default function Auth({ onLoginSuccess }) {
 
           {/* Status Messages */}
           {error && (
-            <div style={{ background: 'rgba(239, 68, 68, 0.12)', border: '1px solid #EF4444', borderRadius: '10px', padding: '10px 14px', color: '#DC2626', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid #EF4444', borderRadius: '10px', padding: '10px 14px', color: '#FCA5A5', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <ShieldAlert size={14} />
               <span>{error}</span>
             </div>
           )}
 
           {success && (
-            <div style={{ background: 'rgba(0, 119, 182, 0.12)', border: '1px solid #0077B6', borderRadius: '10px', padding: '10px 14px', color: '#023E8A', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ background: 'rgba(0, 245, 212, 0.15)', border: '1px solid #00F5D4', borderRadius: '10px', padding: '10px 14px', color: '#00F5D4', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <CheckCircle size={14} />
               <span>{success}</span>
             </div>
@@ -525,11 +543,11 @@ export default function Auth({ onLoginSuccess }) {
             {isLogin ? (
               <>
                 <div>
-                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#574A40', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                     Username or Student ID
                   </label>
-                  <div style={{ display: 'flex', alignItems: 'center', background: '#FFFFFF', border: '1px solid rgba(0, 119, 182, 0.2)', borderRadius: '12px', padding: '12px 14px', gap: '10px' }}>
-                    <User size={16} style={{ color: '#0077B6' }} />
+                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '12px', padding: '12px 14px', gap: '10px' }}>
+                    <User size={16} style={{ color: '#E040FB' }} />
                     <input 
                       type="text" 
                       name="studentId"
@@ -537,17 +555,17 @@ export default function Auth({ onLoginSuccess }) {
                       onChange={handleChange}
                       placeholder="Enter student01"
                       required
-                      style={{ background: 'none', border: 'none', color: '#1C1917', fontSize: '13px', width: '100%', outline: 'none' }}
+                      style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '13px', width: '100%', outline: 'none' }}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#574A40', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                     Password
                   </label>
-                  <div style={{ display: 'flex', alignItems: 'center', background: '#FFFFFF', border: '1px solid rgba(0, 119, 182, 0.2)', borderRadius: '12px', padding: '12px 14px', gap: '10px' }}>
-                    <Lock size={16} style={{ color: '#0077B6' }} />
+                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '12px', padding: '12px 14px', gap: '10px' }}>
+                    <Lock size={16} style={{ color: '#E040FB' }} />
                     <input 
                       type={showPassword ? 'text' : 'password'}
                       name="password"
@@ -555,7 +573,7 @@ export default function Auth({ onLoginSuccess }) {
                       onChange={handleChange}
                       placeholder="••••••••"
                       required
-                      style={{ background: 'none', border: 'none', color: '#1C1917', fontSize: '13px', width: '100%', outline: 'none' }}
+                      style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '13px', width: '100%', outline: 'none' }}
                     />
                     <button
                       type="button"
@@ -564,7 +582,7 @@ export default function Auth({ onLoginSuccess }) {
                       style={{
                         background: 'none',
                         border: 'none',
-                        color: '#8C7A70',
+                        color: 'rgba(255, 255, 255, 0.5)',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
@@ -578,11 +596,11 @@ export default function Auth({ onLoginSuccess }) {
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px', marginTop: '4px' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: '#574A40' }}>
-                    <input type="checkbox" defaultChecked style={{ accentColor: '#0077B6' }} />
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: 'rgba(255, 255, 255, 0.7)' }}>
+                    <input type="checkbox" defaultChecked style={{ accentColor: '#FF5376' }} />
                     Remember Me
                   </label>
-                  <a href="#forgot" onClick={(e) => { e.preventDefault(); setError('⚠️ Contact department administrator to reset credentials.'); }} style={{ color: '#023E8A', textDecoration: 'none', fontWeight: '600' }}>
+                  <a href="#forgot" onClick={(e) => { e.preventDefault(); setError('⚠️ Contact department administrator to reset credentials.'); }} style={{ color: '#00F5D4', textDecoration: 'none', fontWeight: '600' }}>
                     Forgot password?
                   </a>
                 </div>
@@ -591,35 +609,35 @@ export default function Auth({ onLoginSuccess }) {
               <>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#574A40', marginBottom: '6px', textTransform: 'uppercase' }}>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
                       Student Name
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: '#FFFFFF', border: '1px solid rgba(0, 119, 182, 0.2)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
-                      <User size={14} style={{ color: '#0077B6' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                      <User size={14} style={{ color: '#E040FB' }} />
                       <input 
                         type="text" 
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
                         placeholder="John Doe"
-                        style={{ background: 'none', border: 'none', color: '#1C1917', fontSize: '12px', width: '100%', outline: 'none' }}
+                        style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '12px', width: '100%', outline: 'none' }}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#574A40', marginBottom: '6px', textTransform: 'uppercase' }}>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
                       Student ID
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: '#FFFFFF', border: '1px solid rgba(0, 119, 182, 0.2)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
-                      <Lock size={14} style={{ color: '#0077B6' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                      <Lock size={14} style={{ color: '#E040FB' }} />
                       <input 
                         type="text" 
                         name="studentId"
                         value={formData.studentId}
                         onChange={handleChange}
                         placeholder="STU1029"
-                        style={{ background: 'none', border: 'none', color: '#1C1917', fontSize: '12px', width: '100%', outline: 'none' }}
+                        style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '12px', width: '100%', outline: 'none' }}
                       />
                     </div>
                   </div>
@@ -627,88 +645,88 @@ export default function Auth({ onLoginSuccess }) {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#574A40', marginBottom: '6px', textTransform: 'uppercase' }}>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
                       College
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: '#FFFFFF', border: '1px solid rgba(0, 119, 182, 0.2)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
-                      <School size={14} style={{ color: '#0077B6' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                      <School size={14} style={{ color: '#E040FB' }} />
                       <input 
                         type="text" 
                         name="college"
                         value={formData.college}
                         onChange={handleChange}
                         placeholder="University"
-                        style={{ background: 'none', border: 'none', color: '#1C1917', fontSize: '12px', width: '100%', outline: 'none' }}
+                        style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '12px', width: '100%', outline: 'none' }}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#574A40', marginBottom: '6px', textTransform: 'uppercase' }}>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
                       Department
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: '#FFFFFF', border: '1px solid rgba(0, 119, 182, 0.2)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
-                      <BookOpen size={14} style={{ color: '#0077B6' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                      <BookOpen size={14} style={{ color: '#E040FB' }} />
                       <input 
                         type="text" 
                         name="department"
                         value={formData.department}
                         onChange={handleChange}
                         placeholder="Mechanical"
-                        style={{ background: 'none', border: 'none', color: '#1C1917', fontSize: '12px', width: '100%', outline: 'none' }}
+                        style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '12px', width: '100%', outline: 'none' }}
                       />
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#574A40', marginBottom: '6px', textTransform: 'uppercase' }}>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
                     Email Address
                   </label>
-                  <div style={{ display: 'flex', alignItems: 'center', background: '#FFFFFF', border: '1px solid rgba(0, 119, 182, 0.2)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
-                    <Mail size={14} style={{ color: '#0077B6' }} />
+                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                    <Mail size={14} style={{ color: '#E040FB' }} />
                     <input 
                       type="email" 
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="name@college.edu"
-                      style={{ background: 'none', border: 'none', color: '#1C1917', fontSize: '12px', width: '100%', outline: 'none' }}
+                      style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '12px', width: '100%', outline: 'none' }}
                     />
                   </div>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#574A40', marginBottom: '6px', textTransform: 'uppercase' }}>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
                       Password
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: '#FFFFFF', border: '1px solid rgba(0, 119, 182, 0.2)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
-                      <Lock size={14} style={{ color: '#0077B6' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                      <Lock size={14} style={{ color: '#E040FB' }} />
                       <input 
                         type={showPassword ? 'text' : 'password'}
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
                         placeholder="••••••••"
-                        style={{ background: 'none', border: 'none', color: '#1C1917', fontSize: '12px', width: '100%', outline: 'none' }}
+                        style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '12px', width: '100%', outline: 'none' }}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#574A40', marginBottom: '6px', textTransform: 'uppercase' }}>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase' }}>
                       Confirm
                     </label>
-                    <div style={{ display: 'flex', alignItems: 'center', background: '#FFFFFF', border: '1px solid rgba(0, 119, 182, 0.2)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
-                      <Lock size={14} style={{ color: '#0077B6' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '10px', padding: '10px 12px', gap: '8px' }}>
+                      <Lock size={14} style={{ color: '#E040FB' }} />
                       <input 
                         type={showPassword ? 'text' : 'password'}
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleChange}
                         placeholder="••••••••"
-                        style={{ background: 'none', border: 'none', color: '#1C1917', fontSize: '12px', width: '100%', outline: 'none' }}
+                        style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '12px', width: '100%', outline: 'none' }}
                       />
                     </div>
                   </div>
@@ -758,13 +776,13 @@ export default function Auth({ onLoginSuccess }) {
             </button>
           </form>
 
-          <div style={{ textAlign: 'center', borderTop: '1px solid rgba(0, 119, 182, 0.15)', paddingTop: '16px' }}>
-            <p style={{ fontSize: '13px', color: '#574A40', margin: 0 }}>
+          <div style={{ textAlign: 'center', borderTop: '1px solid rgba(224, 64, 251, 0.2)', paddingTop: '16px' }}>
+            <p style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.6)', margin: 0 }}>
               {isLogin ? "New to the platform?" : "Already have an account?"}{' '}
               <a 
                 href="#toggle" 
                 onClick={(e) => { e.preventDefault(); setIsLogin(!isLogin); setError(''); setSuccess(''); }}
-                style={{ color: '#023E8A', textDecoration: 'none', fontWeight: '700' }}
+                style={{ color: '#00F5D4', textDecoration: 'none', fontWeight: '700' }}
               >
                 {isLogin ? 'Create Account' : 'Sign In'}
               </a>

@@ -134,7 +134,7 @@ export class SafetyEngine {
     // 5. Operating Parameter Bounds Check
     if (operation && operation.paramBounds && simParams) {
       if (simParams.speed && operation.paramBounds.speed) {
-        const { max, unit } = operation.paramBounds.speed;
+        const { min, max, unit } = operation.paramBounds.speed;
         if (simParams.speed > max * 1.25) {
           warnings.push({
             code: "SPEED_EXCESSIVE",
