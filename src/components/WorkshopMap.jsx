@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { Play, Compass } from 'lucide-react';
+import { Compass } from 'lucide-react';
 import { MACHINES } from '../data/machines';
 
 export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
@@ -17,6 +17,8 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
     setSelectedMachineId(machineId);
     setActiveTab('machine_explorer');
   };
+  const handleEnterBayRef = useRef(handleEnterBay);
+  handleEnterBayRef.current = handleEnterBay;
 
   useEffect(() => {
     const width = mountRef.current.clientWidth || 600;
@@ -195,7 +197,7 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
       setHoveredId(null);
     };
 
-    const handleClick = (e) => {
+    const handleClick = () => {
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObjects(scene.children, true);
 
@@ -205,7 +207,7 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
           obj = obj.parent;
         }
         if (terminals.some(t => t.id === obj.name)) {
-          handleEnterBay(obj.name);
+          handleEnterBayRef.current(obj.name);
         }
       }
     };

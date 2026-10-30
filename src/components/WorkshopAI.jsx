@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send, Cpu } from 'lucide-react';
+import { MessageSquare, X, Send, Cpu, Volume2, VolumeX, Copy, Check } from 'lucide-react';
 import { generateWorkshopAIResponse } from '../simulation/workshopAIEngine';
 
 export default function WorkshopAI() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { sender: 'ai', text: "Hello! I am your Workshop AI assistant. Ask me anything about machining operations, safety guidelines, tool setups, or troubleshooting diagnostics." }
+    { sender: 'ai', text: "Hello! I am your Workshop AI assistant. Ask me anything about machining operations, safety guidelines, tool setups, or troubleshooting diagnostics. Supports English, தமிழ், and Tanglish!" }
   ]);
   const [inputValue, setInputValue] = useState('');
+  const [speakingIndex, setSpeakingIndex] = useState(null);
+  const [copiedIndex, setCopiedIndex] = useState(null);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -15,6 +17,38 @@ export default function WorkshopAI() {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
+
+  // Clean up speech on unmount
+  useEffect(() => {
+    return () => {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  const handleSpeak = (text, idx) => {
+    if (!('speechSynthesis' in window)) return;
+    if (speakingIndex === idx) {
+      window.speechSynthesis.cancel();
+      setSpeakingIndex(null);
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    utterance.onend = () => setSpeakingIndex(null);
+    utterance.onerror = () => setSpeakingIndex(null);
+    setSpeakingIndex(idx);
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const handleCopy = (text, idx) => {
+    navigator.clipboard?.writeText(text);
+    setCopiedIndex(idx);
+    setTimeout(() => setCopiedIndex(null), 2000);
+  };
 
   const quickPrompts = [
     { label: "Lathe vs Milling", query: "What is the difference between a Lathe and a Milling machine?" },
@@ -128,7 +162,7 @@ export default function WorkshopAI() {
                 key={index}
                 style={{
                   alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
-                  maxWidth: '85%',
+                  maxWidth: '88%',
                   background: msg.sender === 'user' ? 'linear-gradient(135deg, #0077B6 0%, #00509D 100%)' : 'rgba(255, 241, 230, 0.85)',
                   border: msg.sender === 'user' ? 'none' : '1px solid #BAE6FD',
                   borderRadius: msg.sender === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
@@ -136,10 +170,55 @@ export default function WorkshopAI() {
                   fontSize: '13px',
                   lineHeight: '1.5',
                   color: msg.sender === 'user' ? '#FFFFFF' : '#1C1917',
-                  boxShadow: msg.sender === 'user' ? '0 4px 15px rgba(0, 119, 182, 0.25)' : 'none'
+                  boxShadow: msg.sender === 'user' ? '0 4px 15px rgba(0, 119, 182, 0.25)' : 'none',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '6px'
                 }}
               >
-                {msg.text}
+                <div>{msg.text}</div>
+                {msg.sender === 'ai' && (
+                  <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end', paddingTop: '4px', borderTop: '1px solid rgba(186, 230, 253, 0.4)' }}>
+                    <button
+                      onClick={() => handleSpeak(msg.text, index)}
+                      title={speakingIndex === index ? "Stop voice narration" : "Listen via SpeechSynthesis"}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: speakingIndex === index ? '#0077B6' : '#6B7280',
+                        cursor: 'pointer',
+                        padding: '2px 4px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '3px',
+                        fontSize: '10px',
+                        fontWeight: '600'
+                      }}
+                    >
+                      {speakingIndex === index ? <VolumeX size={13} style={{ color: '#EF4444' }} /> : <Volume2 size={13} />}
+                      <span>{speakingIndex === index ? 'MUTE' : 'LISTEN'}</span>
+                    </button>
+                    <button
+                      onClick={() => handleCopy(msg.text, index)}
+                      title="Copy response text"
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: copiedIndex === index ? '#059669' : '#6B7280',
+                        cursor: 'pointer',
+                        padding: '2px 4px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '3px',
+                        fontSize: '10px',
+                        fontWeight: '600'
+                      }}
+                    >
+                      {copiedIndex === index ? <Check size={13} style={{ color: '#059669' }} /> : <Copy size={13} />}
+                      <span>{copiedIndex === index ? 'COPIED' : 'COPY'}</span>
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
             <div ref={messagesEndRef} />

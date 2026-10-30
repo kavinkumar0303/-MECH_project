@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Search, Trophy, ShieldAlert, Award, Bell, Settings, Sparkles, MessageSquare, HelpCircle, Menu } from 'lucide-react';
+import { Search, Trophy, ShieldAlert, Award, Bell, Settings, HelpCircle, Menu } from 'lucide-react';
 import { MACHINES } from '../data/machines';
 
 export default function Navbar({ 
   user, 
   setActiveTab, 
   setSelectedMachineId,
-  showKeyboardHelp,
+  _showKeyboardHelp,
   setShowKeyboardHelp,
   showLabels,
   setShowLabels,

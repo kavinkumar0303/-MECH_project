@@ -219,6 +219,33 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
             </button>
           </div>
 
+          {onLogout && (
+            <div style={{ borderTop: '1px solid #BAE6FD', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h4 style={{ fontSize: '14px', fontWeight: '800', color: '#1E293B', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <LogOut size={16} /> Sign Out
+                </h4>
+                <p style={{ fontSize: '12px', color: '#574A40', marginTop: '2px', lineHeight: '1.4' }}>
+                  End your current engineering session and return to the main portal.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={onLogout}
+                className="space-btn-secondary"
+                style={{
+                  padding: '8px 16px',
+                  fontSize: '11px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                <LogOut size={14} /> Exit Session
+              </button>
+            </div>
+          )}
+
         </div>
 
       </div>

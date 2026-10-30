@@ -1,5 +1,5 @@
 import React from 'react';
-import { Award, ShieldAlert, CheckCircle } from 'lucide-react';
+import { Award } from 'lucide-react';
 import { MACHINES } from '../data/machines';
 
 export default function MyProgress({ user }) {

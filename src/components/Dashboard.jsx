@@ -3,11 +3,8 @@ import {
   Settings, 
   BarChart2, 
   Target, 
-  Clock, 
   ArrowRight,
   Play,
-  Layers,
-  Zap,
   Sparkles,
   ShieldAlert,
   Search,
@@ -15,7 +12,6 @@ import {
   Compass,
   Cpu
 } from 'lucide-react';
-import { MACHINES } from '../data/machines';
 
 export default function Dashboard({ user, setActiveTab, setSelectedMachineId }) {
   const [searchFilter, setSearchFilter] = useState('');

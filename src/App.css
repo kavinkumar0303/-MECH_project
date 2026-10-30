@@ -1,184 +1,343 @@
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
+/* MechDrive Virtual Workshop - Production Enhancement Styles */
 
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-}
-
-.hero {
-  position: relative;
-
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
-}
-
-#center {
+/* 1. Digital Vernier Caliper & Metrology Station */
+.metrology-workstation {
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
-
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
+  gap: 12px;
+  background: #F0F9FF;
+  border: 1px solid #BAE6FD;
+  border-radius: 12px;
+  padding: 16px;
 }
 
-#next-steps {
+.caliper-lcd-panel {
+  background: #0C1E32;
+  border: 2px solid #0077B6;
+  border-radius: 8px;
+  padding: 12px 16px;
   display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
-
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
-
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 119, 182, 0.25);
 }
 
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
+.caliper-lcd-readout {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 26px;
+  font-weight: 800;
+  color: #38BDF8;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
 }
 
-#next-steps ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
+.caliper-lcd-unit {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #BAE6FD;
+  text-transform: uppercase;
 }
 
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
-}
-
-.ticks {
+.caliper-scale-graphic {
   position: relative;
+  height: 28px;
+  background: linear-gradient(180deg, #E2E8F0 0%, #CBD5E1 100%);
+  border-radius: 4px;
+  border: 1px solid #94A3B8;
+  overflow: hidden;
+  margin: 6px 0;
+}
+
+.caliper-scale-ticks {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    #475569 0px,
+    #475569 1px,
+    transparent 1px,
+    transparent 8px
+  );
+  opacity: 0.7;
+}
+
+.caliper-jaw-indicator {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #0077B6;
+  box-shadow: 0 0 6px #0077B6;
+  transition: left 0.1s ease-out;
+}
+
+/* 2. Tolerance Limit Band (GO / NO-GO) */
+.tolerance-track {
+  position: relative;
+  height: 20px;
+  background: #E2E8F0;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+}
+
+.tolerance-zone-lsl {
+  width: 25%;
+  background: rgba(239, 68, 68, 0.25);
+  border-right: 1px dashed #EF4444;
+}
+
+.tolerance-zone-pass {
+  width: 50%;
+  background: rgba(16, 185, 129, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 800;
+  color: #065F46;
+  letter-spacing: 0.5px;
+}
+
+.tolerance-zone-usl {
+  width: 25%;
+  background: rgba(239, 68, 68, 0.25);
+  border-left: 1px dashed #EF4444;
+}
+
+.tolerance-pointer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 2px;
+  background: #023E8A;
+  box-shadow: 0 0 6px rgba(2, 62, 138, 0.8);
+  transform: translateX(-50%);
+  transition: left 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 3. Surface Roughness Stylus Wave */
+.roughness-meter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #FFFFFF;
+  border: 1px solid #BAE6FD;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.roughness-trace-svg {
+  width: 120px;
+  height: 24px;
+}
+
+/* 4. Official Certificate of Competency Modal */
+.cert-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 30, 50, 0.75);
+  backdrop-filter: blur(12px);
+  z-index: 20000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.cert-modal-paper {
+  background: #FFFAF5;
+  color: #1F2937;
   width: 100%;
+  max-width: 820px;
+  border-radius: 12px;
+  padding: 36px 44px;
+  position: relative;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(217, 119, 6, 0.3);
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(0, 119, 182, 0.03) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(217, 119, 6, 0.04) 0%, transparent 20%);
+}
 
-  &::before,
-  &::after {
-    content: '';
+.cert-ornate-border {
+  border: 3px double #B45309;
+  border-radius: 8px;
+  padding: 28px 32px;
+  position: relative;
+}
+
+.cert-corner-accent {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-color: #B45309;
+  border-style: solid;
+}
+.cert-corner-accent.top-left { top: 6px; left: 6px; border-width: 2px 0 0 2px; }
+.cert-corner-accent.top-right { top: 6px; right: 6px; border-width: 2px 2px 0 0; }
+.cert-corner-accent.bottom-left { bottom: 6px; left: 6px; border-width: 0 0 2px 2px; }
+.cert-corner-accent.bottom-right { bottom: 6px; right: 6px; border-width: 0 2px 2px 0; }
+
+.cert-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+
+.cert-authority {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  color: #92400E;
+  text-transform: uppercase;
+}
+
+.cert-title {
+  font-family: 'Outfit', 'Inter', sans-serif;
+  font-size: 26px;
+  font-weight: 900;
+  color: #023E8A;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 4px 0;
+}
+
+.cert-subtitle {
+  font-size: 12px;
+  color: #6B7280;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.cert-body {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 20px 0 28px;
+}
+
+.cert-candidate-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: #111827;
+  border-bottom: 2px solid #D97706;
+  display: inline-block;
+  padding: 0 24px 6px;
+  margin: 4px auto;
+  letter-spacing: 0.5px;
+}
+
+.cert-award-statement {
+  font-size: 13px;
+  color: #4B5563;
+  line-height: 1.6;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+.cert-skills-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.cert-skill-pill {
+  background: rgba(0, 119, 182, 0.08);
+  border: 1px solid #BAE6FD;
+  color: #023E8A;
+  border-radius: 14px;
+  padding: 4px 12px;
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.cert-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 1px solid #E5E7EB;
+  padding-top: 20px;
+  margin-top: 16px;
+}
+
+.cert-seal-stamp {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border: 2px dashed #D97706;
+  background: radial-gradient(circle, #FEF3C7 0%, #FDE68A 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #92400E;
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
+}
+
+.cert-signature-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.cert-signature-line {
+  width: 140px;
+  height: 1px;
+  background: #374151;
+}
+
+.cert-signature-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #4B5563;
+  text-transform: uppercase;
+}
+
+.cert-actions-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* Print Rules for Certificate */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .cert-modal-paper, .cert-modal-paper * {
+    visibility: visible;
+  }
+  .cert-modal-backdrop {
     position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
+    inset: 0;
+    background: transparent;
+    padding: 0;
   }
-
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
+  .cert-modal-paper {
+    box-shadow: none;
+    border: none;
+    max-width: 100%;
+    margin: 0;
   }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
+  .cert-actions-bar {
+    display: none !important;
   }
 }

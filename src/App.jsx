@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import './App.css';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import Auth from './components/Auth';
+import LandingPage from './components/LandingPage';
 import Dashboard from './components/Dashboard';
 import WorkshopMap from './components/WorkshopMap';
 import MachineCockpit from './components/MachineCockpit';
@@ -13,6 +15,7 @@ import WorkshopAI from './components/WorkshopAI';
 
 function App() {
   const [user, setUser] = useState(null);
+  const [authMode, setAuthMode] = useState('landing');
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedMachineId, setSelectedMachineId] = useState('lathe');
   const [isLoading, setIsLoading] = useState(true);
@@ -137,8 +140,66 @@ function App() {
 
   // Not authenticated
   if (!user) {
+    const launchGuestSession = (customMachineId) => {
+      const guest = {
+        studentId: 'student_guest',
+        name: 'Engineering Apprentice',
+        college: 'National Engineering Institute',
+        department: 'Mechanical Engineering',
+        batch: '2024 - 2028',
+        role: 'Student Engineer',
+        avatarUrl: '',
+        xp: 1850,
+        level: 3,
+        safetyScore: 98,
+        accuracy: 96,
+        completedLabs: 8,
+        totalLabs: 24,
+        badges: ['Workshop Inductee', 'ISO Safe Operator'],
+        history: [
+          { machine: 'Lathe', task: 'Facing & Centering Operation', score: '98%', date: 'Today' }
+        ]
+      };
+      if (customMachineId) {
+        setSelectedMachineId(customMachineId);
+        setActiveTab('machine_explorer');
+      }
+      handleLoginSuccess(guest);
+    };
+
+    if (authMode === 'landing') {
+      return (
+        <LandingPage 
+          onGetStarted={() => launchGuestSession()}
+          onLoginClick={() => setAuthMode('login')}
+          onSelectMachine={(mId) => launchGuestSession(mId)}
+        />
+      );
+    }
+
     return (
-      <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+        <button
+          onClick={() => setAuthMode('landing')}
+          style={{
+            position: 'absolute',
+            top: '20px',
+            left: '24px',
+            background: 'rgba(255, 255, 255, 0.9)',
+            backdropFilter: 'blur(8px)',
+            border: '1px solid #BAE6FD',
+            borderRadius: '20px',
+            padding: '8px 18px',
+            color: '#023E8A',
+            fontWeight: '700',
+            fontSize: '12px',
+            cursor: 'pointer',
+            zIndex: 100,
+            boxShadow: '0 2px 10px rgba(0, 119, 182, 0.15)'
+          }}
+        >
+          ← Back to Overview
+        </button>
         <Auth onLoginSuccess={handleLoginSuccess} />
       </div>
     );
@@ -184,6 +245,17 @@ function App() {
             user={user} 
             onUpdateUser={handleUpdateUser} 
             onLogout={handleLogout} 
+          />
+        );
+      case 'landing':
+        return (
+          <LandingPage 
+            onGetStarted={() => setActiveTab('machine_explorer')}
+            onSelectMachine={(mId) => {
+              setSelectedMachineId(mId);
+              setActiveTab('machine_explorer');
+            }}
+            onLoginClick={() => setActiveTab('profile')}
           />
         );
       default:

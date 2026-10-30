@@ -11,6 +11,7 @@ import {
   Zap,
   Sparkles,
   Layers,
+  Compass,
   X
 } from 'lucide-react';
 
@@ -19,7 +20,7 @@ export default function Sidebar({
   setActiveTab, 
   selectedMachineId, 
   setSelectedMachineId, 
-  user, 
+  user: _user, 
   onLogout,
   mobileMenuOpen,
   setMobileMenuOpen
@@ -40,7 +41,8 @@ export default function Sidebar({
     { id: 'moulding', label: 'Sand Moulding', icon: Layers, isMachine: true },
     
     { id: 'progress', label: 'Reports & XP', icon: TrendingUp },
-    { id: 'profile', label: 'Student Profile', icon: User }
+    { id: 'profile', label: 'Student Profile', icon: User },
+    { id: 'landing', label: 'Workshop Tour', icon: Compass }
   ];
 
   const handleItemClick = (item) => {

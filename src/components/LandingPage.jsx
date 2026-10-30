@@ -3,24 +3,15 @@ import {
   Search, 
   Play, 
   Pause, 
-  Sparkles, 
   ArrowRight, 
   CheckCircle2, 
   Star, 
   Mail, 
-  Sliders, 
-  Activity, 
-  Layers, 
   Box, 
   ShieldCheck, 
   Zap, 
-  Compass, 
   X,
-  ChevronRight,
-  TrendingUp,
-  Cpu,
-  Eye,
-  Check
+  ChevronRight
 } from 'lucide-react';
 import { MACHINES } from '../data/machines';
 
@@ -67,7 +58,7 @@ export default function LandingPage({ onGetStarted, onLoginClick, onSelectMachin
           <div className="landing-logo-icon">
             <div className="logo-diamond-inner" />
           </div>
-          <span className="landing-brand-text">LOREM IPSUM</span>
+          <span className="landing-brand-text">MECHDRIVE 3D</span>
         </div>
 
         {/* Center Nav Links */}
@@ -227,15 +218,15 @@ export default function LandingPage({ onGetStarted, onLoginClick, onSelectMachin
           <section className="landing-hero-left">
             {/* UI/UX Pre-heading Tag */}
             <div className="hero-category-wrap">
-              <h2 className="hero-category-gradient">UI/UX</h2>
+              <h2 className="hero-category-gradient">DIGITAL TWIN SIMULATOR</h2>
             </div>
 
             {/* Main Headline */}
-            <h1 className="hero-main-title">Landing Page</h1>
+            <h1 className="hero-main-title">Virtual Workshop</h1>
 
             {/* Paragraph Text */}
             <p className="hero-paragraph">
-              Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam.
+              Interactive 3D mechanical engineering laboratory. Master Centre Lathe, Arc Welding, Shaper, Planer, Milling, Metal Casting, and Moulding with real-time kinematics, ISO safety validation, and automated metrology scoring.
             </p>
 
             {/* CTA Button */}

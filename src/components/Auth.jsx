@@ -11,7 +11,6 @@ import {
   Eye, 
   EyeOff, 
   ArrowRight, 
-  Zap,
   Mail
 } from 'lucide-react';
 

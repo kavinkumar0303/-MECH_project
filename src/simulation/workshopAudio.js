@@ -422,7 +422,7 @@ class WorkshopAudioSynthesizer {
         popGain.connect(this.masterGain);
         popOsc.start(popTime);
         popOsc.stop(popTime + 0.05);
-      } catch (e) {}
+      } catch {}
     }, 120);
     this.activeIntervals.push(popInterval);
   }
@@ -473,7 +473,7 @@ class WorkshopAudioSynthesizer {
           clapperGain.connect(this.masterGain);
           clapperOsc.start(clickTime);
           clapperOsc.stop(clickTime + 0.09);
-        } catch (e) {}
+        } catch {}
       }, 1350);
       this.activeTimeouts.push(clapperTimeout);
     };
@@ -497,7 +497,7 @@ class WorkshopAudioSynthesizer {
   // ==========================================
   // 4. PLANING MACHINE OPERATIONS
   // ==========================================
-  playPlanerOperation(op, speed = 25, now) {
+  playPlanerOperation(_op, _speed = 25, _now) {
     // 3.5s long table reciprocation: 2.4s heavy guideway cut + 1.1s return
     const strokeDuration = 3.5;
 
@@ -709,7 +709,7 @@ class WorkshopAudioSynthesizer {
           thudGain.connect(this.masterGain);
           thud.start(t);
           thud.stop(t + 0.22);
-        } catch (e) {}
+        } catch {}
       }, 400);
       this.activeIntervals.push(ramInterval);
 
@@ -795,7 +795,7 @@ class WorkshopAudioSynthesizer {
             node.gain.cancelScheduledValues(now);
             node.gain.setValueAtTime(node.gain.value, now);
             node.gain.linearRampToValueAtTime(0.001, now + 0.15);
-          } catch (e) {}
+          } catch {}
         }
       });
 
@@ -804,10 +804,10 @@ class WorkshopAudioSynthesizer {
           try {
             if (node.stop) node.stop();
             if (node.disconnect) node.disconnect();
-          } catch (e) {}
+          } catch {}
         });
       }, 180);
-    } catch (e) {}
+    } catch {}
   }
 
   /**
@@ -836,7 +836,7 @@ class WorkshopAudioSynthesizer {
         }
         if (node.stop) node.stop();
         if (node.disconnect) node.disconnect();
-      } catch (e) {}
+      } catch {}
     });
   }
 

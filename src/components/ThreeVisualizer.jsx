@@ -4,7 +4,19 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { ProceduralWorkpieceManager } from '../simulation/proceduralWorkpieces';
 import { SIMULATION_OPERATIONS } from '../simulation/simulationConfig';
 import { workshopAudio } from '../simulation/workshopAudio';
-import { Play, Pause, RotateCcw, Volume2, VolumeX, Eye, Flame, Activity, Sparkles, CheckCircle2 } from 'lucide-react';
+import { 
+  Play, 
+  Pause, 
+  RotateCcw, 
+  Volume2, 
+  VolumeX, 
+  Activity, 
+  Maximize2, 
+  Minimize2, 
+  Droplets, 
+  ChevronDown, 
+  ChevronUp
+} from 'lucide-react';
 
 const labelsData = {
   lathe: [
@@ -98,10 +110,10 @@ export default function ThreeVisualizer({
   isPlaying,
   simStep,
   simParams = { speed: 750, feed: 0.12, doc: 0.8 },
-  activeSubTab,
-  assembledParts,
-  onAssemblyComplete,
-  onAssemblySuccess,
+  _activeSubTab,
+  _assembledParts,
+  _onAssemblyComplete,
+  _onAssemblySuccess,
   cameraMode,
   setCameraMode,
   showLabels = true,
@@ -114,16 +126,18 @@ export default function ThreeVisualizer({
   onStartSimulation,
   onPauseResumeSimulation,
   onResetSimulation,
-  onUpdateSimParams,
-  beforeAfterMode = 'after',
-  onToggleBeforeAfter,
+  _onUpdateSimParams,
+  _beforeAfterMode = 'after',
+  _onToggleBeforeAfter,
   isLogin = false
 }) {
   const mountRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isAudioMuted, setIsAudioMuted] = useState(false);
-  const [isDraggingTool, setIsDraggingTool] = useState(false);
+  const [coolantActive, setCoolantActive] = useState(true);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [droExpanded, setDroExpanded] = useState(true);
 
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
@@ -146,6 +160,13 @@ export default function ThreeVisualizer({
   const operationStateRef = useRef(operationState);
   const selectedPartIdRef = useRef(selectedPartId);
 
+  const isExplodedRef = useRef(isExploded);
+  const isCutawayRef = useRef(isCutaway);
+  const showLabelsRef = useRef(showLabels);
+  const coolantActiveRef = useRef(coolantActive);
+  const focusedPartIdRef = useRef(focusedPartId);
+  const onPartSelectRef = useRef(onPartSelect);
+
   const machineOperations = SIMULATION_OPERATIONS[machineId] || [];
 
   useEffect(() => {
@@ -165,6 +186,13 @@ export default function ThreeVisualizer({
     operationStateRef.current = operationState;
     selectedPartIdRef.current = selectedPartId;
 
+    isExplodedRef.current = isExploded;
+    isCutawayRef.current = isCutaway;
+    showLabelsRef.current = showLabels;
+    coolantActiveRef.current = coolantActive;
+    focusedPartIdRef.current = focusedPartId;
+    onPartSelectRef.current = onPartSelect;
+
     // Audio Synchronization: Play ONLY when operation is actively running
     if (operationState === 'RUNNING' && isPlaying && !isAudioMuted) {
       const opId = typeof activeOperation === 'object' ? activeOperation?.id : activeOperation;
@@ -176,7 +204,7 @@ export default function ThreeVisualizer({
     } else {
       workshopAudio.stopSound();
     }
-  }, [isPlaying, simParams, simStep, toolPosition, activeOperation, operationProgress, operationState, selectedPartId, machineId, isAudioMuted]);
+  }, [isPlaying, simParams, simStep, toolPosition, activeOperation, operationProgress, operationState, selectedPartId, machineId, isAudioMuted, isExploded, isCutaway, showLabels, coolantActive, focusedPartId, onPartSelect]);
 
   // Adjust camera targets
   useEffect(() => {
@@ -637,8 +665,8 @@ export default function ThreeVisualizer({
     scene.add(hoverHelper);
     hoverHelperRef.current = hoverHelper;
 
-    // Sparks Particle System
-    const sparkCount = 40;
+    // Sparks Particle System (Welding & High-Friction Cutting)
+    const sparkCount = 50;
     const sparkGeo = new THREE.BufferGeometry();
     const sparkPositions = new Float32Array(sparkCount * 3);
     const sparkVelocities = [];
@@ -646,15 +674,61 @@ export default function ThreeVisualizer({
       sparkPositions[i * 3] = 0;
       sparkPositions[i * 3 + 1] = 0;
       sparkPositions[i * 3 + 2] = 0;
-      sparkVelocities.push(new THREE.Vector3((Math.random() - 0.5) * 3, Math.random() * 2 + 0.5, (Math.random() - 0.5) * 3));
+      sparkVelocities.push(new THREE.Vector3((Math.random() - 0.5) * 4, Math.random() * 2.5 + 0.5, (Math.random() - 0.5) * 4));
     }
     sparkGeo.setAttribute('position', new THREE.BufferAttribute(sparkPositions, 3));
     const sparks = new THREE.Points(
       sparkGeo,
-      new THREE.PointsMaterial({ color: '#0077B6', size: 0.14, transparent: true, opacity: 0.9 })
+      new THREE.PointsMaterial({ color: '#FFB703', size: 0.16, transparent: true, opacity: 0.95 })
     );
     sparks.visible = false;
     scene.add(sparks);
+
+    // Swarf / Metal Chips Particle System (Turning / Shaping / Milling)
+    const chipCount = 60;
+    const chipGeo = new THREE.BufferGeometry();
+    const chipPositions = new Float32Array(chipCount * 3);
+    const chipVelocities = [];
+    for (let i = 0; i < chipCount; i++) {
+      chipPositions[i * 3] = 0;
+      chipPositions[i * 3 + 1] = 0;
+      chipPositions[i * 3 + 2] = 0;
+      chipVelocities.push(new THREE.Vector3(
+        (Math.random() - 0.4) * 2.5,
+        Math.random() * 2 + 1,
+        Math.random() * 2 + 0.6
+      ));
+    }
+    chipGeo.setAttribute('position', new THREE.BufferAttribute(chipPositions, 3));
+    const chips = new THREE.Points(
+      chipGeo,
+      new THREE.PointsMaterial({ color: '#E0A96D', size: 0.18, transparent: true, opacity: 0.9 })
+    );
+    chips.visible = false;
+    scene.add(chips);
+
+    // Coolant Fluid Stream Particle System (Cutting Fluid Spray)
+    const coolantCount = 45;
+    const coolantGeo = new THREE.BufferGeometry();
+    const coolantPositions = new Float32Array(coolantCount * 3);
+    const coolantVelocities = [];
+    for (let i = 0; i < coolantCount; i++) {
+      coolantPositions[i * 3] = 0;
+      coolantPositions[i * 3 + 1] = 0;
+      coolantPositions[i * 3 + 2] = 0;
+      coolantVelocities.push(new THREE.Vector3(
+        (Math.random() - 0.5) * 0.4,
+        -Math.random() * 2.5 - 2,
+        (Math.random() - 0.5) * 0.4
+      ));
+    }
+    coolantGeo.setAttribute('position', new THREE.BufferAttribute(coolantPositions, 3));
+    const coolantStream = new THREE.Points(
+      coolantGeo,
+      new THREE.PointsMaterial({ color: '#00B4D8', size: 0.22, transparent: true, opacity: 0.75 })
+    );
+    coolantStream.visible = false;
+    scene.add(coolantStream);
 
     // Arc Welding dynamic flare light
     const arcLight = new THREE.PointLight('#60A5FA', 0, 5);
@@ -665,7 +739,6 @@ export default function ThreeVisualizer({
     let clock = new THREE.Clock();
 
     // 3D Pointer Tooltip
-    let hoveredPartId = null;
     const tooltipDiv = document.createElement('div');
     tooltipDiv.style.position = 'absolute';
     tooltipDiv.style.background = 'rgba(255, 255, 255, 0.96)';
@@ -707,7 +780,6 @@ export default function ThreeVisualizer({
       }
 
       if (foundPartId) {
-        hoveredPartId = foundPartId;
         canvas.style.cursor = 'pointer';
         tooltipDiv.style.left = `${e.clientX - rect.left + 15}px`;
         tooltipDiv.style.top = `${e.clientY - rect.top + 15}px`;
@@ -723,7 +795,6 @@ export default function ThreeVisualizer({
         }
       } else {
         canvas.style.cursor = 'crosshair';
-        hoveredPartId = null;
         tooltipDiv.style.display = 'none';
         if (hoverHelperRef.current) {
           hoverHelperRef.current.visible = false;
@@ -750,14 +821,15 @@ export default function ThreeVisualizer({
       const curSelectedPart = selectedPartIdRef.current;
 
       // Exploded View
+      const curExploded = isExplodedRef.current;
       Object.keys(groupsRef.current).forEach((key) => {
         const g = groupsRef.current[key];
         const base = g.userData.basePosition;
         const offset = g.userData.explodedOffset;
         
-        const targetX = isExploded ? base.x + offset[0] : base.x;
-        const targetY = isExploded ? base.y + offset[1] : base.y;
-        const targetZ = isExploded ? base.z + offset[2] : base.z;
+        const targetX = curExploded ? base.x + offset[0] : base.x;
+        const targetY = curExploded ? base.y + offset[1] : base.y;
+        const targetZ = curExploded ? base.z + offset[2] : base.z;
         
         g.position.x = THREE.MathUtils.lerp(g.position.x, targetX, 0.08);
         g.position.y = THREE.MathUtils.lerp(g.position.y, targetY, 0.08);
@@ -765,23 +837,25 @@ export default function ThreeVisualizer({
       });
 
       // Cutaway View
+      const curCutaway = isCutawayRef.current;
       Object.keys(groupsRef.current).forEach((key) => {
         const g = groupsRef.current[key];
         g.traverse((child) => {
           if (child.isMesh && child.material) {
             const isCasing = ['bed', 'column', 'cope', 'drag', 'housing', 'headstock', 'flask', 'sand', 'cope_flask', 'drag_flask'].includes(key);
             if (isCasing) {
-              child.material.transparent = isCutaway;
-              child.material.opacity = isCutaway ? 0.22 : 1.0;
+              child.material.transparent = curCutaway;
+              child.material.opacity = curCutaway ? 0.22 : 1.0;
             }
           }
         });
       });
 
       // Selection and Focus Emissive Highlights
+      const curFocused = focusedPartIdRef.current;
       Object.keys(groupsRef.current).forEach((key) => {
         const g = groupsRef.current[key];
-        const isFocused = focusedPartId === key;
+        const isFocused = curFocused === key;
         const isSelected = curSelectedPart === key;
         
         g.traverse((child) => {
@@ -811,8 +885,8 @@ export default function ThreeVisualizer({
         selectedHelperRef.current.visible = false;
       }
 
-      if (focusedPartId && groupsRef.current[focusedPartId] && focusedPartId !== curSelectedPart && focusedHelperRef.current) {
-        focusedHelperRef.current.setFromObject(groupsRef.current[focusedPartId]);
+      if (curFocused && groupsRef.current[curFocused] && curFocused !== curSelectedPart && focusedHelperRef.current) {
+        focusedHelperRef.current.setFromObject(groupsRef.current[curFocused]);
         focusedHelperRef.current.visible = true;
       } else if (focusedHelperRef.current) {
         focusedHelperRef.current.visible = false;
@@ -822,9 +896,9 @@ export default function ThreeVisualizer({
       if (sparks.visible) {
         const posAttr = sparks.geometry.attributes.position;
         for (let i = 0; i < sparkCount; i++) {
-          posAttr.array[i * 3] += sparkVelocities[i].x * 0.03;
-          posAttr.array[i * 3 + 1] += sparkVelocities[i].y * 0.03 - 0.015;
-          posAttr.array[i * 3 + 2] += sparkVelocities[i].z * 0.03;
+          posAttr.array[i * 3] += sparkVelocities[i].x * 0.035;
+          posAttr.array[i * 3 + 1] += sparkVelocities[i].y * 0.035 - 0.015;
+          posAttr.array[i * 3 + 2] += sparkVelocities[i].z * 0.035;
 
           if (posAttr.array[i * 3 + 1] < -0.6) {
             posAttr.array[i * 3] = 0;
@@ -833,6 +907,40 @@ export default function ThreeVisualizer({
           }
         }
         posAttr.needsUpdate = true;
+      }
+
+      // Metal Chips Swarf Particles
+      if (chips && chips.visible) {
+        const chipPosAttr = chips.geometry.attributes.position;
+        for (let i = 0; i < chipCount; i++) {
+          chipPosAttr.array[i * 3] += chipVelocities[i].x * 0.03;
+          chipPosAttr.array[i * 3 + 1] += chipVelocities[i].y * 0.03 - 0.035;
+          chipPosAttr.array[i * 3 + 2] += chipVelocities[i].z * 0.03;
+
+          if (chipPosAttr.array[i * 3 + 1] < -0.6) {
+            chipPosAttr.array[i * 3] = chips.position.x;
+            chipPosAttr.array[i * 3 + 1] = chips.position.y;
+            chipPosAttr.array[i * 3 + 2] = chips.position.z;
+          }
+        }
+        chipPosAttr.needsUpdate = true;
+      }
+
+      // Coolant Spray Fluid Particles
+      if (coolantStream && coolantStream.visible) {
+        const coolPosAttr = coolantStream.geometry.attributes.position;
+        for (let i = 0; i < coolantCount; i++) {
+          coolPosAttr.array[i * 3] += coolantVelocities[i].x * 0.04;
+          coolPosAttr.array[i * 3 + 1] += coolantVelocities[i].y * 0.04;
+          coolPosAttr.array[i * 3 + 2] += coolantVelocities[i].z * 0.04;
+
+          if (coolPosAttr.array[i * 3 + 1] < -0.4) {
+            coolPosAttr.array[i * 3] = coolantStream.position.x;
+            coolPosAttr.array[i * 3 + 1] = coolantStream.position.y;
+            coolPosAttr.array[i * 3 + 2] = coolantStream.position.z;
+          }
+        }
+        coolPosAttr.needsUpdate = true;
       }
 
       const runningOrCompleted = (opState === 'RUNNING' || opState === 'COMPLETED');
@@ -874,8 +982,22 @@ export default function ThreeVisualizer({
               }
             }
             tool.position.x = carriage.position.x + 0.2;
+            if (chips) {
+              chips.position.set(tool.position.x - 0.05, 0.45, tool.position.z - 0.2);
+              chips.visible = true;
+            }
+            if (coolantStream) {
+              if (coolantActiveRef.current) {
+                coolantStream.position.set(tool.position.x, 0.95, tool.position.z);
+                coolantStream.visible = true;
+              } else {
+                coolantStream.visible = false;
+              }
+            }
           }
         } else {
+          if (chips) chips.visible = false;
+          if (coolantStream) coolantStream.visible = false;
           if (carriage) {
             carriage.position.x = THREE.MathUtils.lerp(carriage.position.x, currentToolPos.x, 0.15);
             if (tool) {
@@ -1261,7 +1383,8 @@ export default function ThreeVisualizer({
 
       // 3D Labels
       const labels = labelsData[machineId] || [];
-      if (showLabels && cameraRef.current) {
+      const curShowLabels = showLabelsRef.current;
+      if (curShowLabels && cameraRef.current && rendererRef.current) {
         labels.forEach((lbl) => {
           const g = groupsRef.current[lbl.id];
           const div = document.getElementById(`label-${lbl.id}`);
@@ -1294,6 +1417,13 @@ export default function ThreeVisualizer({
               line.style.display = 'none';
             }
           }
+        });
+      } else {
+        labels.forEach((lbl) => {
+          const div = document.getElementById(`label-${lbl.id}`);
+          const line = document.getElementById(`line-${lbl.id}`);
+          if (div) div.style.display = 'none';
+          if (line) line.style.display = 'none';
         });
       }
 
@@ -1333,11 +1463,28 @@ export default function ThreeVisualizer({
       if (tooltipDiv && tooltipDiv.parentNode) {
         tooltipDiv.parentNode.removeChild(tooltipDiv);
       }
+      const disposeNode = (node) => {
+        if (!node) return;
+        for (let i = node.children.length - 1; i >= 0; i--) {
+          disposeNode(node.children[i]);
+        }
+        if (node.geometry) node.geometry.dispose();
+        if (node.material) {
+          if (Array.isArray(node.material)) {
+            node.material.forEach((m) => m && m.dispose && m.dispose());
+          } else if (node.material.dispose) {
+            node.material.dispose();
+          }
+        }
+      };
+      if (sceneRef.current) {
+        disposeNode(sceneRef.current);
+      }
       if (rendererRef.current) {
         rendererRef.current.dispose();
       }
     };
-  }, [machineId, isExploded, isCutaway, showLabels]);
+  }, [machineId, highContrast, isLogin]);
 
   // Handle camera keys
   useEffect(() => {
@@ -1447,13 +1594,37 @@ export default function ThreeVisualizer({
       while (obj.parent && !groupsRef.current[obj.name] && obj.parent.name !== 'scene') {
         obj = obj.parent;
       }
-      if (groupsRef.current[obj.name]) {
-        onPartSelect(obj.name);
+      if (groupsRef.current[obj.name] && onPartSelectRef.current) {
+        onPartSelectRef.current(obj.name);
       }
     }
   };
 
   const currentOpName = typeof activeOperation === 'object' ? activeOperation?.name : activeOperation;
+
+  // Real-time CNC / DRO Telemetry Calculations
+  const droX = (
+    machineId === 'lathe'
+      ? (40.0 - (operationState === 'RUNNING' || operationState === 'COMPLETED' ? (operationProgress / 100) * (simParams?.doc || 0.8) * 2 : 0)).toFixed(3)
+      : (machineId === 'milling' ? ((simParams?.doc || 0.8) * (operationProgress / 100)).toFixed(3) : '00.000')
+  );
+  const droZ = (
+    machineId === 'lathe'
+      ? (-(operationProgress / 100) * 65.0).toFixed(3)
+      : (machineId === 'shaper' ? ((Math.sin(Date.now() / 250) * 35)).toFixed(3) : '-00.000')
+  );
+  const droY = '+000.000';
+  const cuttingSpeedVc = ((Math.PI * 40 * (simParams?.speed || 750)) / 1000).toFixed(1);
+  const motorLoad = (
+    operationState === 'RUNNING'
+      ? Math.min(96, Math.round(52 + (simParams?.doc || 0.8) * 16 + (simParams?.feed || 0.12) * 55))
+      : (isPlaying ? 16 : 0)
+  );
+  const tipTemp = (
+    operationState === 'RUNNING'
+      ? Math.round(75 + (operationProgress / 100) * 115 * ((simParams?.speed || 750) / 750))
+      : 24
+  );
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
@@ -1470,6 +1641,160 @@ export default function ThreeVisualizer({
         onClick={handleCanvasClick}
         style={{ width: '100%', height: '100%', cursor: 'crosshair' }} 
       />
+
+      {/* CNC DIGITAL READOUT (DRO) & AXIS TELEMETRY OVERLAY (Top-Right) */}
+      <div 
+        className="dro-controller-panel"
+        style={{
+          position: 'absolute',
+          top: '16px',
+          right: '16px',
+          width: droExpanded ? '230px' : 'auto',
+          background: 'rgba(15, 23, 42, 0.94)',
+          border: '1px solid rgba(0, 180, 216, 0.4)',
+          borderRadius: '12px',
+          padding: droExpanded ? '12px' : '6px 10px',
+          color: '#E2E8F0',
+          fontFamily: 'var(--mono-font)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 180, 216, 0.15)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          zIndex: 45,
+          pointerEvents: 'auto',
+          transition: 'all 0.25s ease'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: droExpanded ? '1px solid rgba(255,255,255,0.1)' : 'none', paddingBottom: droExpanded ? '8px' : '0' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '10px', fontWeight: '800', color: '#00B4D8', letterSpacing: '0.8px' }}>
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: operationState === 'RUNNING' ? '#10B981' : '#00B4D8', boxShadow: '0 0 8px ' + (operationState === 'RUNNING' ? '#10B981' : '#00B4D8') }} />
+            <span>DRO G54 {machineId.toUpperCase()}</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <button
+              onClick={() => {
+                if (!document.fullscreenElement) {
+                  mountRef.current?.requestFullscreen?.();
+                  setIsFullscreen(true);
+                } else {
+                  document.exitFullscreen?.();
+                  setIsFullscreen(false);
+                }
+              }}
+              title="Toggle Fullscreen 3D Viewport"
+              style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '2px', display: 'flex', alignItems: 'center' }}
+            >
+              {isFullscreen ? <Minimize2 size={12} /> : <Maximize2 size={12} />}
+            </button>
+            <button
+              onClick={() => setDroExpanded(p => !p)}
+              title="Expand/Collapse DRO"
+              style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '2px', display: 'flex', alignItems: 'center' }}
+            >
+              {droExpanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+            </button>
+          </div>
+        </div>
+
+        {droExpanded && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '10px' }}>
+            {/* Axis Coordinates */}
+            <div style={{ background: '#090D16', borderRadius: '8px', padding: '8px 10px', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: '700', color: '#38BDF8', letterSpacing: '0.5px' }}>
+                <span style={{ color: '#94A3B8', fontSize: '10px' }}>X [DIA]</span>
+                <span>{droX} mm</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: '700', color: '#38BDF8', letterSpacing: '0.5px', marginTop: '3px' }}>
+                <span style={{ color: '#94A3B8', fontSize: '10px' }}>Z [FEED]</span>
+                <span>{droZ} mm</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontWeight: '600', color: '#64748B', marginTop: '3px' }}>
+                <span style={{ fontSize: '10px' }}>Y [VERT]</span>
+                <span>{droY} mm</span>
+              </div>
+            </div>
+
+            {/* Speeds & Loads */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '9.5px', color: '#CBD5E1' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#94A3B8' }}>Surface Vc:</span>
+                <span style={{ color: '#F1F5F9', fontWeight: '700' }}>{cuttingSpeedVc} m/min</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#94A3B8' }}>Tool Temp:</span>
+                <span style={{ color: tipTemp > 120 ? '#F97316' : '#F1F5F9', fontWeight: '700' }}>{tipTemp} °C</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ color: '#94A3B8' }}>Motor Load:</span>
+                <span style={{ color: motorLoad > 85 ? '#EF4444' : '#10B981', fontWeight: '700' }}>{motorLoad}%</span>
+              </div>
+              {/* Load Bar */}
+              <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', overflow: 'hidden' }}>
+                <div style={{ width: `${motorLoad}%`, height: '100%', background: motorLoad > 85 ? '#EF4444' : motorLoad > 70 ? '#F59E0B' : '#10B981', transition: 'width 0.3s' }} />
+              </div>
+            </div>
+
+            {/* Quick Actions (Coolant M08/M09 & Camera Presets) */}
+            <div style={{ display: 'flex', gap: '4px', marginTop: '4px', paddingTop: '6px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+              <button
+                onClick={() => setCoolantActive(p => !p)}
+                title="Toggle Coolant Jet (M08/M09)"
+                style={{
+                  flex: 1,
+                  padding: '4px',
+                  borderRadius: '4px',
+                  border: coolantActive ? '1px solid #00B4D8' : '1px solid rgba(255,255,255,0.1)',
+                  background: coolantActive ? 'rgba(0, 180, 216, 0.2)' : 'transparent',
+                  color: coolantActive ? '#38BDF8' : '#94A3B8',
+                  fontSize: '9px',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '4px'
+                }}
+              >
+                <Droplets size={10} />
+                <span>{coolantActive ? 'M08' : 'M09'}</span>
+              </button>
+
+              <button
+                onClick={() => setCameraMode('operation')}
+                title="Tool-Eye Zoom Camera"
+                style={{
+                  padding: '4px 6px',
+                  borderRadius: '4px',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: 'transparent',
+                  color: '#CBD5E1',
+                  fontSize: '9px',
+                  fontWeight: '700',
+                  cursor: 'pointer'
+                }}
+              >
+                TOOL
+              </button>
+
+              <button
+                onClick={() => setCameraMode('default')}
+                title="Isometric 3D Camera"
+                style={{
+                  padding: '4px 6px',
+                  borderRadius: '4px',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: 'transparent',
+                  color: '#CBD5E1',
+                  fontSize: '9px',
+                  fontWeight: '700',
+                  cursor: 'pointer'
+                }}
+              >
+                ISO
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* 1. ON-PLANE 3D TELEMETRY & AUDIO HUD (Top Center) */}
       <div style={{
