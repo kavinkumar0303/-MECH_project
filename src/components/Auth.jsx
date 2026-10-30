@@ -351,7 +351,7 @@ export default function Auth({ onLoginSuccess }) {
         minHeight: '100vh',
         width: '100vw',
         display: 'flex',
-        background: 'radial-gradient(ellipse at center top, #160636 0%, #0D0221 100%)',
+        background: 'var(--bg-primary)',
         overflow: 'hidden',
         position: 'relative'
       }}
@@ -362,7 +362,7 @@ export default function Auth({ onLoginSuccess }) {
       </div>
 
       {/* 2. Visual readability overlay */}
-      <div className="login-overlay" style={{ background: 'radial-gradient(ellipse at 80% 50%, rgba(13, 2, 33, 0.4) 0%, rgba(13, 2, 33, 0.85) 100%)' }} />
+      <div className="login-overlay" />
 
       {/* 3. Left Branding Overlay Text */}
       <div 

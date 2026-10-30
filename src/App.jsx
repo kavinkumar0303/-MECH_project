@@ -191,7 +191,7 @@ function App() {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-primary)', width: '100vw', overflowX: 'hidden' }}>
+    <div className="app-shell">
       {/* Navigation sidebar */}
       <Sidebar 
         activeTab={activeTab} 
@@ -203,9 +203,10 @@ function App() {
       />
 
       {/* Main panel viewport area */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', overflowY: 'auto' }}>
+      <div className="app-main">
         <Navbar 
           user={user} 
+          activeTab={activeTab}
           setActiveTab={setActiveTab} 
           setSelectedMachineId={setSelectedMachineId}
           showKeyboardHelp={showKeyboardHelp}
@@ -216,7 +217,7 @@ function App() {
           setHighContrast={setHighContrast}
         />
         
-        <div style={{ flex: 1, overflowY: 'auto', background: 'transparent' }}>
+        <div className="app-page-content">
           {renderTabContent()}
         </div>
       </div>
@@ -227,6 +228,7 @@ function App() {
       {/* Industrial Toast Alerts */}
       {toastAlert && (
         <div 
+          className="app-toast"
           style={{
             position: 'fixed',
             top: '24px',
@@ -259,6 +261,7 @@ function App() {
       {/* Keyboard Shortcuts Interactive Overlay Modal */}
       {showKeyboardHelp && (
         <div 
+          className="shortcuts-backdrop"
           style={{
             position: 'fixed',
             top: 0,
@@ -275,6 +278,7 @@ function App() {
           onClick={() => setShowKeyboardHelp(false)}
         >
           <div 
+            className="shortcuts-dialog"
             style={{
               background: 'rgba(22, 6, 54, 0.95)',
               border: '1px solid rgba(224, 64, 251, 0.35)',

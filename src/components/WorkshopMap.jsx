@@ -23,7 +23,7 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
     const height = mountRef.current.clientHeight || 450;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#0D0221');
+    scene.background = new THREE.Color('#F5F1EA');
 
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     camera.position.set(0, 11, 15);
@@ -45,38 +45,38 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
     controls.target.set(0, 0, 0);
 
     // Cinematic SpaceDrive lighting
-    const ambientLight = new THREE.AmbientLight('#D8B4FE', 1.2);
+    const ambientLight = new THREE.AmbientLight('#FFFFFF', 1.35);
     scene.add(ambientLight);
 
     const dirLight = new THREE.DirectionalLight('#FFFFFF', 2.0);
     dirLight.position.set(5, 15, 5);
     scene.add(dirLight);
 
-    const rimLight = new THREE.DirectionalLight('#00F5D4', 1.5);
+    const rimLight = new THREE.DirectionalLight('#E9A16B', 1.15);
     rimLight.position.set(-5, 5, -5);
     scene.add(rimLight);
 
     // Industrial floor grids (SpaceDrive Purple & Cyan Grid)
-    const gridHelper = new THREE.GridHelper(24, 24, '#FF5376', '#351268');
+    const gridHelper = new THREE.GridHelper(24, 24, '#D9A16F', '#E6DED3');
     gridHelper.position.y = -0.5;
     scene.add(gridHelper);
 
     const borderGeo = new THREE.BoxGeometry(24.2, 0.05, 24.2);
-    const borderMat = new THREE.MeshBasicMaterial({ color: '#7928CA', wireframe: true });
+    const borderMat = new THREE.MeshBasicMaterial({ color: '#D5C7B7', wireframe: true });
     const border = new THREE.Mesh(borderGeo, borderMat);
     border.position.y = -0.5;
     scene.add(border);
 
     // Materials
-    const benchMat = new THREE.MeshStandardMaterial({ color: '#1B083A', roughness: 0.6, metalness: 0.2 });
+    const benchMat = new THREE.MeshStandardMaterial({ color: '#D8D2C8', roughness: 0.72, metalness: 0.08 });
     const machineMats = {
-      lathe: new THREE.MeshStandardMaterial({ color: '#FF5376', metalness: 0.8, roughness: 0.2 }),
-      welding: new THREE.MeshStandardMaterial({ color: '#00F5D4', metalness: 0.7, roughness: 0.3 }),
-      milling: new THREE.MeshStandardMaterial({ color: '#E040FB', metalness: 0.8, roughness: 0.2 }),
-      shaper: new THREE.MeshStandardMaterial({ color: '#7928CA', metalness: 0.8, roughness: 0.2 }),
-      planer: new THREE.MeshStandardMaterial({ color: '#FF758C', metalness: 0.8, roughness: 0.2 }),
-      casting: new THREE.MeshStandardMaterial({ color: '#FF9E00', metalness: 0.7, roughness: 0.4 }),
-      moulding: new THREE.MeshStandardMaterial({ color: '#5E17EB', metalness: 0.7, roughness: 0.4 })
+      lathe: new THREE.MeshStandardMaterial({ color: '#D99058', metalness: 0.55, roughness: 0.3 }),
+      welding: new THREE.MeshStandardMaterial({ color: '#678B83', metalness: 0.5, roughness: 0.36 }),
+      milling: new THREE.MeshStandardMaterial({ color: '#8D9FA8', metalness: 0.55, roughness: 0.3 }),
+      shaper: new THREE.MeshStandardMaterial({ color: '#B58A61', metalness: 0.52, roughness: 0.34 }),
+      planer: new THREE.MeshStandardMaterial({ color: '#728981', metalness: 0.5, roughness: 0.35 }),
+      casting: new THREE.MeshStandardMaterial({ color: '#C77543', metalness: 0.46, roughness: 0.42 }),
+      moulding: new THREE.MeshStandardMaterial({ color: '#A88F70', metalness: 0.42, roughness: 0.42 })
     };
 
     // Terminal layout positioning
@@ -105,7 +105,7 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
 
       // Safety border lines in Cyprus Light
       const stripGeo = new THREE.BoxGeometry(2.5, 0.05, 1.9);
-      const stripMat = new THREE.MeshBasicMaterial({ color: '#0A625D', wireframe: true });
+      const stripMat = new THREE.MeshBasicMaterial({ color: '#D69A67', wireframe: true });
       const strip = new THREE.Mesh(stripGeo, stripMat);
       strip.position.y = 0.31;
       group.add(strip);
