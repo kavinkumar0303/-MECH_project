@@ -96,7 +96,7 @@ export default function WorkshopAI() {
       {/* Expandable Chat Drawer */}
       {isOpen && (
         <div 
-          className="anim-slide-up"
+          className="anim-slide-up workshop-ai-drawer"
           style={{
             position: 'fixed',
             bottom: '90px',

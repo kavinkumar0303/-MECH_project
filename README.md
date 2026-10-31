@@ -34,3 +34,13 @@ npm install
 npm run dev
 ```
 Then open the Vite local URL shown in the terminal.
+
+### Configure authentication
+Authentication is handled by Supabase Auth; the browser must not be given a Supabase service-role key.
+
+1. Create a Supabase project and enable email/password sign-in.
+2. Copy `.env.example` to `.env.local` and set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` from the Supabase project API settings.
+3. Add the local URL and deployed Vercel domain to Supabase Auth's allowed site and redirect URLs. Configure the email confirmation and password-reset templates for those URLs.
+4. Add the same two `VITE_` variables to the Vercel project's environment variables, then redeploy.
+
+The app reads the authenticated Supabase session on startup and listens for sign-out/session-expiration events before rendering protected workshop pages. Student profile and progress data remain local to the authenticated browser; they are not used to authorize access. No demo credentials or passwords are stored in the browser.

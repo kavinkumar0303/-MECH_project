@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Activity,
   BookOpen,
@@ -13,7 +13,6 @@ import {
   Layers3,
   Maximize2,
   Link2,
-  Zap,
   Pause,
   Play,
   RotateCcw,
@@ -48,7 +47,6 @@ const TURNING_STEPS = [
 ];
 
 export default function LatheImmersiveCockpit({
-  user,
   activeSubTab,
   setActiveSubTab,
   activeOperation,
@@ -60,12 +58,9 @@ export default function LatheImmersiveCockpit({
   machineOperations,
   operationProgress,
   operationState,
-  operationHistory,
   isOpRunning,
   simParams,
   setSimParams,
-  selectedTool,
-  setSelectedTool,
   selectedPartId,
   handlePartSelect,
   activePart,
@@ -75,25 +70,14 @@ export default function LatheImmersiveCockpit({
   setIsCutaway,
   cameraMode,
   setCameraMode,
-  showLabels,
   highContrast,
-  onUpdateUser,
   toolPosition,
   setToolPosition,
   beforeAfterMode,
   toggleBeforeAfter,
   isPowerOn,
-  safetyItems,
-  handleSafetyToggle,
-  setupChecklist,
-  toggleSetupChecklist,
-  safetyPassed,
-  safetyFeedback,
   validationAlert,
   setValidationAlert,
-  inspectFeedback,
-  operationResult,
-  setOperationResult
 }) {
   const machine = MACHINES.lathe;
   const shellRef = useRef(null);
@@ -118,11 +102,11 @@ export default function LatheImmersiveCockpit({
   const surfaceSpeed = ((Math.PI * workpieceDiameter * spindleSpeed) / 1000).toFixed(1);
   const feedMmMin = (Number(simParams.feed || 0) * spindleSpeed).toFixed(1);
   const loadPercent = Math.min(96, Math.round(operationState === 'RUNNING' ? 22 + Number(simParams.doc || 0) * 15 + Number(simParams.feed || 0) * 65 : 0));
-  const powerKw = ((loadPercent / 100) * Math.max(spindleSpeed, 1) * 0.0048).toFixed(2);
-  const cutDepth = Number(simParams.doc || 0);
-  const chipRate = Math.max(0, Number(simParams.feed || 0) * cutDepth * Math.max(spindleSpeed, 1));
-  const activeCutting = operationState === 'RUNNING' && isPowerOn;
-  const machinePhase = operationState === 'COMPLETED' ? 'FINISH INSPECTION' : activeCutting ? 'MACHINING / CUTTING' : operationState === 'SETUP' ? 'SETUP & SAFETY CHECK' : 'STANDBY';
+  const operationStart = useCallback(() => {
+    if (!currentOperation) return;
+    if (activeOperation?.id !== currentOperation.id) handleSelectOperation(currentOperation);
+    handleStartOperationSim();
+  }, [activeOperation?.id, currentOperation, handleSelectOperation, handleStartOperationSim]);
 
   useEffect(() => {
     if (!activeOperation && machineOperations[0]) {
@@ -165,7 +149,7 @@ export default function LatheImmersiveCockpit({
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [operationState, handlePauseResumeOperation, handleAbortOperation, handleResetOperation, handleStartOperationSim, handleSelectOperation, currentOperation, setSimParams, setToolPosition]);
+  }, [operationState, handlePauseResumeOperation, handleAbortOperation, handleResetOperation, handleStartOperationSim, handleSelectOperation, currentOperation, setSimParams, setToolPosition, operationStart]);
 
   const toggleFullscreen = async () => {
     try {
@@ -181,12 +165,6 @@ export default function LatheImmersiveCockpit({
     }
   };
 
-  const operationStart = () => {
-    if (!currentOperation) return;
-    if (activeOperation?.id !== currentOperation.id) handleSelectOperation(currentOperation);
-    handleStartOperationSim();
-  };
-
   const progressBar = (
     <div className="lathe-progress">
       <div className="lathe-progress-fill" style={{ width: `${operationProgress}%` }} />
@@ -195,29 +173,6 @@ export default function LatheImmersiveCockpit({
 
   return (
     <div ref={shellRef} className="lathe-immersive-shell">
-      <header className="lathe-topbar">
-        <div className="lathe-brand">
-          <div className="lathe-brand-mark"><Settings2 size={20} /></div>
-          <span>VIRTUAL MECHANICAL WORKSHOP</span>
-        </div>
-        <nav className="lathe-topnav">
-          <button>Home</button>
-          <button className="active">Machines</button>
-          <button onClick={() => setActiveSubTab('operate')}>Simulations</button>
-          <button onClick={() => setActiveSubTab('experiments')}>Theory</button>
-          <button onClick={() => setActiveSubTab('safety')}>Safety</button>
-          <button onClick={() => setActiveSubTab('scorecard')}>Quiz</button>
-          <button>Resources</button>
-        </nav>
-        <div className="lathe-top-actions">
-          <button className="lathe-icon-btn" onClick={toggleFullscreen} title="Fullscreen">
-            {fullscreen ? <X size={18} /> : <Maximize2 size={18} />}
-          </button>
-          <span className="lathe-fullscreen-label">{fullscreen ? 'Exit' : 'Fullscreen'}</span>
-          <button className="lathe-icon-btn" title="Settings"><Settings2 size={18} /></button>
-        </div>
-      </header>
-
       <div className="lathe-workspace">
         <aside className="lathe-left-rail">
           <div className="lathe-left-title">Lathe Machine (WM290)</div>
@@ -238,7 +193,7 @@ export default function LatheImmersiveCockpit({
               <span className={`status-dot ${isPowerOn ? 'on' : ''}`} />
               <span>{isPowerOn ? 'SYSTEM ACTIVE' : 'SYSTEM STANDBY'}</span>
             </div>
-            <div className="lathe-key-hints">SPACE&nbsp; RUN/PAUSE &nbsp;•&nbsp; R&nbsp; RESET</div>
+            <div className="lathe-key-hints">SPACE Run/Pause · X Stop · R Reset · +/- Speed</div>
           </div>
         </aside>
 
@@ -249,6 +204,10 @@ export default function LatheImmersiveCockpit({
               <h1>WM290 Centre Lathe</h1>
             </div>
             <div className="lathe-stage-tools">
+              <button onClick={toggleFullscreen} title={fullscreen ? 'Exit fullscreen' : 'Fullscreen'}>
+                {fullscreen ? <X size={14} /> : <Maximize2 size={14} />}
+                {fullscreen ? 'Exit' : 'Fullscreen'}
+              </button>
               <button className={isExploded ? 'selected' : ''} onClick={() => setIsExploded(!isExploded)}><Expand size={14} /> Exploded</button>
               <button className={isCutaway ? 'selected' : ''} onClick={() => setIsCutaway(!isCutaway)}><Scissors size={14} /> Cutaway</button>
               <button onClick={() => setShowReference(true)}><Eye size={14} /> Reference</button>
@@ -258,61 +217,6 @@ export default function LatheImmersiveCockpit({
 
           <div className="lathe-canvas-wrap">
             <div className="lathe-workshop-vignette" aria-hidden="true" />
-            <div className="lathe-status-ribbon">
-              <span className={`lathe-status-led ${activeCutting ? 'running' : operationState === 'COMPLETED' ? 'complete' : ''}`} />
-              <span className="lathe-status-label">SIMULATED MACHINE STATE</span>
-              <strong>{machinePhase}</strong>
-              <span className="lathe-status-divider" />
-              <span>{activeCutting ? 'SPINDLE COUPLED' : 'DRIVE DISENGAGED'}</span>
-              <span className="lathe-status-divider" />
-              <span>{isPowerOn ? 'POWER ON' : 'POWER OFF'}</span>
-            </div>
-
-            {activeSubTab === 'operate' && <div className={`lathe-operation-hud ${activeCutting ? 'running' : ''}`}>
-              <div className="lathe-hud-top">
-                <div>
-                  <span className="lathe-panel-kicker">LIVE MACHINING FEED</span>
-                  <strong>{currentOperation?.name || 'Turning'}</strong>
-                </div>
-                <div className="lathe-hud-progress"><span>{Math.round(operationProgress)}%</span><div><i style={{ width: `${operationProgress}%` }} /></div></div>
-              </div>
-              <div className="lathe-hud-grid">
-                <div className="lathe-hud-readout"><span>SPINDLE</span><strong>{spindleSpeed}</strong><small>RPM</small></div>
-                <div className="lathe-hud-readout"><span>V<sub>c</sub></span><strong>{surfaceSpeed}</strong><small>m/min</small></div>
-                <div className="lathe-hud-readout"><span>FEED</span><strong>{feedMmMin}</strong><small>mm/min</small></div>
-                <div className="lathe-hud-readout"><span>LOAD</span><strong>{loadPercent}</strong><small>%</small></div>
-              </div>
-              <div className="lathe-hud-cutline">
-                <span><Zap size={13} /> CUTTING LOAD</span>
-                <div className="lathe-hud-meter"><i style={{ width: `${loadPercent}%` }} /></div>
-                <strong>{powerKw} kW <em>SIMULATED</em></strong>
-              </div>
-            </div>}
-
-            {activeSubTab === 'operate' && (
-              <div className="lathe-cutting-overlay">
-                <div className="lathe-cutting-overlay-title"><span className="live-dot" /> CUTTING ZONE</div>
-                <div className="lathe-cutting-visual">
-                  <div className="cz-spindle"><span /><span /><span /></div>
-                  <div className="cz-stock"><div className="cz-groove" /></div>
-                  <div className="cz-tool"><span /></div>
-                  <div className="cz-chip chip-a" /><div className="cz-chip chip-b" /><div className="cz-chip chip-c" />
-                </div>
-                <div className="lathe-cutting-meta"><span>DOC <strong>{cutDepth.toFixed(1)} mm</strong></span><span>Chip rate <strong>{chipRate.toFixed(0)} mm³/min</strong></span></div>
-              </div>
-            )}
-
-            <div className="lathe-keyboard-guide" aria-label="Keyboard controls">
-              <strong>KEYBOARD CONTROLS</strong>
-              <span><kbd>←</kbd><kbd>→</kbd> Carriage</span>
-              <span><kbd>↑</kbd><kbd>↓</kbd> Cross-slide</span>
-              <span><kbd>Space</kbd> Start / Pause</span>
-              <span><kbd>X</kbd> Stop</span>
-              <span><kbd>R</kbd> Reset</span>
-              <span><kbd>+</kbd><kbd>−</kbd> RPM</span>
-              <small>Hold Shift with an axis key for larger steps. Manual movement is disabled during a running cycle.</small>
-            </div>
-
             <ThreeVisualizer
               machineId="lathe"
               selectedPartId={selectedPartId}
@@ -366,26 +270,6 @@ export default function LatheImmersiveCockpit({
               </div>
             )}
 
-            {activePart && (
-              <div className="lathe-component-card">
-                <div className="lathe-component-card-top">
-                  <span>SELECTED COMPONENT</span>
-                  <button onClick={() => handlePartSelect(null)}><X size={14} /></button>
-                </div>
-                <h3>{activePart.name}</h3>
-                <p>{activePart.desc}</p>
-                {selectedPartId === 'chuck' && <div className="lathe-component-chip">3-JAW SELF-CENTERING CHUCK</div>}
-              </div>
-            )}
-          </div>
-
-          <div className="lathe-operator-strip">
-            <div><span className="lathe-strip-key">1</span><span>Mount stock</span></div>
-            <div><span className="lathe-strip-key">2</span><span>Clamp & align tool</span></div>
-            <div><span className="lathe-strip-key">3</span><span>Set RPM / feed / DOC</span></div>
-            <div><span className="lathe-strip-key">4</span><span>Run spindle</span></div>
-            <div><span className="lathe-strip-key">5</span><span>Engage feed</span></div>
-            <div className="lathe-strip-note">All values shown here are simulated training telemetry.</div>
           </div>
 
           <div className="lathe-bottom-steps">
@@ -478,9 +362,10 @@ export default function LatheImmersiveCockpit({
           <section className="lathe-info-card">
             <div className="lathe-info-icon"><ClipboardCheck size={18} /></div>
             <div>
-              <span>TRAINING STATUS</span>
-              <strong>{operationState === 'COMPLETED' ? 'Operation Complete' : operationState === 'RUNNING' ? 'Simulation Running' : 'Ready for Practice'}</strong>
-              <p>{currentOperation?.description || 'Select an operation and use the 3D workplane to practice the machine procedure.'}</p>
+              <span>{selectedPartId ? 'SELECTED COMPONENT' : 'MACHINE COMPONENT'}</span>
+              <strong>{activePart?.name || 'Select a component'}</strong>
+              <p>{activePart?.desc || 'Choose a part to inspect it in the 3D view.'}</p>
+              {selectedPartId === 'chuck' && <span className="lathe-component-chip">3-JAW SELF-CENTERING CHUCK</span>}
             </div>
           </section>
 

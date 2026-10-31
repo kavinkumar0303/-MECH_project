@@ -466,7 +466,6 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
   if (selectedId === 'lathe') {
     return (
       <LatheImmersiveCockpit
-        user={user}
         activeSubTab={activeSubTab}
         setActiveSubTab={setActiveSubTab}
         activeOperation={activeOperation}
@@ -478,12 +477,9 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
         machineOperations={machineOperations}
         operationProgress={operationProgress}
         operationState={operationState}
-        operationHistory={operationHistory}
         isOpRunning={isOpRunning}
         simParams={simParams}
         setSimParams={setSimParams}
-        selectedTool={selectedTool}
-        setSelectedTool={setSelectedTool}
         selectedPartId={selectedPartId}
         handlePartSelect={handlePartSelect}
         activePart={activePart}
@@ -493,34 +489,23 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
         setIsCutaway={setIsCutaway}
         cameraMode={cameraMode}
         setCameraMode={setCameraMode}
-        showLabels={showLabels}
         highContrast={highContrast}
-        onUpdateUser={onUpdateUser}
         toolPosition={toolPosition}
         setToolPosition={setToolPosition}
         beforeAfterMode={beforeAfterMode}
         toggleBeforeAfter={toggleBeforeAfter}
         isPowerOn={isPowerOn}
-        safetyItems={safetyItems}
-        handleSafetyToggle={handleSafetyToggle}
-        setupChecklist={setupChecklist}
-        toggleSetupChecklist={toggleSetupChecklist}
-        safetyPassed={safetyPassed}
-        safetyFeedback={safetyFeedback}
         validationAlert={validationAlert}
         setValidationAlert={setValidationAlert}
-        inspectFeedback={inspectFeedback}
-        operationResult={assessmentResult}
-        setOperationResult={setAssessmentResult}
       />
     );
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 70px)', background: 'var(--bg-primary)', overflow: 'hidden' }}>
+    <div className="machine-cockpit-shell" style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 70px)', background: 'var(--bg-primary)', overflow: 'hidden' }}>
       
       {/* 1. Category Switcher (1-7 machines) */}
-      <div 
+      <div className="machine-category-tabs"
         style={{ 
           display: 'flex', 
           gap: '8px', 
@@ -558,7 +543,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
       </div>
 
       {/* 2. 9-Stage Learning Navigation Subtabs */}
-      <div 
+      <div className="machine-stage-tabs"
         style={{ 
           display: 'flex', 
           gap: '8px', 
@@ -612,10 +597,10 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
       </div>
 
       {/* Main 3-Column Split Viewport */}
-      <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '330px 1fr 340px', height: 'calc(100% - 92px)', overflow: 'hidden' }}>
+      <div className="machine-cockpit-grid" style={{ flex: 1, display: 'grid', gridTemplateColumns: '330px 1fr 340px', height: 'calc(100% - 92px)', overflow: 'hidden' }}>
         
         {/* COLUMN 1: OPERATIONS & CONTROLS */}
-        <div 
+        <div className="machine-control-rail"
           style={{ 
             borderRight: '1px solid rgba(168, 85, 247, 0.2)', 
             padding: '20px', 
@@ -1020,7 +1005,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
         </div>
 
         {/* COLUMN 2: 3D WORKPLANE VIEWPORT */}
-        <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+        <div className="machine-viewer-stage" style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
           
           <ThreeVisualizer
             machineId={selectedId}
@@ -1232,7 +1217,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
           )}
 
           {/* Viewport Top Right Camera / View Toggles */}
-          <div 
+          <div className="machine-viewer-toolbar"
             style={{ 
               position: 'absolute', 
               top: '16px', 
@@ -1306,7 +1291,7 @@ export default function MachineCockpit({ user, onUpdateUser, initialMachineId, s
         </div>
 
         {/* COLUMN 3: STATUS / ASSESSMENT / METROLOGY INSPECTOR */}
-        <div 
+        <div className="machine-details-rail"
           style={{ 
             borderLeft: '1px solid rgba(168, 85, 247, 0.2)', 
             padding: activeSubTab === 'explorer' ? '16px' : '20px', 

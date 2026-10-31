@@ -11,11 +11,11 @@ import {
   Eye, 
   EyeOff, 
   ArrowRight, 
-  Zap,
   Mail
 } from 'lucide-react';
+import { supabase, supabaseConfigError } from '../lib/supabase';
 
-export default function Auth({ onLoginSuccess }) {
+export default function Auth({ onLoginSuccess, authError, recoveryMode = false }) {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -32,15 +32,6 @@ export default function Auth({ onLoginSuccess }) {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError('');
-  };
-
-  const handleDemoFill = () => {
-    setFormData({
-      ...formData,
-      studentId: 'student01',
-      password: 'demo123'
-    });
     setError('');
   };
 
@@ -257,96 +248,114 @@ export default function Auth({ onLoginSuccess }) {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
     setError('');
     setSuccess('');
 
-    if (isLogin) {
-      const storedUsers = JSON.parse(localStorage.getItem('registered_users') || '[]');
-      const userMatch = storedUsers.find(
-        (u) => (u.studentId === formData.studentId || u.email === formData.studentId) && u.password === formData.password
-      );
+    if (!supabase) {
+      setError(supabaseConfigError);
+      return;
+    }
 
-      if ((formData.studentId === 'student01' && formData.password === 'demo123') || userMatch) {
-        setIsSubmitting(true);
-        
-        const loggedUser = userMatch || {
-          name: 'Kavin Kumar',
-          studentId: 'student01',
-          college: 'PSG College of Technology',
-          department: 'Mechanical Engineering',
-          email: 'kavin.kumar@psg.edu',
-          xp: 1240,
-          level: 'Workshop Expert',
-          safetyScore: 98,
-          accuracy: 98,
-          completedMissions: 24,
-          machinesExplored: 7,
-          completedMissionsList: ['lathe_01', 'welding_01', 'milling_01'],
-          badges: ['Lathe Beginner', 'Safety First', 'Milling Master', 'Workshop Expert']
-        };
+    if (!isLogin && !recoveryMode && [
+      formData.name,
+      formData.studentId,
+      formData.college,
+      formData.department,
+      formData.email,
+      formData.password
+    ].some((value) => !value.trim())) {
+      setError('Complete all fields to create your account.');
+      return;
+    }
 
-        setTimeout(() => {
-          setIsSubmitting(false);
-          setSuccess('✓ Authentication Successful');
-          setTimeout(() => {
-            onLoginSuccess(loggedUser);
-          }, 800);
-        }, 1200);
+    if ((!isLogin || recoveryMode) && formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      if (recoveryMode) {
+        const { data, error: updateError } = await supabase.auth.updateUser({ password: formData.password });
+        if (updateError) throw updateError;
+        if (!data.user) throw new Error('Password update did not return a user. Please try again.');
+        setSuccess('Password updated successfully.');
+        onLoginSuccess(data.user);
+      } else if (isLogin) {
+        const { data, error: signInError } = await supabase.auth.signInWithPassword({
+          email: formData.email.trim(),
+          password: formData.password
+        });
+        if (signInError) throw signInError;
+        if (!data.user) throw new Error('Sign-in did not return a user. Please try again.');
+        setSuccess('Signed in successfully.');
+        onLoginSuccess(data.user);
       } else {
-        setError('⚠️ Invalid Username or Password');
-      }
-    } else {
-      if (!formData.name || !formData.studentId || !formData.college || !formData.department || !formData.email || !formData.password) {
-        setError('⚠️ Please fill out all fields');
-        return;
-      }
-      if (formData.password !== formData.confirmPassword) {
-        setError('⚠️ Passwords do not match');
-        return;
-      }
+        const { data, error: signUpError } = await supabase.auth.signUp({
+          email: formData.email.trim(),
+          password: formData.password,
+          options: {
+            data: {
+              full_name: formData.name.trim(),
+              student_id: formData.studentId.trim(),
+              college: formData.college.trim(),
+              department: formData.department.trim()
+            }
+          }
+        });
+        if (signUpError) throw signUpError;
 
-      const storedUsers = JSON.parse(localStorage.getItem('registered_users') || '[]');
-      if (storedUsers.some((u) => u.studentId === formData.studentId || u.email === formData.email)) {
-        setError('⚠️ Account with this ID or Email already exists');
-        return;
+        if (data.session && data.user) {
+          setSuccess('Your account is ready.');
+          onLoginSuccess(data.user);
+        } else {
+          setIsLogin(true);
+          setSuccess('Account created. Check your email to confirm it, then sign in.');
+        }
       }
+    } catch (submitError) {
+      if (submitError.message === 'Invalid login credentials') {
+        setError('Email or password is incorrect.');
+      } else {
+        setError(submitError.message || 'Authentication failed. Please try again.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-      const newUser = {
-        name: formData.name,
-        studentId: formData.studentId,
-        college: formData.college,
-        department: formData.department,
-        email: formData.email,
-        password: formData.password,
-        xp: 0,
-        level: 'Apprentice',
-        safetyScore: 100,
-        accuracy: 100,
-        completedMissions: 0,
-        machinesExplored: 0,
-        completedMissionsList: [],
-        badges: []
-      };
+  const handlePasswordReset = async () => {
+    setError('');
+    setSuccess('');
+    if (!supabase) {
+      setError(supabaseConfigError);
+      return;
+    }
+    if (!formData.email.trim()) {
+      setError('Enter your email address first.');
+      return;
+    }
 
-      setIsSubmitting(true);
-      setTimeout(() => {
-        setIsSubmitting(false);
-        storedUsers.push(newUser);
-        localStorage.setItem('registered_users', JSON.stringify(storedUsers));
-        setSuccess('✓ Workshop Account Created!');
-        setTimeout(() => {
-          onLoginSuccess(newUser);
-        }, 800);
-      }, 1200);
+    setIsSubmitting(true);
+    try {
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(formData.email.trim(), {
+        redirectTo: `${window.location.origin}/?password-recovery=1`
+      });
+      if (resetError) throw resetError;
+      setSuccess('Password reset instructions have been sent to your email.');
+    } catch (resetError) {
+      setError(resetError.message || 'Unable to send password reset instructions.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <div 
-      className="anim-fade-in"
+      className="anim-fade-in auth-screen"
       style={{
         minHeight: '100vh',
         width: '100vw',
@@ -443,7 +452,7 @@ export default function Auth({ onLoginSuccess }) {
       {/* 5. Floating Login Card Container */}
       <div className="login-card-container">
         <div 
-          className="anim-slide-up"
+          className="anim-slide-up auth-card"
           style={{
             width: '100%',
             maxWidth: isLogin ? '420px' : '520px',
@@ -460,7 +469,7 @@ export default function Auth({ onLoginSuccess }) {
           }}
         >
           {/* Brand Header Inside Card */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <div className="auth-card-header" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
             <div style={{ 
               width: '54px', 
               height: '54px', 
@@ -475,85 +484,84 @@ export default function Auth({ onLoginSuccess }) {
               <Settings className="anim-slow-spin" size={28} style={{ color: '#FF5376' }} />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <span style={{ fontSize: '18px', fontWeight: '900', color: '#FFFFFF', letterSpacing: '1px', textTransform: 'uppercase' }}>STUDENT PORTAL</span>
+              <span className="auth-card-title" style={{ fontSize: '18px', fontWeight: '900', color: '#FFFFFF', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                {recoveryMode ? 'Reset password' : isLogin ? 'Student portal' : 'Create account'}
+              </span>
               <span style={{ fontSize: '11px', fontWeight: '700', color: '#00F5D4', letterSpacing: '1.5px', textTransform: 'uppercase', marginTop: '2px' }}>Virtual Mechanical Lab</span>
             </div>
             <p style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '13px', textAlign: 'center', margin: 0 }}>
-              Sign in to continue your workshop training
+              {recoveryMode ? 'Choose a new password for your student account.' : isLogin ? 'Sign in to continue your workshop training.' : 'Create your secure workshop account.'}
             </p>
           </div>
 
-          {/* Demo Alert Credentials Box */}
+          {/* Secure sign-in note */}
           {isLogin && (
-            <div 
-              style={{
-                background: 'rgba(32, 12, 74, 0.7)',
-                border: '1px solid rgba(224, 64, 251, 0.3)',
-                borderRadius: '12px',
-                padding: '12px 16px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: '12px'
-              }}
-            >
-              <div style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.7)', lineHeight: '1.4' }}>
-                <strong style={{ color: '#00F5D4' }}>Demo Student Access</strong><br/>
-                User: <span style={{ fontFamily: 'var(--mono-font)', color: '#FFFFFF', fontWeight: '700' }}>student01</span> | 
-                Pass: <span style={{ fontFamily: 'var(--mono-font)', color: '#FFFFFF', fontWeight: '700' }}>demo123</span>
-              </div>
-              <button 
-                type="button"
-                onClick={handleDemoFill}
-                style={{
-                  background: 'linear-gradient(135deg, rgba(255, 83, 118, 0.2) 0%, rgba(121, 40, 202, 0.3) 100%)',
-                  border: '1px solid #FF5376',
-                  color: '#FFFFFF',
-                  padding: '6px 12px',
-                  borderRadius: '16px',
-                  fontSize: '11px',
-                  fontWeight: '700',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  boxShadow: '0 0 10px rgba(255, 83, 118, 0.25)'
-                }}
-              >
-                Auto Fill
-              </button>
+            <div className="auth-secure-note">
+              <ShieldAlert size={16} aria-hidden="true" />
+              <span>Secure access to your workshop training</span>
+            </div>
+          )}
+
+          {(authError || supabaseConfigError) && (
+            <div className="auth-message auth-message-error" role="alert">
+              <ShieldAlert size={15} />
+              <span>{authError || supabaseConfigError}</span>
             </div>
           )}
 
           {/* Status Messages */}
           {error && (
-            <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid #EF4444', borderRadius: '10px', padding: '10px 14px', color: '#FCA5A5', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div className="auth-message auth-message-error" role="alert">
               <ShieldAlert size={14} />
               <span>{error}</span>
             </div>
           )}
 
           {success && (
-            <div style={{ background: 'rgba(0, 245, 212, 0.15)', border: '1px solid #00F5D4', borderRadius: '10px', padding: '10px 14px', color: '#00F5D4', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div className="auth-message auth-message-success" role="status">
               <CheckCircle size={14} />
               <span>{success}</span>
             </div>
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {isLogin ? (
+          <form className="auth-form" onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {recoveryMode ? (
               <>
                 <div>
                   <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                    Username or Student ID
+                    New password
+                  </label>
+                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '12px', padding: '12px 14px', gap: '10px' }}>
+                    <Lock size={16} style={{ color: '#E040FB' }} />
+                    <input type="password" name="password" autoComplete="new-password" value={formData.password} onChange={handleChange} required />
+                  </div>
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    Confirm new password
+                  </label>
+                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '12px', padding: '12px 14px', gap: '10px' }}>
+                    <Lock size={16} style={{ color: '#E040FB' }} />
+                    <input type="password" name="confirmPassword" autoComplete="new-password" value={formData.confirmPassword} onChange={handleChange} required />
+                  </div>
+                </div>
+              </>
+            ) : isLogin ? (
+              <>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    Email address
                   </label>
                   <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(32, 12, 74, 0.65)', border: '1px solid rgba(224, 64, 251, 0.25)', borderRadius: '12px', padding: '12px 14px', gap: '10px' }}>
                     <User size={16} style={{ color: '#E040FB' }} />
-                    <input 
-                      type="text" 
-                      name="studentId"
-                      value={formData.studentId}
+                    <input
+                      type="email"
+                      name="email"
+                      autoComplete="email"
+                      value={formData.email}
                       onChange={handleChange}
-                      placeholder="Enter student01"
+                      placeholder="you@college.edu"
                       required
                       style={{ background: 'none', border: 'none', color: '#FFFFFF', fontSize: '13px', width: '100%', outline: 'none' }}
                     />
@@ -569,6 +577,7 @@ export default function Auth({ onLoginSuccess }) {
                     <input 
                       type={showPassword ? 'text' : 'password'}
                       name="password"
+                      autoComplete={isLogin ? 'current-password' : 'new-password'}
                       value={formData.password}
                       onChange={handleChange}
                       placeholder="••••••••"
@@ -595,14 +604,11 @@ export default function Auth({ onLoginSuccess }) {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px', marginTop: '4px' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: 'rgba(255, 255, 255, 0.7)' }}>
-                    <input type="checkbox" defaultChecked style={{ accentColor: '#FF5376' }} />
-                    Remember Me
-                  </label>
-                  <a href="#forgot" onClick={(e) => { e.preventDefault(); setError('⚠️ Contact department administrator to reset credentials.'); }} style={{ color: '#00F5D4', textDecoration: 'none', fontWeight: '600' }}>
+                <div className="auth-form-options">
+                  <span>Protected student account</span>
+                  <button type="button" onClick={handlePasswordReset} disabled={isSubmitting}>
                     Forgot password?
-                  </a>
+                  </button>
                 </div>
               </>
             ) : (
@@ -776,7 +782,7 @@ export default function Auth({ onLoginSuccess }) {
             </button>
           </form>
 
-          <div style={{ textAlign: 'center', borderTop: '1px solid rgba(224, 64, 251, 0.2)', paddingTop: '16px' }}>
+          {!recoveryMode && <div style={{ textAlign: 'center', borderTop: '1px solid rgba(224, 64, 251, 0.2)', paddingTop: '16px' }}>
             <p style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.6)', margin: 0 }}>
               {isLogin ? "New to the platform?" : "Already have an account?"}{' '}
               <a 
@@ -787,7 +793,7 @@ export default function Auth({ onLoginSuccess }) {
                 {isLogin ? 'Create Account' : 'Sign In'}
               </a>
             </p>
-          </div>
+          </div>}
         </div>
       </div>
     </div>

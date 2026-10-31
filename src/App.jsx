@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import Auth from './components/Auth';
@@ -10,12 +10,19 @@ import MachineComparison from './components/MachineComparison';
 import MyProgress from './components/MyProgress';
 import Profile from './components/Profile';
 import WorkshopAI from './components/WorkshopAI';
+import { supabase, supabaseConfigError } from './lib/supabase';
+import { saveWorkshopUser, toWorkshopUser } from './lib/workshopUser';
 
 function App() {
   const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedMachineId, setSelectedMachineId] = useState('lathe');
   const [isLoading, setIsLoading] = useState(true);
+  const [authError, setAuthError] = useState('');
+  const [isPasswordRecovery, setIsPasswordRecovery] = useState(
+    new URLSearchParams(window.location.search).has('password-recovery')
+  );
+  const passwordRecoveryRef = useRef(isPasswordRecovery);
 
   // Global UX States
   const [highContrast, setHighContrast] = useState(false);
@@ -23,13 +30,78 @@ function App() {
   const [showKeyboardHelp, setShowKeyboardHelp] = useState(false);
   const [toastAlert, setToastAlert] = useState(null);
 
-  // Sync user state with localStorage
+  // Supabase owns the session; local profile data never grants access.
   useEffect(() => {
-    const cachedSession = localStorage.getItem('active_student_session');
-    if (cachedSession) {
-      setUser(JSON.parse(cachedSession));
+    localStorage.removeItem('active_student_session');
+    localStorage.removeItem('registered_users');
+
+    if (!supabase) {
+      setAuthError(supabaseConfigError);
+      setIsLoading(false);
+      return undefined;
     }
-    setIsLoading(false);
+
+    let active = true;
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!active) return;
+      if (event === 'INITIAL_SESSION') return;
+      if (event === 'PASSWORD_RECOVERY') {
+        passwordRecoveryRef.current = true;
+        setIsPasswordRecovery(true);
+        setUser(null);
+        setIsLoading(false);
+        return;
+      }
+      if (event === 'SIGNED_OUT') {
+        passwordRecoveryRef.current = false;
+        setIsPasswordRecovery(false);
+      }
+      if (passwordRecoveryRef.current) {
+        setUser(null);
+        setIsLoading(false);
+        return;
+      }
+      setUser(session?.user ? toWorkshopUser(session.user) : null);
+      if (!session?.user) setIsLoading(false);
+    });
+
+    const validateStoredSession = async () => {
+      try {
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError) throw sessionError;
+        if (!session) {
+          if (!active) return;
+          setAuthError('');
+          setUser(null);
+          setIsLoading(false);
+          return;
+        }
+
+        const { data, error } = await supabase.auth.getUser();
+        if (!active) return;
+        if (error) {
+          setAuthError('Unable to verify your sign-in session. Please sign in again.');
+          setUser(null);
+        } else if (passwordRecoveryRef.current) {
+          setUser(null);
+        } else {
+          setAuthError('');
+          setUser(data.user ? toWorkshopUser(data.user) : null);
+        }
+        setIsLoading(false);
+      } catch {
+        if (!active) return;
+        setAuthError('Unable to verify your sign-in session. Please sign in again.');
+        setUser(null);
+        setIsLoading(false);
+      }
+    };
+    validateStoredSession();
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   // Handle High Contrast body class toggling
@@ -108,20 +180,33 @@ function App() {
   };
 
   const handleLoginSuccess = (loggedUser) => {
-    setUser(loggedUser);
-    localStorage.setItem('active_student_session', JSON.stringify(loggedUser));
+    setUser(toWorkshopUser(loggedUser));
+    setAuthError('');
+    passwordRecoveryRef.current = false;
+    setIsPasswordRecovery(false);
+    window.history.replaceState(null, document.title, window.location.pathname);
     setActiveTab('dashboard');
   };
 
-  const handleLogout = () => {
-    setUser(null);
-    localStorage.removeItem('active_student_session');
-    setActiveTab('dashboard');
+  const handleLogout = async () => {
+    if (!supabase) {
+      setAuthError(supabaseConfigError);
+      return;
+    }
+
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      setUser(null);
+      setActiveTab('dashboard');
+    } catch {
+      setAuthError('Unable to sign out. Please try again.');
+    }
   };
 
   const handleUpdateUser = (updatedUser) => {
     setUser(updatedUser);
-    localStorage.setItem('active_student_session', JSON.stringify(updatedUser));
+    saveWorkshopUser(updatedUser);
   };
 
   if (isLoading) {
@@ -138,7 +223,7 @@ function App() {
   if (!user) {
     return (
       <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Auth onLoginSuccess={handleLoginSuccess} />
+        <Auth onLoginSuccess={handleLoginSuccess} authError={authError} recoveryMode={isPasswordRecovery} />
       </div>
     );
   }

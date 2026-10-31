@@ -240,9 +240,9 @@ export default function ThreeVisualizer({
 
     const isDark = !isLogin;
     const scene = new THREE.Scene();
-    scene.background = machineId === 'lathe' ? new THREE.Color('#dfe7e6') : new THREE.Color('#0B1014');
+    scene.background = machineId === 'lathe' ? new THREE.Color('#e6eef7') : new THREE.Color('#eaf1f8');
     if (machineId === 'lathe') {
-      scene.fog = new THREE.Fog('#dfe7e6', 12, 32);
+      scene.fog = new THREE.Fog('#e6eef7', 12, 32);
     }
     sceneRef.current = scene;
 
@@ -259,7 +259,7 @@ export default function ThreeVisualizer({
     floorMesh.visible = machineId === 'lathe';
     if (machineId === 'lathe') {
       floorMesh.receiveShadow = true;
-      floorMat.color.set('#8f9897');
+      floorMat.color.set('#b9c9d8');
       floorMat.roughness = 0.92;
       floorMat.metalness = 0.03;
     }
@@ -267,21 +267,21 @@ export default function ThreeVisualizer({
 
     // Clean, light industrial workshop backdrop for the lathe view.
     if (machineId === 'lathe') {
-      const wallMat = new THREE.MeshStandardMaterial({ color: '#cbd2d0', roughness: 0.92, metalness: 0.02 });
+      const wallMat = new THREE.MeshStandardMaterial({ color: '#e1eaf3', roughness: 0.92, metalness: 0.02 });
       const wall = new THREE.Mesh(new THREE.PlaneGeometry(32, 15), wallMat);
       wall.position.set(0, 5.5, -7.0);
       wall.receiveShadow = true;
       scene.add(wall);
 
-      const beamMat = new THREE.MeshStandardMaterial({ color: '#697477', roughness: 0.65, metalness: 0.2 });
+      const beamMat = new THREE.MeshStandardMaterial({ color: '#8298ae', roughness: 0.65, metalness: 0.2 });
       [-8, 0, 8].forEach((x) => {
         const beam = new THREE.Mesh(new THREE.BoxGeometry(0.18, 10, 0.22), beamMat);
         beam.position.set(x, 3.2, -6.85);
         scene.add(beam);
       });
 
-      const windowFrame = new THREE.MeshStandardMaterial({ color: '#56656a', metalness: 0.55, roughness: 0.35 });
-      const glassMat = new THREE.MeshStandardMaterial({ color: '#a8c7cf', transparent: true, opacity: 0.55, roughness: 0.18, metalness: 0.05 });
+      const windowFrame = new THREE.MeshStandardMaterial({ color: '#70869c', metalness: 0.55, roughness: 0.35 });
+      const glassMat = new THREE.MeshStandardMaterial({ color: '#b7d5ed', transparent: true, opacity: 0.55, roughness: 0.18, metalness: 0.05 });
       [-7.2, 7.2].forEach((x) => {
         const glass = new THREE.Mesh(new THREE.BoxGeometry(3.5, 2.8, 0.05), glassMat);
         glass.position.set(x, 5.1, -6.9);
@@ -296,8 +296,8 @@ export default function ThreeVisualizer({
         scene.add(sill);
       });
 
-      const cabinetMat = new THREE.MeshStandardMaterial({ color: '#405b62', metalness: 0.45, roughness: 0.48 });
-      const benchMat = new THREE.MeshStandardMaterial({ color: '#6e6a5e', metalness: 0.2, roughness: 0.68 });
+      const cabinetMat = new THREE.MeshStandardMaterial({ color: '#55728c', metalness: 0.45, roughness: 0.48 });
+      const benchMat = new THREE.MeshStandardMaterial({ color: '#8198ad', metalness: 0.2, roughness: 0.68 });
       const bench = new THREE.Mesh(new THREE.BoxGeometry(8.0, 0.18, 0.85), benchMat);
       bench.position.set(0, 1.0, -5.95);
       scene.add(bench);
@@ -310,18 +310,18 @@ export default function ThreeVisualizer({
         scene.add(handle);
       });
 
-      const lightMat = new THREE.MeshStandardMaterial({ color: '#e7eceb', emissive: '#fff3cf', emissiveIntensity: 1.8 });
+      const lightMat = new THREE.MeshStandardMaterial({ color: '#f5f9ff', emissive: '#dcecff', emissiveIntensity: 1.8 });
       [-5, 0, 5].forEach((x) => {
         const fixture = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.10, 0.28), lightMat);
         fixture.position.set(x, 9.0, -1.8);
         scene.add(fixture);
-        const lamp = new THREE.PointLight('#fff0cf', 2.1, 9);
+        const lamp = new THREE.PointLight('#e7f2ff', 2.1, 9);
         lamp.position.set(x, 8.7, -1.4);
         scene.add(lamp);
       });
 
       // Four visible floor anchor plates keep the lathe visually grounded.
-      const anchorMat = new THREE.MeshStandardMaterial({ color: '#4b5354', metalness: 0.82, roughness: 0.30 });
+      const anchorMat = new THREE.MeshStandardMaterial({ color: '#657c91', metalness: 0.82, roughness: 0.30 });
       [[-1.78,-0.32],[-1.78,0.32],[1.78,-0.32],[1.78,0.32]].forEach(([x,z]) => {
         const plate = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.055, 0.28), anchorMat);
         plate.position.set(x, -1.825, z);
@@ -470,10 +470,10 @@ export default function ThreeVisualizer({
     controlsRef.current = controls;
 
     // Lighting
-    const ambientLight = new THREE.AmbientLight('#E2DED4', highContrast ? 2.0 : (machineId === 'lathe' ? 1.55 : 1.15));
+    const ambientLight = new THREE.AmbientLight('#e5effb', highContrast ? 2.0 : (machineId === 'lathe' ? 1.55 : 1.15));
     scene.add(ambientLight);
 
-    const mainLight = new THREE.DirectionalLight('#FFE8B8', highContrast ? 3.0 : (machineId === 'lathe' ? 2.65 : 2.35));
+    const mainLight = new THREE.DirectionalLight('#f0f6ff', highContrast ? 3.0 : (machineId === 'lathe' ? 2.65 : 2.35));
     mainLight.position.set(7, 12, 6);
     mainLight.castShadow = machineId === 'lathe';
     mainLight.shadow.mapSize.set(2048, 2048);
@@ -483,7 +483,7 @@ export default function ThreeVisualizer({
     rimLight.position.set(-8, 5, -8);
     scene.add(rimLight);
 
-    const magentaSpotLight = new THREE.PointLight('#DDAE65', highContrast ? 1.0 : (machineId === 'lathe' ? 0.65 : 0.55), 18);
+    const magentaSpotLight = new THREE.PointLight('#79b7f0', highContrast ? 1.0 : (machineId === 'lathe' ? 0.65 : 0.55), 18);
     magentaSpotLight.position.set(-3, 4, 3);
     scene.add(magentaSpotLight);
     const orangeSpotLight = new THREE.PointLight('#FFB45B', 0.7, 5);
@@ -492,12 +492,12 @@ export default function ThreeVisualizer({
 
     // Materials dictionary
     const mats = {
-      machineBody: new THREE.MeshStandardMaterial({ color: '#3E4A59', metalness: 0.86, roughness: 0.30 }),
-      secondaryMetal: new THREE.MeshStandardMaterial({ color: '#B8C1CC', metalness: 0.96, roughness: 0.16 }),
-      darkMechanicalParts: new THREE.MeshStandardMaterial({ color: '#20262D', metalness: 0.82, roughness: 0.34 }),
-      shafts: new THREE.MeshStandardMaterial({ color: '#D7DEE6', metalness: 0.98, roughness: 0.10 }),
-      workpiece: new THREE.MeshStandardMaterial({ color: '#8D99A6', metalness: 0.93, roughness: 0.20 }),
-      cuttingTool: new THREE.MeshStandardMaterial({ color: '#E7ECEF', metalness: 0.99, roughness: 0.08 }),
+      machineBody: new THREE.MeshStandardMaterial({ color: '#71879c', metalness: 0.38, roughness: 0.42 }),
+      secondaryMetal: new THREE.MeshStandardMaterial({ color: '#B8C7D5', metalness: 0.62, roughness: 0.28 }),
+      darkMechanicalParts: new THREE.MeshStandardMaterial({ color: '#657b90', metalness: 0.4, roughness: 0.42 }),
+      shafts: new THREE.MeshStandardMaterial({ color: '#D7DEE6', metalness: 0.72, roughness: 0.22 }),
+      workpiece: new THREE.MeshStandardMaterial({ color: '#AAB8C6', metalness: 0.42, roughness: 0.34 }),
+      cuttingTool: new THREE.MeshStandardMaterial({ color: '#E7ECEF', metalness: 0.68, roughness: 0.20 }),
       safetyParts: new THREE.MeshStandardMaterial({ color: '#D8A627', metalness: 0.50, roughness: 0.28 }),
       sandMould: new THREE.MeshStandardMaterial({ color: '#836B4B', roughness: 0.92, metalness: 0.04 }),
       moltenMetal: new THREE.MeshStandardMaterial({ color: '#FF7A18', emissive: '#FF4D00', emissiveIntensity: 3.2, roughness: 0.12 }),
@@ -1406,7 +1406,7 @@ export default function ThreeVisualizer({
       controls.update();
     }
 
-    const selectedHelper = new THREE.BoxHelper(new THREE.Mesh(), '#c59b55');
+    const selectedHelper = new THREE.BoxHelper(new THREE.Mesh(), '#2878c7');
     selectedHelper.visible = false;
     scene.add(selectedHelper);
     selectedHelperRef.current = selectedHelper;
@@ -1569,7 +1569,7 @@ export default function ThreeVisualizer({
               child.userData.originalEmissive = child.material.emissive?.getHex() || 0;
             }
             if (isSelected) {
-              child.material.emissive?.set('#c59b55');
+              child.material.emissive?.set('#2878c7');
               child.material.emissiveIntensity = 0.18;
             } else if (isFocused) {
               child.material.emissive?.set('#5b9fa8');
@@ -2270,7 +2270,7 @@ export default function ThreeVisualizer({
       />
 
       {/* 1. ON-PLANE 3D TELEMETRY & AUDIO HUD (Top Center) */}
-      <div style={{
+      <div className="machine-operation-hud" style={{
         position: 'absolute',
         top: '16px',
         left: '50%',
@@ -2328,7 +2328,7 @@ export default function ThreeVisualizer({
       </div>
 
       {/* 2. ON-PLANE 3D OPERATIONS DOCK (Bottom Center Floating Bar) */}
-      <div style={{
+      <div className="machine-operation-dock" style={{
         position: 'absolute',
         bottom: '48px',
         left: '50%',
@@ -2489,7 +2489,7 @@ export default function ThreeVisualizer({
       )}
 
       {!isMobile && (
-        <div style={{
+        <div className="machine-keyboard-hints" style={{
           position: 'absolute',
           bottom: '12px',
           left: '50%',
