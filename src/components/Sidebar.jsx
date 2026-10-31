@@ -4,8 +4,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Compass,
+  GitCompareArrows,
   Gauge,
   LayoutDashboard,
+  Lightbulb,
   LogOut,
   Settings,
   Shield,
@@ -18,6 +20,8 @@ import {
 const menuItems = [
   { id: 'dashboard', label: 'Overview', icon: LayoutDashboard },
   { id: 'workshop_map', label: 'Workshop map', icon: Compass },
+  { id: 'decision_assistant', label: 'Machine advisor', icon: Lightbulb },
+  { id: 'comparison', label: 'Compare machines', icon: GitCompareArrows },
   { id: 'lathe', label: 'Centre lathe', icon: Settings, isMachine: true },
   { id: 'welding', label: 'Arc welding', icon: Zap, isMachine: true },
   { id: 'milling', label: 'Milling machine', icon: Wrench, isMachine: true },
@@ -74,7 +78,7 @@ export default function Sidebar({
         {menuItems.map((item, index) => {
           const Icon = item.icon;
           const active = isActive(item);
-          const showDivider = index === 2 || index === 9;
+          const showDivider = index === 4 || index === 11;
           return (
             <React.Fragment key={item.id}>
               {showDivider && !collapsed && <div className="sidebar-nav-divider" />}

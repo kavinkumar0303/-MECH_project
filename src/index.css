@@ -2263,6 +2263,11 @@ body {
   color: #213b53 !important;
   font: 500 14px/1.45 var(--sans-font);
 }
+.auth-form input:focus-visible {
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+}
 .auth-form input::placeholder { color: #92a2b1 !important; opacity: 1; }
 .auth-form div[style*="rgba(32, 12, 74"] {
   min-height: 48px;
@@ -2275,7 +2280,7 @@ body {
 .auth-form div[style*="rgba(32, 12, 74"]:focus-within {
   border-color: #6ea3d2 !important;
   background: #fff !important;
-  box-shadow: 0 0 0 4px rgba(40, 120, 199, .11);
+  box-shadow: 0 0 0 3px rgba(40, 120, 199, .1);
 }
 .auth-form div[style*="rgba(32, 12, 74"] > svg { color: #6286a7 !important; }
 .auth-form button[aria-label="Show password"],
@@ -2317,6 +2322,30 @@ body {
   filter: brightness(1.04);
 }
 .auth-form > button[type="submit"]:disabled { opacity: .72; cursor: wait; }
+.auth-form > .auth-demo-button {
+  min-height: 46px;
+  margin-top: -7px;
+  border: 1px solid #c64b52;
+  border-radius: 13px;
+  background: linear-gradient(110deg, #d95a60, #b83d48);
+  box-shadow: 0 7px 16px rgba(184, 61, 72, .18);
+  color: #fff;
+  font: 750 12px/1.2 var(--sans-font);
+  letter-spacing: .06em;
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.auth-form > .auth-demo-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(184, 61, 72, .24);
+  filter: brightness(1.04);
+}
+.auth-form > .auth-demo-button:disabled { opacity: .88; cursor: not-allowed; }
+.auth-form > .auth-demo-button:focus-visible {
+  outline: 2px solid #b83d48 !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 5px rgba(184, 61, 72, .14) !important;
+}
 .auth-card > div:last-child { border-color: #e5edf5 !important; }
 .auth-card > div:last-child p { color: #667c91 !important; }
 .auth-card > div:last-child a { color: #2168a8 !important; }
@@ -2326,7 +2355,8 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
   .auth-card { animation: none; }
-  .auth-form > button[type="submit"] { transition: none; }
+  .auth-form > button[type="submit"],
+  .auth-form > .auth-demo-button { transition: none; }
 }
 @media (max-width: 920px) {
   .hide-mobile { display: none !important; }

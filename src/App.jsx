@@ -10,7 +10,7 @@ import MachineComparison from './components/MachineComparison';
 import MyProgress from './components/MyProgress';
 import Profile from './components/Profile';
 import WorkshopAI from './components/WorkshopAI';
-import { supabase, supabaseConfigError } from './lib/supabase';
+import { supabase } from './lib/supabase';
 import { saveWorkshopUser, toWorkshopUser } from './lib/workshopUser';
 
 function App() {
@@ -36,7 +36,6 @@ function App() {
     localStorage.removeItem('registered_users');
 
     if (!supabase) {
-      setAuthError(supabaseConfigError);
       setIsLoading(false);
       return undefined;
     }
@@ -190,7 +189,7 @@ function App() {
 
   const handleLogout = async () => {
     if (!supabase) {
-      setAuthError(supabaseConfigError);
+      setAuthError('Sign-in is temporarily unavailable. Please contact your workshop administrator.');
       return;
     }
 

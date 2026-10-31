@@ -23,7 +23,7 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
     const height = mountRef.current.clientHeight || 450;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#EDF4FB');
+    scene.background = new THREE.Color('#ECEBE7');
 
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     camera.position.set(0, 11, 15);
@@ -52,31 +52,30 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
     dirLight.position.set(5, 15, 5);
     scene.add(dirLight);
 
-    const rimLight = new THREE.DirectionalLight('#8DBCE8', 1.15);
+    const rimLight = new THREE.DirectionalLight('#E8A176', 1.15);
     rimLight.position.set(-5, 5, -5);
     scene.add(rimLight);
 
-    // Industrial floor grids (SpaceDrive Purple & Cyan Grid)
-    const gridHelper = new THREE.GridHelper(24, 24, '#77A8D8', '#D6E3F0');
+    const gridHelper = new THREE.GridHelper(24, 24, '#D57A4D', '#D7D5CF');
     gridHelper.position.y = -0.5;
     scene.add(gridHelper);
 
     const borderGeo = new THREE.BoxGeometry(24.2, 0.05, 24.2);
-    const borderMat = new THREE.MeshBasicMaterial({ color: '#BCD0E3', wireframe: true });
+    const borderMat = new THREE.MeshBasicMaterial({ color: '#C8C5BE', wireframe: true });
     const border = new THREE.Mesh(borderGeo, borderMat);
     border.position.y = -0.5;
     scene.add(border);
 
     // Materials
-    const benchMat = new THREE.MeshStandardMaterial({ color: '#D8D2C8', roughness: 0.72, metalness: 0.08 });
+    const benchMat = new THREE.MeshStandardMaterial({ color: '#C9C4BB', roughness: 0.72, metalness: 0.08 });
     const machineMats = {
-      lathe: new THREE.MeshStandardMaterial({ color: '#4388c5', metalness: 0.55, roughness: 0.3 }),
-      welding: new THREE.MeshStandardMaterial({ color: '#6097c4', metalness: 0.5, roughness: 0.36 }),
-      milling: new THREE.MeshStandardMaterial({ color: '#759dbd', metalness: 0.55, roughness: 0.3 }),
-      shaper: new THREE.MeshStandardMaterial({ color: '#4f7da5', metalness: 0.52, roughness: 0.34 }),
-      planer: new THREE.MeshStandardMaterial({ color: '#638dac', metalness: 0.5, roughness: 0.35 }),
-      casting: new THREE.MeshStandardMaterial({ color: '#3e79b1', metalness: 0.46, roughness: 0.42 }),
-      moulding: new THREE.MeshStandardMaterial({ color: '#779abb', metalness: 0.42, roughness: 0.42 })
+      lathe: new THREE.MeshStandardMaterial({ color: '#56595A', metalness: 0.55, roughness: 0.3 }),
+      welding: new THREE.MeshStandardMaterial({ color: '#7A6254', metalness: 0.5, roughness: 0.36 }),
+      milling: new THREE.MeshStandardMaterial({ color: '#686B6A', metalness: 0.55, roughness: 0.3 }),
+      shaper: new THREE.MeshStandardMaterial({ color: '#4E5253', metalness: 0.52, roughness: 0.34 }),
+      planer: new THREE.MeshStandardMaterial({ color: '#77736C', metalness: 0.5, roughness: 0.35 }),
+      casting: new THREE.MeshStandardMaterial({ color: '#604E43', metalness: 0.46, roughness: 0.42 }),
+      moulding: new THREE.MeshStandardMaterial({ color: '#6A6259', metalness: 0.42, roughness: 0.42 })
     };
 
     // Terminal layout positioning
@@ -105,7 +104,7 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
 
       // Safety border lines in Cyprus Light
       const stripGeo = new THREE.BoxGeometry(2.5, 0.05, 1.9);
-      const stripMat = new THREE.MeshBasicMaterial({ color: '#76aee1', wireframe: true });
+      const stripMat = new THREE.MeshBasicMaterial({ color: '#E07842', wireframe: true });
       const strip = new THREE.Mesh(stripGeo, stripMat);
       strip.position.y = 0.31;
       group.add(strip);
@@ -255,7 +254,7 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
   }, []);
 
   return (
-    <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+    <main className="workshop-map-page industrial-page" style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
       
       <div>
         <h2 style={{ fontSize: '24px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '1px', color: '#FFFFFF' }}>
@@ -363,6 +362,6 @@ export default function WorkshopMap({ setActiveTab, setSelectedMachineId }) {
         </div>
 
       </div>
-    </div>
+    </main>
   );
 }

@@ -92,7 +92,7 @@ export default function MachineComparison() {
   const data = getComparisonData();
 
   return (
-    <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+    <main className="comparison-page industrial-page" style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
       
       {/* Selection Control Row */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
@@ -115,6 +115,7 @@ export default function MachineComparison() {
             return (
               <button
                 key={pair.id}
+                className={`comparison-pair-button${isActive ? ' is-active' : ''}`}
                 onClick={() => setComparisonPair(pair.id)}
                 style={{
                   background: isActive ? 'var(--brand-gradient)' : 'transparent',
@@ -224,6 +225,6 @@ export default function MachineComparison() {
         </div>
 
       </div>
-    </div>
+    </main>
   );
 }

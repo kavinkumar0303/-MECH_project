@@ -3,16 +3,29 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-export const supabaseConfigError = !supabaseUrl || !supabaseAnonKey
-  ? 'Authentication is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to the Vercel environment.'
-  : '';
+const hasSupabaseConfig = (() => {
+  if (
+    !supabaseUrl?.trim()
+    || !supabaseAnonKey?.trim()
+    || supabaseUrl.includes('your-project.supabase.co')
+    || supabaseAnonKey.includes('your-supabase-publishable-or-anon-key')
+  ) {
+    return false;
+  }
 
-export const supabase = supabaseConfigError
-  ? null
-  : createClient(supabaseUrl, supabaseAnonKey, {
+  try {
+    return ['http:', 'https:'].includes(new URL(supabaseUrl.trim()).protocol);
+  } catch {
+    return false;
+  }
+})();
+
+export const supabase = hasSupabaseConfig
+  ? createClient(supabaseUrl.trim(), supabaseAnonKey.trim(), {
       auth: {
         autoRefreshToken: true,
         persistSession: true,
         detectSessionInUrl: true
       }
-    });
+    })
+  : null;

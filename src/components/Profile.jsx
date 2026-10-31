@@ -46,7 +46,7 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
   };
 
   return (
-    <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '32px', maxWidth: '850px', margin: '0 auto', width: '100%' }}>
+    <main className="profile-page industrial-page" style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '32px', maxWidth: '850px', margin: '0 auto', width: '100%' }}>
 
       {/* Title */}
       <div>
@@ -222,6 +222,6 @@ export default function Profile({ user, onUpdateUser, onLogout }) {
         </div>
 
       </div>
-    </div>
+    </main>
   );
 }

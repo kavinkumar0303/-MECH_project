@@ -95,7 +95,7 @@ export default function WorkshopAI() {
 
       {/* Expandable Chat Drawer */}
       {isOpen && (
-        <div 
+        <div
           className="anim-slide-up workshop-ai-drawer"
           style={{
             position: 'fixed',
@@ -116,7 +116,7 @@ export default function WorkshopAI() {
           }}
         >
           {/* Chat Header */}
-          <div 
+          <div className="workshop-ai-header"
             style={{
               padding: '16px 20px',
               borderBottom: '1px solid rgba(224, 64, 251, 0.2)',
@@ -147,9 +147,9 @@ export default function WorkshopAI() {
           </div>
 
           {/* Chat Messages */}
-          <div style={{ flex: 1, padding: '16px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div className="workshop-ai-messages" style={{ flex: 1, padding: '16px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {messages.map((msg, index) => (
-              <div 
+              <div className={`workshop-ai-message ${msg.sender === 'user' ? 'is-user' : 'is-assistant'}`}
                 key={index}
                 style={{
                   alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
@@ -172,7 +172,7 @@ export default function WorkshopAI() {
 
           {/* Quick Click Prompts */}
           {messages.length === 1 && (
-            <div style={{ padding: '0 16px 12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div className="workshop-ai-prompts" style={{ padding: '0 16px 12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <span style={{ fontSize: '10px', color: '#00F5D4', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase' }}>
                 SUGGESTED ENQUIRIES
               </span>
@@ -211,9 +211,9 @@ export default function WorkshopAI() {
           )}
 
           {/* Chat Input */}
-          <div style={{ padding: '14px', borderTop: '1px solid rgba(224, 64, 251, 0.2)', background: 'rgba(13, 2, 33, 0.6)' }}>
+          <div className="workshop-ai-inputbar" style={{ padding: '14px', borderTop: '1px solid rgba(224, 64, 251, 0.2)', background: 'rgba(13, 2, 33, 0.6)' }}>
             <div style={{ display: 'flex', gap: '8px' }}>
-              <input 
+              <input className="workshop-ai-text-input"
                 type="text" 
                 placeholder="Ask about lathe speeds, welding, safety..."
                 value={inputValue}
@@ -230,7 +230,7 @@ export default function WorkshopAI() {
                   outline: 'none'
                 }}
               />
-              <button 
+              <button className="workshop-ai-send"
                 onClick={() => handleSend()}
                 style={{
                   background: 'linear-gradient(135deg, #FF5376 0%, #7928CA 100%)',

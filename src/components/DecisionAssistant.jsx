@@ -68,7 +68,7 @@ export default function DecisionAssistant() {
   const rec = getRecommendation();
 
   return (
-    <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '900px', margin: '0 auto', width: '100%' }}>
+    <main className="decision-page industrial-page" style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '900px', margin: '0 auto', width: '100%' }}>
       
       {/* Title block */}
       <div>
@@ -275,6 +275,6 @@ export default function DecisionAssistant() {
         )}
 
       </div>
-    </div>
+    </main>
   );
 }

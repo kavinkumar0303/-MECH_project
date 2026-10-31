@@ -13,7 +13,10 @@ import {
   ArrowRight, 
   Mail
 } from 'lucide-react';
-import { supabase, supabaseConfigError } from '../lib/supabase';
+import { supabase } from '../lib/supabase';
+
+const AUTH_UNAVAILABLE_MESSAGE = 'Sign-in is temporarily unavailable. Please contact your workshop administrator.';
+const DEMO_UNAVAILABLE_MESSAGE = 'Demo sign-in is unavailable right now. Please contact your workshop administrator.';
 
 export default function Auth({ onLoginSuccess, authError, recoveryMode = false }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -29,6 +32,24 @@ export default function Auth({ onLoginSuccess, authError, recoveryMode = false }
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const visibleError = !supabase
+    ? AUTH_UNAVAILABLE_MESSAGE
+    : error || authError;
+
+  const getFriendlyAuthError = (authError, fallback) => {
+    const message = authError?.message?.toLowerCase() || '';
+    if (message.includes('invalid login credentials')) return 'Email or password is incorrect.';
+    if (message.includes('email not confirmed')) return 'Please confirm your email before signing in.';
+    if (message.includes('too many requests') || message.includes('rate limit')) {
+      return 'Too many attempts. Please wait a moment and try again.';
+    }
+    if (message.includes('fetch') || message.includes('network')) {
+      return 'Unable to reach the sign-in service. Check your connection and try again.';
+    }
+    return fallback;
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -246,8 +267,6 @@ export default function Auth({ onLoginSuccess, authError, recoveryMode = false }
     };
   }, []);
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
@@ -255,7 +274,7 @@ export default function Auth({ onLoginSuccess, authError, recoveryMode = false }
     setSuccess('');
 
     if (!supabase) {
-      setError(supabaseConfigError);
+      setError(AUTH_UNAVAILABLE_MESSAGE);
       return;
     }
 
@@ -317,11 +336,44 @@ export default function Auth({ onLoginSuccess, authError, recoveryMode = false }
         }
       }
     } catch (submitError) {
-      if (submitError.message === 'Invalid login credentials') {
-        setError('Email or password is incorrect.');
-      } else {
-        setError(submitError.message || 'Authentication failed. Please try again.');
+      setError(getFriendlyAuthError(submitError, 'Authentication failed. Please try again.'));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    if (isSubmitting) return;
+    setError('');
+    setSuccess('');
+
+    if (!supabase) {
+      setError(AUTH_UNAVAILABLE_MESSAGE);
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const { data: credentials, error: demoError } = await supabase.functions.invoke('demo-login');
+      if (demoError) throw demoError;
+      if (
+        typeof credentials?.email !== 'string'
+        || !credentials.email.trim()
+        || typeof credentials?.password !== 'string'
+        || !credentials.password
+      ) {
+        throw new Error('Demo credentials are unavailable.');
       }
+
+      setFormData((previous) => ({
+        ...previous,
+        email: credentials.email.trim(),
+        password: credentials.password
+      }));
+      setShowPassword(false);
+      setSuccess('Demo credentials filled successfully!');
+    } catch (demoError) {
+      setError(getFriendlyAuthError(demoError, DEMO_UNAVAILABLE_MESSAGE));
     } finally {
       setIsSubmitting(false);
     }
@@ -331,7 +383,7 @@ export default function Auth({ onLoginSuccess, authError, recoveryMode = false }
     setError('');
     setSuccess('');
     if (!supabase) {
-      setError(supabaseConfigError);
+      setError(AUTH_UNAVAILABLE_MESSAGE);
       return;
     }
     if (!formData.email.trim()) {
@@ -347,7 +399,7 @@ export default function Auth({ onLoginSuccess, authError, recoveryMode = false }
       if (resetError) throw resetError;
       setSuccess('Password reset instructions have been sent to your email.');
     } catch (resetError) {
-      setError(resetError.message || 'Unable to send password reset instructions.');
+      setError(getFriendlyAuthError(resetError, 'Unable to send password reset instructions.'));
     } finally {
       setIsSubmitting(false);
     }
@@ -502,18 +554,10 @@ export default function Auth({ onLoginSuccess, authError, recoveryMode = false }
             </div>
           )}
 
-          {(authError || supabaseConfigError) && (
-            <div className="auth-message auth-message-error" role="alert">
-              <ShieldAlert size={15} />
-              <span>{authError || supabaseConfigError}</span>
-            </div>
-          )}
-
-          {/* Status Messages */}
-          {error && (
+          {visibleError && (
             <div className="auth-message auth-message-error" role="alert">
               <ShieldAlert size={14} />
-              <span>{error}</span>
+              <span>{visibleError}</span>
             </div>
           )}
 
@@ -771,8 +815,6 @@ export default function Auth({ onLoginSuccess, authError, recoveryMode = false }
                   }} />
                   <span>AUTHENTICATING...</span>
                 </div>
-              ) : success ? (
-                <span>✓ ACCESS GRANTED</span>
               ) : (
                 <>
                   <span>{isLogin ? 'ENTER WORKSHOP' : 'CREATE ACCOUNT'}</span>
@@ -780,6 +822,16 @@ export default function Auth({ onLoginSuccess, authError, recoveryMode = false }
                 </>
               )}
             </button>
+            {isLogin && !recoveryMode && (
+              <button
+                type="button"
+                className="auth-demo-button"
+                onClick={handleDemoLogin}
+                disabled={isSubmitting || !supabase}
+              >
+                {isSubmitting ? 'CONNECTING TO DEMO...' : 'Demo Login'}
+              </button>
+            )}
           </form>
 
           {!recoveryMode && <div style={{ textAlign: 'center', borderTop: '1px solid rgba(224, 64, 251, 0.2)', paddingTop: '16px' }}>
