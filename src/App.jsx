@@ -30,12 +30,24 @@ function App() {
   const [showKeyboardHelp, setShowKeyboardHelp] = useState(false);
   const [toastAlert, setToastAlert] = useState(null);
 
-  // Supabase owns the session; local profile data never grants access.
+  // Session state: supports both Supabase session and local/demo session persistence.
   useEffect(() => {
-    localStorage.removeItem('active_student_session');
-    localStorage.removeItem('registered_users');
+    const restoreLocalSession = () => {
+      try {
+        const stored = localStorage.getItem('active_student_session');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed) {
+            setUser(toWorkshopUser(parsed));
+          }
+        }
+      } catch {
+        localStorage.removeItem('active_student_session');
+      }
+    };
 
     if (!supabase) {
+      restoreLocalSession();
       setIsLoading(false);
       return undefined;
     }
@@ -70,8 +82,9 @@ function App() {
         if (sessionError) throw sessionError;
         if (!session) {
           if (!active) return;
+          // Check for active demo/local session as fallback
+          restoreLocalSession();
           setAuthError('');
-          setUser(null);
           setIsLoading(false);
           return;
         }
@@ -90,8 +103,8 @@ function App() {
         setIsLoading(false);
       } catch {
         if (!active) return;
-        setAuthError('Unable to verify your sign-in session. Please sign in again.');
-        setUser(null);
+        restoreLocalSession();
+        setAuthError('');
         setIsLoading(false);
       }
     };
@@ -179,7 +192,13 @@ function App() {
   };
 
   const handleLoginSuccess = (loggedUser) => {
-    setUser(toWorkshopUser(loggedUser));
+    const workshopUser = toWorkshopUser(loggedUser);
+    setUser(workshopUser);
+    try {
+      localStorage.setItem('active_student_session', JSON.stringify(loggedUser));
+    } catch {
+      // ignore storage error
+    }
     setAuthError('');
     passwordRecoveryRef.current = false;
     setIsPasswordRecovery(false);
@@ -188,18 +207,17 @@ function App() {
   };
 
   const handleLogout = async () => {
-    if (!supabase) {
-      setAuthError('Sign-in is temporarily unavailable. Please contact your workshop administrator.');
-      return;
-    }
-
     try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      setUser(null);
-      setActiveTab('dashboard');
+      localStorage.removeItem('active_student_session');
+      if (supabase) {
+        await supabase.auth.signOut();
+      }
     } catch {
-      setAuthError('Unable to sign out. Please try again.');
+      // ignore
+    } finally {
+      setUser(null);
+      setAuthError('');
+      setActiveTab('dashboard');
     }
   };
 

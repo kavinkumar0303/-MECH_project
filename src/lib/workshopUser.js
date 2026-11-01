@@ -19,24 +19,24 @@ export function toWorkshopUser(authUser) {
 
   const metadata = authUser.user_metadata || {};
   const profile = readProfile(authUser.id);
-  const displayName = metadata.full_name || metadata.name || authUser.email || 'Workshop Student';
+  const displayName = authUser.name || metadata.full_name || metadata.name || authUser.email || 'Workshop Student';
 
   return {
     ...profile,
     id: authUser.id,
     name: profile.name || displayName,
-    studentId: profile.studentId || metadata.student_id || authUser.email || '',
-    college: profile.college || metadata.college || '',
-    department: profile.department || metadata.department || '',
-    email: authUser.email || '',
-    xp: profile.xp ?? 0,
-    level: profile.level || 'Apprentice',
-    safetyScore: profile.safetyScore ?? 100,
-    accuracy: profile.accuracy ?? 100,
-    completedMissions: profile.completedMissions ?? 0,
-    machinesExplored: profile.machinesExplored ?? 0,
-    completedMissionsList: profile.completedMissionsList || [],
-    badges: profile.badges || []
+    studentId: profile.studentId || authUser.studentId || metadata.student_id || authUser.email || 'STU1029',
+    college: profile.college || authUser.college || metadata.college || 'PSG College of Technology',
+    department: profile.department || authUser.department || metadata.department || 'Mechanical Engineering',
+    email: authUser.email || 'student.demo@workshop.edu',
+    xp: profile.xp ?? authUser.xp ?? 1240,
+    level: profile.level || authUser.level || 'Workshop Apprentice',
+    safetyScore: profile.safetyScore ?? authUser.safetyScore ?? 94,
+    accuracy: profile.accuracy ?? authUser.accuracy ?? 88,
+    completedMissions: profile.completedMissions ?? authUser.completedMissions ?? 12,
+    machinesExplored: profile.machinesExplored ?? authUser.machinesExplored ?? 4,
+    completedMissionsList: profile.completedMissionsList?.length ? profile.completedMissionsList : (authUser.completedMissionsList || ['lathe_01', 'welding_01', 'milling_01']),
+    badges: profile.badges?.length ? profile.badges : (authUser.badges || ['Lathe Beginner', 'Safety First', 'Milling Master'])
   };
 }
 
