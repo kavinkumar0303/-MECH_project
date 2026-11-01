@@ -34,9 +34,7 @@ export default function Auth({ onLoginSuccess, authError, recoveryMode = false }
   const [success, setSuccess] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const visibleError = !supabase
-    ? AUTH_UNAVAILABLE_MESSAGE
-    : error || authError;
+  const visibleError = error || (!supabase ? AUTH_UNAVAILABLE_MESSAGE : authError);
 
   const getFriendlyAuthError = (authError, fallback) => {
     const message = authError?.message?.toLowerCase() || '';
@@ -348,7 +346,7 @@ export default function Auth({ onLoginSuccess, authError, recoveryMode = false }
     setSuccess('');
 
     if (!supabase) {
-      setError(AUTH_UNAVAILABLE_MESSAGE);
+      setError(DEMO_UNAVAILABLE_MESSAGE);
       return;
     }
 
@@ -827,7 +825,7 @@ export default function Auth({ onLoginSuccess, authError, recoveryMode = false }
                 type="button"
                 className="auth-demo-button"
                 onClick={handleDemoLogin}
-                disabled={isSubmitting || !supabase}
+                disabled={isSubmitting}
               >
                 {isSubmitting ? 'CONNECTING TO DEMO...' : 'Demo Login'}
               </button>
